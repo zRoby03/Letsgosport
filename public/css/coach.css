@@ -1,0 +1,288 @@
+/* Coach workspace refresh */
+#pagina-coach {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.coach-hero-panel {
+    padding: clamp(28px, 4vw, 54px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    background:
+        radial-gradient(circle at 85% 18%, rgba(0, 200, 215, 0.18), transparent 28%),
+        radial-gradient(circle at 12% 85%, rgba(236, 11, 140, 0.14), transparent 30%),
+        var(--glass-surface);
+    box-shadow: var(--soft-shadow);
+    backdrop-filter: blur(22px) saturate(150%);
+    -webkit-backdrop-filter: blur(22px) saturate(150%);
+}
+
+.coach-hero-panel h1 {
+    max-width: 860px;
+    margin: 0;
+    color: var(--ink);
+    font-size: clamp(38px, 4.7vw, 72px);
+    line-height: 1;
+    letter-spacing: 0 !important;
+}
+
+.coach-hero-panel p:not(.eyebrow) {
+    max-width: 720px;
+    margin: 18px 0 0;
+    color: var(--muted);
+    font-size: clamp(16px, 1.15vw, 20px);
+    line-height: 1.65;
+}
+
+.coach-workbar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(150px, 220px)) minmax(260px, 1fr);
+    gap: 14px;
+    align-items: stretch;
+}
+
+.coach-workbar article,
+.coach-search-field {
+    min-height: 84px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px solid rgba(214, 226, 240, 0.86);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: var(--card-shadow);
+}
+
+.coach-workbar article span,
+.coach-search-field span,
+.coach-course-kicker {
+    color: var(--neon-magenta);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.coach-workbar article strong {
+    margin-top: 4px;
+    color: var(--ink);
+    font-size: 30px;
+    line-height: 1;
+}
+
+.coach-search-field {
+    gap: 10px;
+}
+
+.coach-search-field input {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid rgba(214, 226, 240, 0.9);
+    border-radius: 14px;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.9);
+    font: inherit;
+    font-weight: 700;
+    outline: none;
+}
+
+.coach-search-field input:focus {
+    border-color: rgba(0, 200, 215, 0.72);
+    box-shadow: 0 0 0 4px rgba(0, 200, 215, 0.12);
+}
+
+.coach-course-list {
+    display: grid;
+    gap: 16px;
+    text-align: left;
+}
+
+.coach-course-card {
+    margin: 0 !important;
+    padding: clamp(18px, 2vw, 26px) !important;
+    border: 1px solid rgba(214, 226, 240, 0.9) !important;
+    border-radius: 24px !important;
+    background: rgba(255, 255, 255, 0.82) !important;
+    box-shadow: var(--card-shadow) !important;
+}
+
+.coach-course-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.coach-course-title-block {
+    min-width: 0;
+}
+
+.coach-course-title {
+    margin: 4px 0 0 !important;
+    color: var(--ink) !important;
+    font-size: clamp(22px, 2.2vw, 32px) !important;
+    line-height: 1.12;
+    letter-spacing: 0 !important;
+}
+
+.coach-course-count {
+    flex: 0 0 auto;
+    padding: 9px 12px;
+    border: 1px solid rgba(0, 200, 215, 0.26);
+    border-radius: 999px;
+    color: #008ea6;
+    background: rgba(0, 200, 215, 0.1);
+    font-size: 13px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.coach-course-schedule {
+    margin: 18px 0 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.coach-course-schedule span {
+    padding: 9px 12px;
+    border-radius: 999px;
+    color: var(--muted);
+    background: rgba(18, 34, 68, 0.06);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.coach-course-students-title {
+    margin: 0 0 12px !important;
+    color: var(--ink) !important;
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.coach-student-list {
+    display: grid !important;
+    gap: 10px !important;
+}
+
+.coach-student-row {
+    padding: 14px !important;
+    display: grid !important;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center !important;
+    gap: 14px;
+    border: 1px solid rgba(214, 226, 240, 0.9) !important;
+    border-radius: 18px !important;
+    background: rgba(255, 255, 255, 0.76) !important;
+    box-shadow: none !important;
+}
+
+.coach-student-row:hover {
+    border-color: rgba(0, 200, 215, 0.42) !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+}
+
+.coach-student-avatar {
+    width: 52px !important;
+    height: 52px !important;
+    margin: 0 !important;
+    border: 3px solid rgba(0, 200, 215, 0.32) !important;
+    box-shadow: 0 10px 20px rgba(18, 34, 68, 0.1) !important;
+}
+
+.coach-student-name {
+    color: var(--ink) !important;
+    font-size: 16px !important;
+    font-weight: 900 !important;
+}
+
+.coach-student-email {
+    margin-top: 2px;
+    color: var(--muted) !important;
+    font-size: 13px !important;
+    overflow-wrap: anywhere;
+}
+
+.coach-student-tags {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.coach-student-tags span {
+    padding: 5px 8px;
+    border-radius: 999px;
+    color: var(--muted);
+    background: rgba(18, 34, 68, 0.06);
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.coach-student-action {
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid rgba(0, 200, 215, 0.38);
+    border-radius: 14px;
+    color: #008ea6;
+    background: rgba(255, 255, 255, 0.82);
+    font: inherit;
+    font-weight: 900;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.coach-student-action:hover,
+.coach-student-action:focus-visible {
+    border-color: rgba(236, 11, 140, 0.38);
+    box-shadow: 0 10px 24px rgba(18, 34, 68, 0.12);
+    transform: translateY(-1px);
+}
+
+.coach-empty-state,
+#coach-lista-corsi .admin-list-state {
+    margin: 0;
+    padding: 18px 20px;
+    border: 1px dashed rgba(214, 226, 240, 0.95);
+    border-radius: 18px;
+    color: var(--muted);
+    background: rgba(255, 255, 255, 0.7);
+    font-weight: 800;
+}
+
+@media screen and (max-width: 860px) {
+    .coach-workbar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .coach-search-field {
+        grid-column: 1 / -1;
+    }
+}
+
+@media screen and (max-width: 620px) {
+    .coach-hero-panel {
+        padding: 24px;
+    }
+
+    .coach-workbar {
+        grid-template-columns: 1fr;
+    }
+
+    .coach-course-heading {
+        flex-direction: column;
+    }
+
+    .coach-student-row {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .coach-student-action {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+}

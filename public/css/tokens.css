@@ -1,0 +1,22 @@
+:root {
+    --neon-cyan: #00c8d7;
+    --neon-magenta: #ec0b8c;
+    --neon-violet: #c400c9;
+    --ink: #071126;
+    --muted: #50627a;
+    --page-bg: #f8fbff;
+    --surface: #ffffff;
+    --glass-surface: rgba(255, 255, 255, 0.78);
+    --glass-strong: rgba(255, 255, 255, 0.92);
+    --glass-border: rgba(214, 226, 240, 0.9);
+    --soft-shadow: 0 22px 58px rgba(18, 34, 68, 0.1);
+    --card-shadow: 0 14px 38px rgba(18, 34, 68, 0.08);
+    --glow-cyan: 0 18px 48px rgba(0, 200, 215, 0.22);
+    --glow-magenta: 0 18px 48px rgba(236, 11, 140, 0.18);
+    --radius-xl: 32px;
+    --radius-lg: 24px;
+    --radius-md: 18px;
+    --transition-soft: 260ms cubic-bezier(.2, .8, .2, 1);
+    --gradient-primary: linear-gradient(135deg, #ec0b8c, #d600b8);
+    --gradient-cyan: linear-gradient(135deg, #00c8d7, #00aeca);
+}

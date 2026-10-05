@@ -1,0 +1,774 @@
+/* Admin base styles */
+#pagina-admin .admin-hero-panel h1,
+#pagina-admin .admin-section-heading h2 {
+    text-wrap: balance;
+}
+
+#pagina-admin .admin-hero-panel p,
+#pagina-admin .admin-section-heading p {
+    text-wrap: pretty;
+}
+
+#pagina-admin .admin-form-submit,
+#pagina-admin .admin-form-cancel,
+#pagina-admin .admin-action-btn {
+    border-radius: 14px;
+}
+
+#pagina-admin .admin-search-input,
+#pagina-admin input,
+#pagina-admin select,
+#pagina-admin textarea {
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+#pagina-admin .admin-stats-grid,
+#pagina-admin .admin-quick-actions {
+    min-width: 0;
+}
+
+#pagina-admin .admin-mobile-card,
+#pagina-admin .admin-user-row,
+#pagina-admin .admin-entity-row {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.admin-panel {
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.62);
+    border-radius: 18px;
+    background: rgba(255,255,255,0.4);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    text-align: left;
+}
+.admin-form-panel { margin-bottom: 20px; }
+.admin-divider { margin: 30px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.55); }
+.admin-divider.is-large { margin: 40px 0; }
+.admin-form-row {
+    margin-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.admin-form-row input,
+.admin-form-row select { padding: 8px; box-sizing: border-box; }
+.admin-form-grow { flex: 1; }
+.admin-form-number { width: 100px; }
+.admin-form-wide {
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 8px;
+    box-sizing: border-box;
+    border-radius: 8px;
+}
+.admin-upload-label { display: block; font-size: 14px; font-weight: 700; }
+.admin-file-input { margin: 5px 0 15px; }
+.admin-form-actions { display: flex; gap: 10px; }
+.admin-form-submit,
+.admin-form-cancel {
+    padding: 10px 20px;
+    border: 0;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+.admin-form-submit.is-course { background: #2575fc; }
+.admin-form-submit.is-race { background: #ff9800; }
+.admin-form-submit.is-editing { background: #28a745; }
+.admin-form-cancel { background: #6c757d; }
+.admin-list-state { margin: 10px 0; color: #777; text-align: center; }
+.admin-list-state.is-error { color: #dc3545; }
+.admin-user-list,
+.admin-entity-list {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+    list-style: none;
+}
+.admin-user-row {
+    padding: 15px;
+    border: 1px solid rgba(255,255,255,0.72);
+    border-radius: 14px;
+    background: rgba(255,255,255,0.48);
+}
+.admin-user-header {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.admin-user-identity,
+.admin-user-actions,
+.admin-user-name-fields,
+.admin-certificate-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.admin-user-avatar {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.admin-user-data { min-width: 0; }
+.admin-user-name-fields { gap: 5px; margin-bottom: 5px; }
+.admin-field { padding: 6px 8px; box-sizing: border-box; border-radius: 6px; }
+.admin-field-name { width: 110px; }
+.admin-field-age { width: 65px; }
+.admin-field-bio { width: 100%; }
+.admin-role-select { min-width: 105px; }
+.admin-user-email { color: #777; font-size: 13px; }
+.admin-action-btn {
+    padding: 7px 11px;
+    border: 0;
+    border-radius: 7px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.2s, transform 0.2s;
+}
+.admin-action-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.admin-action-btn.is-warning { color: #222; background: #ffc107; }
+.admin-action-btn.is-success { background: #28a745; }
+.admin-action-btn.is-danger { background: #dc3545; }
+.admin-action-btn.is-outline { color: #17a2b8; border: 1px solid #17a2b8; background: #fff; }
+.admin-action-btn.is-outline:hover { color: #fff; background: #17a2b8; }
+.admin-certificate-box {
+    margin-top: 15px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.62);
+}
+.admin-certificate-status { font-size: 13px; }
+.admin-certificate-status.is-valid { color: #28a745; }
+.admin-certificate-status.is-invalid { color: #dc3545; }
+.admin-field-label { color: #777; font-size: 11px; }
+.admin-field-date { font-size: 11px; }
+.admin-save-hint { color: #888; font-size: 11px; font-style: italic; }
+.admin-entity-row {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid rgba(255,255,255,0.72);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.48);
+}
+.admin-entity-content { display: flex; flex-direction: column; gap: 4px; }
+.admin-entity-meta { color: #777; font-size: 13px; }
+.admin-entity-actions { display: flex; gap: 10px; }
+
+@media (max-width: 768px) {
+    .admin-form-row,
+    .admin-user-header,
+    .admin-certificate-box,
+    .admin-entity-row {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-form-row input,
+    .admin-form-row select,
+    .admin-form-grow,
+    .admin-form-number,
+    .admin-field-name,
+    .admin-field-age,
+    .admin-action-btn {
+        width: 100%;
+    }
+
+    .admin-user-actions,
+    .admin-entity-actions,
+    .admin-form-actions {
+        width: 100%;
+    }
+
+    .admin-user-actions > *,
+    .admin-entity-actions > *,
+    .admin-form-actions > * {
+        flex: 1;
+    }
+}
+
+/* Admin dashboard layout */
+#pagina-admin > h1 {
+    margin: 0 0 8px;
+    color: var(--ink);
+    font-size: clamp(34px, 4vw, 56px);
+    letter-spacing: -0.06em;
+    text-shadow: none;
+}
+
+#pagina-admin > p {
+    margin: 0 0 24px;
+    color: var(--muted);
+    font-weight: 700;
+}
+
+.admin-panel {
+    padding: 24px;
+    border-radius: var(--radius-lg);
+}
+
+.admin-stats-grid {
+    margin: 0 0 24px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.admin-stats-grid article {
+    padding: 20px;
+    border: 1px solid rgba(214, 226, 240, 0.86);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: var(--card-shadow);
+}
+
+.admin-stats-grid span {
+    display: block;
+    color: var(--neon-magenta);
+    font-size: 13px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.admin-stats-grid strong {
+    display: block;
+    margin-top: 8px;
+    color: var(--ink);
+    font-size: 18px;
+    letter-spacing: -0.03em;
+}
+
+.admin-user-row,
+.admin-entity-row {
+    border: 1px solid rgba(214, 226, 240, 0.84);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.74);
+    box-shadow: var(--card-shadow);
+}
+
+.admin-action-btn.is-warning,
+.admin-action-btn.is-success,
+.admin-action-btn.is-danger,
+.admin-form-submit.is-course,
+.admin-form-submit.is-race,
+.admin-form-submit.is-editing {
+    color: #fff;
+    background: var(--gradient-primary);
+}
+
+/* Admin dashboard polish */
+#pagina-admin {
+    color: var(--ink);
+}
+
+#pagina-admin .admin-hero-panel {
+    margin-bottom: 22px;
+    padding: 30px;
+    border: 1px solid rgba(214, 226, 240, 0.88);
+    border-radius: 22px;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(239, 252, 255, 0.78)),
+        radial-gradient(circle at 92% 12%, rgba(225, 0, 155, 0.12), transparent 28%);
+    box-shadow: var(--card-shadow);
+}
+
+#pagina-admin .admin-hero-panel .eyebrow,
+#pagina-admin .admin-section-heading span {
+    margin: 0;
+    color: var(--neon-magenta);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+#pagina-admin .admin-hero-panel h1 {
+    margin: 8px 0 10px;
+    max-width: 760px;
+    color: var(--ink);
+    font-size: clamp(34px, 3.6vw, 54px);
+    line-height: 1.02;
+    letter-spacing: 0;
+}
+
+#pagina-admin .admin-hero-panel p:last-child {
+    margin: 0;
+    max-width: 680px;
+    color: var(--muted);
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.55;
+}
+
+#pagina-admin .admin-stats-grid {
+    margin-bottom: 18px;
+}
+
+#pagina-admin .admin-stats-grid article {
+    min-height: 118px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+}
+
+#pagina-admin .admin-stats-grid strong {
+    font-size: 26px;
+    letter-spacing: 0;
+}
+
+#pagina-admin .admin-stats-grid small {
+    color: var(--muted);
+    font-weight: 800;
+}
+
+#pagina-admin .admin-quick-actions {
+    margin: 0 0 28px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+#pagina-admin .admin-mobile-card {
+    position: relative;
+    min-height: 122px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    border: 1px solid rgba(214, 226, 240, 0.9);
+    border-radius: 18px;
+    color: var(--ink);
+    text-align: left;
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: var(--card-shadow);
+    cursor: pointer;
+}
+
+#pagina-admin .admin-mobile-card:hover,
+#pagina-admin .admin-mobile-card:focus-visible {
+    border-color: rgba(0, 196, 255, 0.42);
+    box-shadow: 0 16px 42px rgba(23, 63, 112, 0.14);
+    transform: translateY(-1px);
+}
+
+#pagina-admin .admin-mobile-card span {
+    color: var(--neon-cyan);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+#pagina-admin .admin-mobile-card strong {
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.2;
+}
+
+#pagina-admin .admin-mobile-card small {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+#pagina-admin .admin-mobile-card em {
+    position: absolute;
+    right: 16px;
+    top: 14px;
+    color: var(--neon-magenta);
+    font-style: normal;
+    font-size: 22px;
+    line-height: 1;
+}
+
+#pagina-admin .admin-section-block {
+    margin-top: 36px;
+    scroll-margin-top: 128px;
+}
+
+#pagina-admin .admin-section-heading {
+    margin-bottom: 14px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 330px);
+    align-items: end;
+    gap: 20px;
+}
+
+#pagina-admin .admin-section-heading h2 {
+    margin: 6px 0 6px;
+    color: var(--ink);
+    font-size: 28px;
+    line-height: 1.15;
+    letter-spacing: 0;
+}
+
+#pagina-admin .admin-section-heading p {
+    margin: 0;
+    color: var(--muted);
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+#pagina-admin .admin-search-input {
+    width: 100%;
+    min-height: 46px;
+    padding: 0 16px;
+    border: 1px solid rgba(198, 213, 231, 0.94);
+    border-radius: 14px;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 8px 20px rgba(22, 48, 86, 0.08);
+    font: inherit;
+    font-weight: 800;
+}
+
+#pagina-admin .admin-search-input:focus {
+    border-color: rgba(225, 0, 155, 0.42);
+    outline: 3px solid rgba(225, 0, 155, 0.12);
+}
+
+#pagina-admin .admin-form-panel {
+    margin-bottom: 18px;
+}
+
+#pagina-admin .admin-form-panel h3 {
+    margin: 0 0 16px;
+    color: var(--ink);
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: 0;
+}
+
+#pagina-admin .admin-form-grid {
+    display: grid;
+    grid-template-columns: minmax(220px, 1.8fr) repeat(4, minmax(112px, 1fr));
+    align-items: end;
+    gap: 14px;
+}
+
+#pagina-admin #admin-form-gare .admin-form-grid {
+    grid-template-columns: minmax(220px, 1.7fr) repeat(3, minmax(120px, 1fr));
+}
+
+#pagina-admin .admin-field-group {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+#pagina-admin .admin-field-group > span,
+#pagina-admin .admin-upload-label {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+#pagina-admin .admin-field-group input,
+#pagina-admin .admin-field-group select,
+#pagina-admin .admin-field-group textarea {
+    width: 100%;
+    min-height: 46px;
+    padding: 12px 14px;
+    border: 1px solid rgba(198, 213, 231, 0.92);
+    border-radius: 14px;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.9);
+    font: inherit;
+    font-weight: 700;
+}
+
+#pagina-admin .admin-field-group textarea {
+    min-height: 98px;
+    resize: vertical;
+    line-height: 1.45;
+}
+
+#pagina-admin .admin-field-group input:focus,
+#pagina-admin .admin-field-group select:focus,
+#pagina-admin .admin-field-group textarea:focus {
+    border-color: rgba(0, 196, 255, 0.48);
+    outline: 3px solid rgba(0, 196, 255, 0.12);
+}
+
+#pagina-admin .admin-field-group-wide,
+#pagina-admin .admin-file-box {
+    margin-top: 14px;
+}
+
+#pagina-admin .admin-file-box {
+    padding: 16px;
+    display: grid;
+    gap: 8px;
+    border: 1px dashed rgba(137, 154, 178, 0.72);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.58);
+}
+
+#pagina-admin .admin-file-box small {
+    color: var(--muted);
+    font-weight: 700;
+}
+
+#pagina-admin .admin-file-input {
+    max-width: 100%;
+}
+
+#pagina-admin .admin-form-actions {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#pagina-admin .admin-user-row,
+#pagina-admin .admin-entity-row {
+    padding: 18px;
+}
+
+#pagina-admin .admin-entity-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+#pagina-admin .admin-entity-content {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+#pagina-admin .admin-entity-content strong {
+    color: var(--ink);
+    font-size: 17px;
+    overflow-wrap: anywhere;
+}
+
+#pagina-admin .admin-entity-meta {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+#pagina-admin .admin-entity-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+#pagina-admin .admin-user-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+#pagina-admin .admin-role-badge {
+    padding: 5px 9px;
+    border: 1px solid rgba(137, 154, 178, 0.26);
+    border-radius: 999px;
+    color: #526176;
+    background: rgba(242, 246, 252, 0.92);
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+#pagina-admin .admin-role-badge.is-admin {
+    color: #a60073;
+    background: rgba(225, 0, 155, 0.1);
+    border-color: rgba(225, 0, 155, 0.22);
+}
+
+#pagina-admin .admin-role-badge.is-coach {
+    color: #007b9d;
+    background: rgba(0, 196, 255, 0.1);
+    border-color: rgba(0, 196, 255, 0.22);
+}
+
+#pagina-admin .admin-role-badge.is-partner {
+    color: #475569;
+    background: rgba(226, 232, 240, 0.88);
+}
+
+#pagina-admin .admin-highlight {
+    animation: adminRowHighlight 1.8s ease;
+}
+
+@keyframes adminRowHighlight {
+    0%,
+    100% {
+        box-shadow: var(--card-shadow);
+    }
+
+    30% {
+        border-color: rgba(0, 196, 255, 0.66);
+        box-shadow: 0 0 0 5px rgba(0, 196, 255, 0.16), var(--card-shadow);
+    }
+}
+
+@media screen and (max-width: 1180px) {
+    #pagina-admin .admin-quick-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #pagina-admin .admin-form-grid,
+    #pagina-admin #admin-form-gare .admin-form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #pagina-admin .admin-form-grow {
+        grid-column: 1 / -1;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 900px) {
+    #pagina-admin .admin-stats-grid,
+    #pagina-admin .admin-quick-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    #pagina-admin .admin-section-heading,
+    #pagina-admin .admin-form-grid,
+    #pagina-admin #admin-form-gare .admin-form-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    #pagina-admin .admin-hero-panel,
+    #pagina-admin .admin-panel {
+        border-radius: 20px !important;
+    }
+
+    #pagina-admin .admin-hero-panel {
+        padding: 24px;
+        border-radius: 20px;
+    }
+
+    #pagina-admin .admin-hero-panel h1 {
+        font-size: clamp(30px, 9vw, 40px) !important;
+        line-height: 1.05 !important;
+        letter-spacing: 0 !important;
+    }
+
+    #pagina-admin .admin-hero-panel p:last-child {
+        font-size: 15px !important;
+        line-height: 1.48 !important;
+    }
+
+    #pagina-admin .admin-quick-actions,
+    #pagina-admin .admin-section-heading,
+    #pagina-admin .admin-form-grid,
+    #pagina-admin #admin-form-gare .admin-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #pagina-admin .admin-section-heading {
+        align-items: stretch;
+        gap: 12px;
+        text-align: left;
+    }
+
+    #pagina-admin .admin-section-block {
+        margin-top: 30px;
+        scroll-margin-top: 96px;
+    }
+
+    #pagina-admin .admin-mobile-card {
+        min-height: 108px;
+    }
+
+    #pagina-admin .admin-user-row,
+    #pagina-admin .admin-entity-row {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    #pagina-admin .admin-user-header,
+    #pagina-admin .admin-certificate-box,
+    #pagina-admin .admin-user-name-fields {
+        align-items: stretch;
+    }
+
+    #pagina-admin .admin-user-actions,
+    #pagina-admin .admin-certificate-controls {
+        width: 100%;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+    }
+
+    #pagina-admin .admin-field,
+    #pagina-admin .admin-role-select {
+        width: 100% !important;
+    }
+
+    #pagina-admin .admin-entity-actions,
+    #pagina-admin .admin-form-actions {
+        width: 100%;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        justify-content: stretch;
+    }
+
+    #pagina-admin .admin-entity-actions > *,
+    #pagina-admin .admin-form-actions > * {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 380px) {
+    #pagina-admin .admin-hero-panel h1 {
+        font-size: 29px !important;
+    }
+}
+
+/* Admin interactive states */
+.admin-form-submit.is-loading,
+.admin-action-btn.is-loading {
+    cursor: wait;
+    opacity: 0.72;
+}
+
+.admin-form-submit:disabled,
+.admin-action-btn:disabled {
+    cursor: not-allowed;
+    filter: grayscale(0.25);
+}

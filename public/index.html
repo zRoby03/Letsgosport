@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Let's Go Sport</title>
+    <link rel="stylesheet" href="css/tokens.css?v=2">
+    <link rel="stylesheet" href="css/style.css?v=35">
+    <link rel="stylesheet" href="css/layout.css?v=4">
+    <link rel="stylesheet" href="css/coach.css?v=2">
+    <link rel="stylesheet" href="css/admin.css?v=3">
+    <link rel="stylesheet" href="css/call.css?v=4">
+    <link rel="stylesheet" href="css/chat.css?v=4">
+    <script>
+        window.RECAPTCHA_SITE_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+        window.onRecaptchaReady = function () {
+            window.app?.gestisciRecaptchaPronto?.();
+        };
+    </script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaReady&render=explicit" async defer></script>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#ffffff">
+</head>
+<body class="lgs-app">
+<div id="loading-screen" class="loading-screen">
+    <div class="loader-pulse"></div>
+    <h2 class="loading-text">LETSGOSPORT</h2>
+</div>
+
+<header class="navbar" aria-label="Navigazione principale">
+    <button id="btn-home-logo" class="brand-button" type="button" data-nav="home" aria-label="Vai alla home">
+        <span class="brand-mark" aria-hidden="true">LS</span>
+        <span class="brand-text">LetsGo<span>Sport</span></span>
+    </button>
+
+    <nav class="nav-left" aria-label="Sezioni">
+        <button id="btn-home" class="nav-link" type="button" data-nav="home">Home</button>
+        <button id="btn-dashboard" class="nav-link" type="button" data-nav="dashboard">Corsi</button>
+        <button id="btn-gare" class="nav-link" type="button" data-nav="gare">Gare</button>
+        <button id="btn-chat" class="nav-link nav-link-chat" type="button" data-nav="chat">
+            Chat
+            <span id="badge-nav-chat" class="nav-chat-badge" hidden>Nuovo</span>
+        </button>
+        <button id="btn-area-mobile" class="nav-link nav-link-area" type="button" data-nav="profilo">Area</button>
+    </nav>
+
+    <div class="nav-right">
+        <span id="container-saluto" class="nav-greeting hidden">
+            <span id="testo-saluto"></span>
+        </span>
+        <button id="btn-admin" class="nav-pill nav-pill-soft hidden" type="button" data-nav="admin">Admin</button>
+        <button id="btn-coach" class="nav-pill nav-pill-soft hidden" type="button" data-nav="coach">Coach</button>
+        <button id="btn-login-nav" class="nav-pill nav-pill-light" type="button">Login</button>
+        <button id="btn-registrati-nav" class="nav-pill nav-pill-primary" type="button">Registrati</button>
+        <button id="btn-profilo" class="nav-pill nav-pill-primary hidden" type="button" data-nav="profilo">Area personale</button>
+        <button id="btn-logout" class="nav-pill nav-pill-light hidden" type="button">Esci</button>
+        <button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button"
+                aria-label="Apri menu" aria-expanded="false" aria-controls="mobile-navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</header>
+
+<button id="mobile-nav-backdrop" class="mobile-nav-backdrop" type="button" aria-label="Chiudi menu"></button>
+
+<main class="app-shell">
+<div id="pagina-home" class="sezione-pagina">
+    <section class="landing-hero">
+        <div class="hero-copy">
+            <p class="eyebrow">Associazione sportiva</p>
+            <h1><span class="text-magenta">Sport</span>, crescita e <span class="text-cyan">comunità</span> in un solo posto.</h1>
+            <p class="hero-subtitle">LetsGoSport è l'associazione sportiva che unisce benessere, passione e crescita attraverso lo sport. Per bambini, ragazzi e adulti: insieme, ogni giorno.</p>
+            <div class="hero-actions">
+                <button class="btn-liquid btn-liquid-primary" type="button" data-nav="dashboard">Scopri i corsi</button>
+                <button class="btn-liquid btn-liquid-secondary" type="button" data-nav="gare">Vedi le gare</button>
+            </div>
+        </div>
+        <div class="hero-visual image-slider" data-image-slider data-slider-interval="5000"
+             role="region" aria-label="Immagini dell'associazione sportiva">
+            <div class="image-slider-track">
+                <figure class="image-slide is-active">
+                    <img src="uploads/sliders/associazione-sportiva-1.jpg" alt="Palestra attrezzata dell'associazione sportiva">
+                    <figcaption>Spazi attrezzati per allenarsi in sicurezza</figcaption>
+                </figure>
+                <figure class="image-slide">
+                    <img src="uploads/sliders/associazione-sportiva-2.jpg" alt="Gruppo di sportivi che si saluta dopo l'allenamento" loading="lazy">
+                    <figcaption>Una comunità che cresce attraverso lo sport</figcaption>
+                </figure>
+                <figure class="image-slide">
+                    <img src="uploads/sliders/associazione-sportiva-3.jpg" alt="Atlete pronte per una sessione di nuoto" loading="lazy">
+                    <figcaption>Attività per ogni età e livello</figcaption>
+                </figure>
+            </div>
+            <button class="image-slider-arrow image-slider-prev" type="button" data-slider-prev aria-label="Immagine precedente">‹</button>
+            <button class="image-slider-arrow image-slider-next" type="button" data-slider-next aria-label="Immagine successiva">›</button>
+            <div class="image-slider-dots" data-slider-dots aria-label="Seleziona immagine"></div>
+            <span class="sr-only" data-slider-status aria-live="polite"></span>
+        </div>
+    </section>
+
+    <section class="feature-strip" aria-label="Valori LetsGoSport">
+        <article><span>👥</span><strong>Per tutti</strong><small>Bambini, ragazzi e adulti</small></article>
+        <article><span>♡</span><strong>Benessere</strong><small>Corpo, mente e spirito</small></article>
+        <article><span>🏆</span><strong>Comunità</strong><small>Insieme è meglio</small></article>
+        <article><span>🛡</span><strong>Sicurezza</strong><small>Ambiente sano e protetto</small></article>
+        <article><span>◎</span><strong>Qualità</strong><small>Istruttori qualificati</small></article>
+    </section>
+
+    <section class="preview-panel">
+        <div class="section-heading">
+            <h2>I nostri corsi</h2>
+            <button class="link-action" type="button" data-nav="dashboard">Scopri tutti i corsi <span>→</span></button>
+        </div>
+        <div class="home-course-grid">
+            <button type="button" data-nav="dashboard"><span class="sport-icon sport-icon-magenta">⚽</span><strong>Calcio</strong><small>Tecnica, gioco di squadra e divertimento.</small><span>›</span></button>
+            <button type="button" data-nav="dashboard"><span class="sport-icon sport-icon-cyan">🏐</span><strong>Pallavolo</strong><small>Tecnica, collaborazione e passione.</small><span>›</span></button>
+            <button type="button" data-nav="dashboard"><span class="sport-icon sport-icon-magenta">🤹</span><strong>Giocoleria</strong><small>Creatività, coordinazione e controllo.</small><span>›</span></button>
+            <button type="button" data-nav="dashboard"><span class="sport-icon sport-icon-cyan">👟</span><strong>Atletica leggera</strong><small>Velocità, resistenza e determinazione.</small><span>›</span></button>
+            <button type="button" data-nav="dashboard"><span class="sport-icon sport-icon-cyan">🏀</span><strong>Basket</strong><small>Strategia, ritmo e spirito di squadra.</small><span>›</span></button>
+            <button type="button" data-nav="dashboard"><span class="sport-icon sport-icon-magenta">🎀</span><strong>Ginnastica ritmica</strong><small>Eleganza, tecnica e armonia.</small><span>›</span></button>
+            <button type="button" data-nav="dashboard"><span class="sport-icon sport-icon-cyan">🥊</span><strong>Boxe</strong><small>Forza, disciplina e autocontrollo.</small><span>›</span></button>
+            <button type="button" data-nav="dashboard"><span class="sport-icon sport-icon-magenta">🧘</span><strong>Pilates</strong><small>Equilibrio, postura e benessere.</small><span>›</span></button>
+        </div>
+    </section>
+
+    <section class="preview-panel race-preview-panel">
+        <div class="section-heading">
+            <h2>Prossime gare</h2>
+            <button class="link-action" type="button" data-nav="gare">Vedi tutte le gare <span>→</span></button>
+        </div>
+        <div class="home-race-list">
+            <button type="button" data-nav="gare"><span class="date-chip"><strong>16</strong><small>DIC</small></span><strong>Maratona 10k invernale</strong><small>Centro Sportivo LetsGoSport</small><time>09:00</time><span>Dettagli</span></button>
+            <button type="button" data-nav="gare"><span class="date-chip date-chip-cyan"><strong>23</strong><small>OTT</small></span><strong>Torneo Basket 3v3</strong><small>Parco Comunale</small><time>16:00</time><span>Dettagli</span></button>
+            <button type="button" data-nav="gare"><span class="date-chip"><strong>29</strong><small>NOV</small></span><strong>Torneo Boxe principiante</strong><small>Tutte le sedi</small><time>10:00</time><span>Dettagli</span></button>
+        </div>
+    </section>
+
+    <div class="mobile-sticky-cta">
+        <button id="btn-login-home" class="btn-liquid btn-liquid-primary" type="button">Registrati ora</button>
+    </div>
+</div>
+
+    <div id="modale-login" class="modal-overlay">
+        <div class="modal-content">
+            <button class="chiudi-modale" type="button" data-close-modal="modale-login" aria-label="Chiudi login">×</button>
+            <h2 class="modal-title">Bentornato</h2>
+            
+            <form id="form-login">
+                <input type="email" id="input-email" name="email" class="form-input" autocomplete="username" placeholder="La tua email" required>
+                <input type="password" id="input-password" name="password" class="form-input form-input-last" autocomplete="current-password" placeholder="Password" required>
+                
+                <div class="recaptcha-container">
+                    <div id="recaptcha-login" class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Entra</button>
+            </form>
+            
+            <p class="modal-footer-text">
+                Non hai un account? <a href="#" id="link-apri-registrazione" class="modal-link primary">Registrati ora</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="modale-registrazione" class="modal-overlay">
+        <div class="modal-content">
+            <button class="chiudi-modale" type="button" data-close-modal="modale-registrazione" aria-label="Chiudi registrazione">×</button>
+            <h2 class="modal-title">Unisciti a noi</h2>
+            
+            <form id="form-registrazione">
+                <input type="text" id="reg-nome" class="form-input" autocomplete="given-name" placeholder="Nome" required>
+                <input type="text" id="reg-cognome" class="form-input" autocomplete="family-name" placeholder="Cognome" required>
+                <input type="email" id="reg-email" class="form-input" autocomplete="email" placeholder="Email" required>
+                <input type="password" id="reg-password" class="form-input form-input-last" autocomplete="new-password" placeholder="Scegli una password" required>
+                
+                <div class="recaptcha-container">
+                    <div id="recaptcha-registrazione" class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+                </div>
+                <button type="submit" class="btn btn-success btn-block">Registrati</button>
+            </form>
+
+            <p class="modal-footer-text">
+                Hai già un account? <a href="#" id="link-apri-login" class="modal-link success">Accedi</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="pagina-dashboard" class="sezione-pagina hidden">
+        <section class="catalog-hero catalog-hero-courses">
+            <div>
+                <p class="eyebrow">Corsi sportivi per tutti</p>
+                <h1>Scopri i corsi giusti per <span class="text-cyan">ogni età</span> e <span class="text-magenta">livello</span>.</h1>
+                <p>Dai primi passi allo sport al perfezionamento: corsi pensati per bambini, ragazzi e adulti, con istruttori qualificati e ambienti sicuri e accoglienti.</p>
+            </div>
+            <div class="image-slider" data-image-slider data-slider-interval="5200"
+                 role="region" aria-label="Immagini dei corsi sportivi">
+                <div class="image-slider-track">
+                    <figure class="image-slide is-active">
+                        <img src="uploads/sliders/basket.jpg" alt="Partita di basket in un palazzetto">
+                        <figcaption>Basket</figcaption>
+                    </figure>
+                    <figure class="image-slide">
+                        <img src="uploads/sliders/nuoto.jpg" alt="Atleta durante un allenamento di nuoto" loading="lazy">
+                        <figcaption>Nuoto</figcaption>
+                    </figure>
+                    <figure class="image-slide">
+                        <img src="uploads/sliders/giocoleria.jpg" alt="Artista durante un esercizio di giocoleria" loading="lazy">
+                        <figcaption>Giocoleria</figcaption>
+                    </figure>
+                </div>
+                <button class="image-slider-arrow image-slider-prev" type="button" data-slider-prev aria-label="Immagine precedente">‹</button>
+                <button class="image-slider-arrow image-slider-next" type="button" data-slider-next aria-label="Immagine successiva">›</button>
+                <div class="image-slider-dots" data-slider-dots aria-label="Seleziona immagine"></div>
+                <span class="sr-only" data-slider-status aria-live="polite"></span>
+            </div>
+        </section>
+        <div id="contenitore-corsi" class="grid-corsi"></div>
+    </div>
+
+    <div id="pagina-gare" class="sezione-pagina hidden">
+        <section class="catalog-hero catalog-hero-races">
+            <div>
+                <p class="eyebrow">Associazione sportiva</p>
+                <h1><span class="text-magenta">Gare</span> ed eventi che ci <span class="text-cyan">uniscono</span>.</h1>
+                <p>Sfida i tuoi limiti, condividi la passione e vivi emozioni indimenticabili insieme alla nostra comunità.</p>
+            </div>
+            <div class="image-slider" data-image-slider data-slider-interval="5400"
+                 role="region" aria-label="Immagini delle gare sportive">
+                <div class="image-slider-track">
+                    <figure class="image-slide is-active">
+                        <img src="uploads/sliders/trofei.jpg" alt="Trofei pronti per una premiazione sportiva">
+                        <figcaption>Traguardi da celebrare insieme</figcaption>
+                    </figure>
+                    <figure class="image-slide">
+                        <img src="uploads/sliders/maratona.jpg" alt="Partecipanti durante una maratona cittadina" loading="lazy">
+                        <figcaption>Gare aperte alla nostra comunità</figcaption>
+                    </figure>
+                </div>
+                <button class="image-slider-arrow image-slider-prev" type="button" data-slider-prev aria-label="Immagine precedente">‹</button>
+                <button class="image-slider-arrow image-slider-next" type="button" data-slider-next aria-label="Immagine successiva">›</button>
+                <div class="image-slider-dots" data-slider-dots aria-label="Seleziona immagine"></div>
+                <span class="sr-only" data-slider-status aria-live="polite"></span>
+            </div>
+        </section>
+        <section class="feature-strip race-feature-strip" aria-label="Valori gare">
+            <article><span>🏆</span><strong>Competizione sana</strong><small>Crescita e confronto nel rispetto.</small></article>
+            <article><span>👥</span><strong>Comunità attiva</strong><small>Insieme per raggiungere grandi traguardi.</small></article>
+            <article><span>🏅</span><strong>Spirito sportivo</strong><small>Valori che vanno oltre ogni gara.</small></article>
+            <article><span>🗓</span><strong>Eventi organizzati</strong><small>Gare per tutti i livelli e categorie.</small></article>
+        </section>
+        <div id="contenitore-gare" class="grid-corsi"></div>
+    </div>
+
+    <div id="pagina-profilo" class="sezione-pagina hidden">
+        <section class="profile-page-heading">
+            <h1>La tua <span class="text-magenta">area personale</span></h1>
+            <p>Gestisci il tuo profilo, visualizza i tuoi corsi e le gare a cui sei iscritto.</p>
+        </section>
+
+        <div id="info-utente" class="profile-panel">
+
+            <aside class="profile-avatar-card" aria-label="Foto e stato certificato">
+                <img id="img-propic" class="profile-avatar" src="uploads/defaults/default_user.png" alt="Foto profilo">
+
+                <input type="file" id="input-propic" class="sr-only" accept=".jpg,.jpeg,.png,.webp,.gif" aria-label="Carica una nuova foto profilo">
+                <button id="btn-cambia-propic" class="btn btn-primary btn-small" type="button">Cambia foto</button>
+
+                <div id="status-certificato" class="profile-certificate" aria-live="polite">
+                    <div id="semaforo-luce" class="profile-certificate-dot" aria-hidden="true"></div>
+                    <span id="semaforo-testo" class="profile-certificate-text"></span>
+                </div>
+            </aside>
+
+            <section class="profile-form-card" aria-label="Dati personali">
+                <div class="profile-meta-grid">
+                    <p><strong>Email:</strong> <span id="testo-email"></span></p>
+                    <p><strong>Ruolo:</strong> <span id="testo-ruolo" class="profile-role-badge"></span></p>
+                </div>
+
+                <hr class="profile-divider">
+
+                <div class="profile-form-grid">
+                    <div class="field-group">
+                        <label for="input-nome">Nome</label>
+                        <input type="text" id="input-nome" placeholder="Il tuo nome" autocomplete="given-name">
+                    </div>
+                    <div class="field-group">
+                        <label for="input-cognome">Cognome</label>
+                        <input type="text" id="input-cognome" placeholder="Il tuo cognome" autocomplete="family-name">
+                    </div>
+                </div>
+
+                <div class="field-group field-group-compact">
+                    <label for="input-eta">Età</label>
+                    <input type="number" id="input-eta" placeholder="Es. 25" min="1" max="120" inputmode="numeric">
+                </div>
+
+                <div class="field-group">
+                    <label for="input-bio">Biografia</label>
+                    <textarea id="input-bio" rows="3" placeholder="Scrivi qualcosa su di te..."></textarea>
+                </div>
+
+                <div class="profile-actions-row">
+                    <button id="btn-salva-profilo" class="btn btn-success profile-save-btn" type="button">Salva modifiche</button>
+                </div>
+            </section>
+        </div>
+
+        <section class="profile-list-panel profile-tools-panel">
+            <div class="section-heading profile-tools-heading">
+                <h2>Strumenti</h2>
+            </div>
+            <div class="profile-tools-grid">
+                <button id="btn-admin-profilo" class="profile-tool-button profile-tool-admin hidden" type="button" data-nav="admin">
+                    <span aria-hidden="true">⚙</span>
+                    <strong>Pannello Admin</strong>
+                    <small>Gestisci utenti, corsi e gare</small>
+                </button>
+                <button id="btn-coach-profilo" class="profile-tool-button profile-tool-coach hidden" type="button" data-nav="coach">
+                    <span aria-hidden="true">▣</span>
+                    <strong>Area coach</strong>
+                    <small>Controlla registro e iscritti</small>
+                </button>
+                <button id="btn-logout-profilo" class="profile-tool-button profile-tool-logout" type="button">
+                    <span aria-hidden="true">↩</span>
+                    <strong>Esci</strong>
+                    <small>Termina la sessione corrente</small>
+                </button>
+            </div>
+        </section>
+
+        <div class="section-heading profile-section-heading">
+            <h2>I tuoi corsi</h2>
+            <button class="link-action" type="button" data-nav="dashboard">Vedi tutti i corsi <span>→</span></button>
+        </div>
+        <div id="lista-mie-iscrizioni" class="profile-list-panel">
+            <p>Caricamento iscrizioni...</p>
+        </div>
+
+        <div class="section-heading profile-section-heading">
+            <h2>Le tue gare</h2>
+            <button class="link-action" type="button" data-nav="gare">Vedi tutte le gare <span>→</span></button>
+        </div>
+        <div id="lista-mie-gare" class="profile-list-panel">
+            <p>Caricamento gare...</p>
+        </div>
+    </div>
+
+    <div id="pagina-chat" class="sezione-pagina hidden">
+        <div class="chat-container">
+            
+            <div id="chat-sidebar" class="chat-sidebar">
+                <h3 class="chat-sidebar-title">Le tue stanze</h3>
+                <div class="chat-sidebar-actions">
+                    <button id="btn-nuova-chat" class="chat-sidebar-primary" type="button">
+                        <span>➕</span> Nuova chat privata
+                    </button>
+                    
+                    <button id="btn-stato-dnd" class="chat-status-btn is-online" type="button">
+                        🟢 Stato: disponibile
+                    </button>
+                    <button id="btn-notifiche-desktop" class="chat-notification-btn is-disabled" type="button">🔕 OFF</button>
+                </div>
+                <ul id="lista-stanze-chat" class="chat-room-list">
+                    <li id="nav-room-general" class="stanza-item room-general attiva">
+                        <span class="room-avatar room-avatar-general"><span class="room-avatar-emoji">🌍</span></span>
+                        <div class="room-details"><div class="room-name">Piazza principale</div></div>
+                    </li>
+                </ul>
+            </div>
+
+            <button id="chat-sidebar-backdrop" class="chat-sidebar-backdrop" type="button" aria-label="Chiudi elenco stanze"></button>
+
+            <div class="chat-main">
+                
+<div class="chat-header">
+    <button id="btn-chat-sidebar-toggle" class="chat-sidebar-toggle" type="button" aria-label="Apri elenco stanze" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+    <h3 id="titolo-chat-attiva">🌍 Piazza principale</h3>
+    <span id="chat-member-count" class="chat-member-count">Caricamento partecipanti...</span>
+    <span id="chat-connection-status" class="chat-connection-status is-offline">Offline</span>
+
+    <button id="btn-avvia-chiamata" class="chat-action-btn" data-mobile-icon="☎" type="button" title="Avvia chiamata">
+        <img src="uploads/buttons/tasto_call.png" alt="">
+    </button>
+</div>
+                <div id="contenitore-messaggi" aria-live="polite" aria-label="Messaggi della chat">
+                    <p class="chat-list-state">Benvenuto nella Piazza principale. Manteniamo toni gentili e rispettosi.</p>
+                </div>
+
+<div class="chat-composer">
+    
+    <div id="indicatore-scrittura" class="chat-typing-indicator"></div>
+    
+    <input type="file" id="input-file-chat" class="sr-only" accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.webm,.mp3,.wav,.ogg,.mp4,.aac,.m4a">
+    
+    <button id="btn-allega-chat" class="chat-action-btn" data-mobile-icon="+" type="button" title="Allega un file">
+        <img src="uploads/buttons/tasto_allega.png" alt="">
+    </button>
+    
+    <input type="text" id="input-messaggio" placeholder="Scrivi un messaggio...">
+    
+    <button id="btn-registra-vocale" class="chat-action-btn" data-mobile-icon="●"
+        type="button" title="Tieni premuto per registrare">
+        <img src="uploads/buttons/tasto_audio.png" alt="">
+    </button>
+    
+    <button id="btn-invia-chat" class="chat-action-btn chat-send-btn" data-mobile-icon="➤" type="button" title="Invia">
+        <img src="uploads/buttons/tasto_invia.png" alt="">
+    </button>
+</div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div id="modale-contatti" class="modal-overlay">
+        <div class="modal-content contacts-modal-content">
+            <button class="chiudi-modale modal-close-btn" type="button" data-close-modal="modale-contatti" aria-label="Chiudi rubrica">×</button>
+            <h2 class="contacts-modal-title">Rubrica 📒</h2>
+            
+            <input type="text" id="input-cerca-contatti" class="contacts-search-input" placeholder="🔍 Cerca nome o cognome...">
+            
+            <div id="lista-contatti" class="contacts-list">
+                <p class="chat-list-state">Caricamento contatti...</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modale-mini-profilo" class="modal-overlay mini-profile-modal">
+        <div class="modal-content mini-profile-content">
+            <button class="chiudi-modale modal-close-btn" type="button" data-close-modal="modale-mini-profilo" aria-label="Chiudi profilo">×</button>
+            
+            <div class="mini-profile-layout">
+                <div class="mini-profile-summary">
+                    <div class="mini-profile-avatar-wrap">
+                        <img id="mini-profilo-img" class="mini-profile-avatar" src="" alt="Foto profilo">
+                        <span id="mini-profilo-pallino" class="mini-profile-presence"></span>
+                    </div>
+                    
+                    <h2 id="mini-profilo-nome" class="mini-profile-name"></h2>
+                    <div id="mini-profilo-ruolo-tag" class="mini-profile-role"></div>
+                    
+                    <div class="mini-profile-facts">
+                        <p><strong>Età:</strong> <span id="mini-profilo-eta"></span></p>
+                        <p><strong>Ruolo:</strong> <span id="mini-profilo-ruolo-testo"></span></p>
+                    </div>
+                </div>
+                <div class="mini-profile-bio-panel">
+                    <h3>Biografia</h3>
+                    <div class="mini-profile-bio-scroll">
+                        <p id="mini-profilo-bio"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pagina-admin" class="sezione-pagina hidden">
+        <section class="admin-hero-panel">
+            <p class="eyebrow">Pannello amministrativo</p>
+            <h1>Gestisci LetsGoSport con ordine.</h1>
+            <p>Tieni sotto controllo utenti, coach, corsi e gare da un'unica area riservata.</p>
+        </section>
+
+        <section class="admin-stats-grid" aria-label="Riepilogo amministrazione">
+            <article><span>Utenti</span><strong id="admin-count-utenti">--</strong><small>Profili registrati</small></article>
+            <article><span>Coach</span><strong id="admin-count-coach">--</strong><small>Istruttori assegnabili</small></article>
+            <article><span>Corsi</span><strong id="admin-count-corsi">--</strong><small>Attivi nel catalogo</small></article>
+            <article><span>Gare</span><strong id="admin-count-gare">--</strong><small>Eventi pubblicati</small></article>
+        </section>
+
+        <section class="admin-mobile-actions admin-quick-actions" aria-label="Azioni rapide admin">
+            <button class="admin-mobile-card" type="button" data-scroll-target="admin-sezione-utenti">
+                <span>Utenti</span>
+                <strong>Profili e permessi</strong>
+                <small>Gestisci dati, ruoli e certificati.</small>
+                <em aria-hidden="true">›</em>
+            </button>
+            <button class="admin-mobile-card" type="button" data-scroll-target="admin-form-corsi">
+                <span>Corsi</span>
+                <strong>Nuovo corso</strong>
+                <small>Crea o aggiorna il catalogo sportivo.</small>
+                <em aria-hidden="true">›</em>
+            </button>
+            <button class="admin-mobile-card" type="button" data-scroll-target="admin-lista-corsi">
+                <span>Catalogo</span>
+                <strong>Corsi pubblicati</strong>
+                <small>Modifica orari, coach e descrizioni.</small>
+                <em aria-hidden="true">›</em>
+            </button>
+            <button class="admin-mobile-card" type="button" data-scroll-target="admin-form-gare">
+                <span>Gare</span>
+                <strong>Nuova gara</strong>
+                <small>Programma eventi e competizioni.</small>
+                <em aria-hidden="true">›</em>
+            </button>
+        </section>
+
+        <section id="admin-sezione-utenti" class="admin-section-block">
+            <div class="admin-section-heading">
+                <div>
+                    <span>Utenti</span>
+                    <h2>Gestione utenti</h2>
+                    <p>Modifica profili, ruoli, certificati e foto senza uscire dal pannello.</p>
+                </div>
+                <input type="search" id="admin-search-utenti" class="admin-search-input" placeholder="Cerca nome, email o ruolo" aria-label="Cerca utenti">
+            </div>
+            <div id="tabella-utenti" class="admin-panel">
+                <p>Caricamento utenti in corso...</p>
+            </div>
+        </section>
+
+        <section id="admin-sezione-corsi" class="admin-section-block">
+            <div class="admin-section-heading">
+                <div>
+                    <span>Corsi</span>
+                    <h2>Gestione corsi</h2>
+                    <p>Crea nuovi corsi, assegna i coach e mantieni aggiornati giorni, orari e costi.</p>
+                </div>
+                <input type="search" id="admin-search-corsi" class="admin-search-input" placeholder="Cerca corso, giorno o coach" aria-label="Cerca corsi">
+            </div>
+
+            <div id="admin-form-corsi" class="admin-panel admin-form-panel">
+                <h3 id="titolo-modulo-corso">Aggiungi un nuovo corso</h3>
+
+                <input type="hidden" id="admin-corso-id">
+
+                <div class="admin-form-row admin-form-grid">
+                    <label class="admin-field-group admin-form-grow" for="admin-corso-nome">
+                        <span>Nome corso</span>
+                        <input type="text" id="admin-corso-nome" placeholder="Es. Calcio base" autocomplete="off">
+                    </label>
+                    <label class="admin-field-group" for="admin-corso-giorno">
+                        <span>Giorno</span>
+                        <select id="admin-corso-giorno" aria-label="Giorno del corso">
+                            <option value="">Seleziona giorno</option>
+                            <option value="Lunedi">Lunedì</option>
+                            <option value="Martedi">Martedì</option>
+                            <option value="Mercoledi">Mercoledì</option>
+                            <option value="Giovedi">Giovedì</option>
+                            <option value="Venerdi">Venerdì</option>
+                            <option value="Sabato">Sabato</option>
+                            <option value="Domenica">Domenica</option>
+                        </select>
+                    </label>
+                    <label class="admin-field-group" for="admin-corso-orario">
+                        <span>Orario</span>
+                        <input type="time" id="admin-corso-orario">
+                    </label>
+                    <label class="admin-field-group admin-form-number" for="admin-corso-durata">
+                        <span>Durata</span>
+                        <input type="number" id="admin-corso-durata" placeholder="Minuti" min="1" max="300">
+                    </label>
+                    <label class="admin-field-group admin-form-number" for="admin-corso-costo">
+                        <span>Costo</span>
+                        <input type="number" id="admin-corso-costo" placeholder="Euro" min="0" step="0.01">
+                    </label>
+                </div>
+
+                <label class="admin-field-group admin-field-group-wide" for="admin-corso-bio">
+                    <span>Descrizione</span>
+                    <textarea id="admin-corso-bio" class="admin-form-wide" rows="3" placeholder="Racconta il corso in modo chiaro e coinvolgente."></textarea>
+                </label>
+
+                <label class="admin-field-group admin-field-group-wide" for="admin-corso-coach">
+                    <span>Coach</span>
+                    <select id="admin-corso-coach">
+                        <option value="">Seleziona un coach...</option>
+                    </select>
+                </label>
+
+                <div class="admin-file-box">
+                    <label class="admin-upload-label" for="admin-corso-img">Immagine di copertina</label>
+                    <input type="file" id="admin-corso-img" class="admin-file-input" accept=".jpg,.jpeg,.png,.webp,.gif">
+                    <small>Lascia vuoto questo campo per mantenere l'immagine attuale.</small>
+                </div>
+
+                <div class="admin-form-actions">
+                    <button id="btn-salva-corso" class="admin-form-submit is-course" type="button">Crea corso</button>
+                    <button id="btn-annulla-corso" class="admin-form-cancel hidden" type="button">Annulla</button>
+                </div>
+            </div>
+
+            <div id="admin-lista-corsi" class="admin-panel">
+                <p>Caricamento corsi in corso...</p>
+            </div>
+        </section>
+
+        <section id="admin-sezione-gare" class="admin-section-block">
+            <div class="admin-section-heading">
+                <div>
+                    <span>Gare</span>
+                    <h2>Gestione gare ed eventi</h2>
+                    <p>Programma gare, aggiorna date e cura la presentazione degli eventi.</p>
+                </div>
+                <input type="search" id="admin-search-gare" class="admin-search-input" placeholder="Cerca gara o data" aria-label="Cerca gare">
+            </div>
+
+            <div id="admin-form-gare" class="admin-panel admin-form-panel">
+                <h3 id="titolo-modulo-gara">Aggiungi una nuova gara</h3>
+
+                <input type="hidden" id="admin-gara-id">
+
+                <div class="admin-form-row admin-form-grid">
+                    <label class="admin-field-group admin-form-grow" for="admin-gara-nome">
+                        <span>Nome gara</span>
+                        <input type="text" id="admin-gara-nome" placeholder="Es. Maratona estiva" autocomplete="off">
+                    </label>
+                    <label class="admin-field-group" for="admin-gara-giorno">
+                        <span>Data</span>
+                        <input type="date" id="admin-gara-giorno">
+                    </label>
+                    <label class="admin-field-group" for="admin-gara-orario">
+                        <span>Orario</span>
+                        <input type="time" id="admin-gara-orario">
+                    </label>
+                    <label class="admin-field-group admin-form-number" for="admin-gara-costo">
+                        <span>Costo</span>
+                        <input type="number" id="admin-gara-costo" placeholder="Euro" min="0" step="0.01">
+                    </label>
+                </div>
+
+                <label class="admin-field-group admin-field-group-wide" for="admin-gara-bio">
+                    <span>Descrizione</span>
+                    <textarea id="admin-gara-bio" class="admin-form-wide" rows="3" placeholder="Presenta l'evento con informazioni essenziali e tono curato."></textarea>
+                </label>
+
+                <div class="admin-file-box">
+                    <label class="admin-upload-label" for="admin-gara-img">Immagine vetrina</label>
+                    <input type="file" id="admin-gara-img" class="admin-file-input" accept=".jpg,.jpeg,.png,.webp,.gif">
+                    <small>JPG, PNG, WEBP o GIF. Se non carichi nulla, resta l'immagine già presente.</small>
+                </div>
+
+                <div class="admin-form-actions">
+                    <button id="btn-salva-gara" class="admin-form-submit is-race" type="button">Crea gara</button>
+                    <button id="btn-annulla-gara" class="admin-form-cancel hidden" type="button">Annulla</button>
+                </div>
+            </div>
+
+            <div id="admin-lista-gare" class="admin-panel">
+                <p>Caricamento gare in corso...</p>
+            </div>
+        </section>
+    </div>
+
+    <div id="pagina-coach" class="sezione-pagina hidden">
+        <section class="coach-hero-panel">
+            <div>
+                <p class="eyebrow">Area coach</p>
+                <h1>Registro corsi e iscritti</h1>
+                <p>Controlla i corsi assegnati, consulta gli iscritti e apri rapidamente le schede degli atleti da seguire.</p>
+            </div>
+        </section>
+
+        <section class="coach-workbar" aria-label="Riepilogo area coach">
+            <article>
+                <span>Corsi assegnati</span>
+                <strong id="coach-count-corsi">0</strong>
+            </article>
+            <article>
+                <span>Iscritti totali</span>
+                <strong id="coach-count-iscritti">0</strong>
+            </article>
+            <label class="coach-search-field" for="coach-search-registro">
+                <span>Cerca nel registro</span>
+                <input id="coach-search-registro" type="search" autocomplete="off" placeholder="Cerca corso, nome o email">
+            </label>
+        </section>
+
+        <div id="coach-lista-corsi" class="coach-course-list">
+            <p class="admin-list-state">Caricamento registro...</p>
+        </div>
+    </div>
+
+    <div id="modale-chiamata-arrivo" class="modal-overlay incoming-call-modal">
+        <div class="modal-content incoming-call-content">
+            <img id="chiamante-img" class="incoming-call-avatar" src="uploads/defaults/default_user.png" alt="Foto del chiamante">
+            <h2 id="chiamante-nome" class="incoming-call-name">Mario Rossi</h2>
+            <p class="incoming-call-message">Ti sta videochiamando...</p>
+            
+            <div class="incoming-call-actions">
+                <button id="btn-accetta-chiamata" class="incoming-call-action" type="button" aria-label="Accetta chiamata">
+                    <img src="uploads/buttons/tasto_accetta.png" alt="">
+                </button>
+                <button id="btn-rifiuta-chiamata" class="incoming-call-action" type="button" aria-label="Rifiuta chiamata">
+                    <img src="uploads/buttons/tasto_rifiuta.png" alt="">
+                </button>
+            </div>
+        </div>
+    </div>
+
+<div id="modale-videochiamata" role="dialog" aria-modal="true" aria-label="Videochiamata">
+    
+    <div class="vc-layout-wrapper">
+        
+        <div id="vc-main-focus"></div>
+        
+        <div id="vc-sidebar">
+            
+            <div class="vc-card" id="card-remota" data-focus-card="card-remota">
+                <div class="vc-avatar"><img id="img-chiamata-remota" src="uploads/defaults/default_user.png" alt="Partecipante remoto"></div>
+                <video id="video-remoto" autoplay playsinline></video>
+                <div class="vc-camera-status">Videocamera spenta</div>
+                <div class="vc-name-tag" id="nome-chiamata-remota">In attesa...</div>
+            </div>
+
+            <div class="vc-card" id="card-locale" data-focus-card="card-locale">
+                <div class="vc-avatar"><img id="img-chiamata-locale" src="uploads/defaults/default_user.png" alt="Il tuo avatar"></div>
+                <video id="video-locale" autoplay playsinline muted></video>
+                <div class="vc-camera-status">Videocamera spenta</div>
+                <div class="vc-name-tag">Tu</div>
+            </div>
+
+            <div class="vc-card hidden" id="card-screen" data-focus-card="card-screen">
+                <video id="video-screen" autoplay playsinline muted></video>
+                <div class="vc-name-tag">Il tuo schermo</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="vc-control-bar">
+        <div class="vc-control-group">
+            
+            <button id="btn-toggle-audio" class="vc-btn spento" data-mobile-icon="M" title="Microfono disattivato" aria-label="Microfono" aria-pressed="false">
+                <img id="img-toggle-audio" src="uploads/buttons/tasto_mic_disatt.png" alt="">
+            </button>
+            
+            <button id="btn-toggle-deafen" class="vc-btn is-active" data-mobile-icon="A" title="Audio chiamata attivo" aria-label="Audio chiamata" aria-pressed="true">
+                <img id="img-toggle-deafen" src="uploads/buttons/tasto_cuffie_att.png" alt="">
+            </button>
+
+            <button id="btn-toggle-video" class="vc-btn spento" data-mobile-icon="V" title="Videocamera disattivata" aria-label="Videocamera" aria-pressed="false">
+                <img id="img-toggle-video" src="uploads/buttons/tasto_cam_disatt.png" alt="">
+            </button>
+
+            <button id="btn-share-screen" class="vc-btn spento" data-mobile-icon="S" title="Condivisione schermo disattivata" aria-label="Condivisione schermo" aria-pressed="false">
+                <img id="img-share-screen" src="uploads/buttons/tasto_schermo_disatt.png" alt="">
+            </button>
+
+            <button id="btn-end-call" data-mobile-icon="×" class="vc-btn" title="Termina chiamata" aria-label="Termina chiamata">
+                <img src="uploads/buttons/tasto_rifiuta.png" alt="">
+            </button>
+
+        </div>
+    </div>
+</div>
+
+</main>
+
+    <div id="toast-container"></div>
+
+    <audio id="suono-squillo" src="sounds/ringtone.mp3" loop preload="auto"></audio>
+    
+    <script src="/socket.io/socket.io.js"></script> 
+    <script src="js/api.js?v=2"></script>
+    <script src="js/main.js?v=15"></script>
+    <script src="js/ui.js?v=13"></script>
+    <script src="js/auth.js?v=7"></script>
+    <script src="js/profilo.js?v=8"></script>
+    <script src="js/admin-api.js?v=1"></script>
+    <script src="js/admin-ui.js?v=7"></script>
+    <script src="js/admin.js?v=8"></script>
+    <script src="js/chat-socket.js?v=14"></script>
+    <script src="js/chat-messaggi.js?v=9"></script>
+    <script src="js/chat-audio.js?v=5"></script>
+    <script src="js/call.js?v=13"></script>
+
+    <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(() => {})
+        .catch((error) => {
+          console.error('Errore nella registrazione del Service Worker:', error);
+        });
+    });
+  }
+</script>
+</body>
+</html>

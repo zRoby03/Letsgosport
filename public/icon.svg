@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title description">
+  <title id="title">LetsGoSport</title>
+  <desc id="description">Pallone stilizzato nei colori ciano e magenta di LetsGoSport</desc>
+  <defs>
+    <linearGradient id="background" x1="64" y1="48" x2="448" y2="464" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00c8d7"/>
+      <stop offset="1" stop-color="#ec0b8c"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#071126"/>
+  <circle cx="256" cy="238" r="154" fill="url(#background)"/>
+  <circle cx="256" cy="238" r="126" fill="none" stroke="#ffffff" stroke-width="18"/>
+  <path d="M130 238h252M256 112c48 36 76 80 76 126s-28 90-76 126M256 112c-48 36-76 80-76 126s28 90 76 126" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-width="18"/>
+  <path d="M152 148c38 28 73 42 104 42s66-14 104-42M152 328c38-28 73-42 104-42s66 14 104 42" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-width="18"/>
+  <text x="256" y="446" fill="#ffffff" font-family="Arial, sans-serif" font-size="54" font-weight="700" letter-spacing="8" text-anchor="middle">LGS</text>
+</svg>

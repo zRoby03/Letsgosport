@@ -1,0 +1,16 @@
+{
+  "name": "Let's Go Sport",
+  "short_name": "Go Sport",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fbff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    }
+  ]
+}

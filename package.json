@@ -1,0 +1,29 @@
+{
+  "name": "letsgosport",
+  "version": "1.0.0",
+  "description": "Piattaforma web per corsi, gare e chat sportive.",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.20.0",
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-mysql-session": "^3.0.3",
+    "express-session": "^1.19.0",
+    "multer": "^2.4.0",
+    "mysql2": "3.24.4",
+    "socket.io": "^4.8.3"
+  },
+  "overrides": {
+    "mysql2": "3.24.4"
+  }
+}
