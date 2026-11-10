@@ -1,5 +1,6 @@
 node_modules/
 .env
+.data/
 
 npm-debug.log*
 yarn-debug.log*
@@ -15,6 +16,7 @@ public/uploads/catalog/*
 public/uploads/defaults/*
 public/uploads/sliders/*
 !public/uploads/buttons/tasto_*.png
+!public/uploads/buttons/tasto_*.svg
 !public/uploads/catalog/boxe.jpg
 !public/uploads/catalog/giocoleria.jpg
 !public/uploads/defaults/default_user.png

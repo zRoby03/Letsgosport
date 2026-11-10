@@ -353,24 +353,24 @@ Object.assign(window.app, {
         this._setCallControlState(
             'btn-toggle-audio',
             Boolean(audioTrack?.enabled),
-            'uploads/buttons/tasto_mic_att.png',
-            'uploads/buttons/tasto_mic_disatt.png',
+            'uploads/buttons/tasto_mic_att.svg',
+            'uploads/buttons/tasto_mic_disatt.svg',
             'Microfono attivo',
             'Microfono disattivato'
         );
         this._setCallControlState(
             'btn-toggle-video',
             Boolean(videoTrack?.enabled),
-            'uploads/buttons/tasto_cam_att.png',
-            'uploads/buttons/tasto_cam_disatt.png',
+            'uploads/buttons/tasto_cam_att.svg',
+            'uploads/buttons/tasto_cam_disatt.svg',
             'Videocamera attiva',
             'Videocamera disattivata'
         );
         this._setCallControlState(
             'btn-share-screen',
             Boolean(this.isScreenSharing && screenTrack),
-            'uploads/buttons/tasto_schermo_att.png',
-            'uploads/buttons/tasto_schermo_disatt.png',
+            'uploads/buttons/tasto_schermo_att.svg',
+            'uploads/buttons/tasto_schermo_disatt.svg',
             'Condivisione schermo attiva',
             'Condivisione schermo disattivata'
         );
@@ -414,7 +414,7 @@ Object.assign(window.app, {
         const image = document.getElementById('img-toggle-deafen');
 
         if (remoteAudio) remoteAudio.muted = false;
-        if (image) image.src = 'uploads/buttons/tasto_cuffie_att.png';
+        if (image) image.src = 'uploads/buttons/tasto_cuffie_att.svg';
         if (button) {
             button.classList.add('is-active');
             button.classList.remove('spento');
@@ -813,9 +813,9 @@ Object.assign(window.app, {
         const imgDeafen = document.getElementById('img-toggle-deafen');
         if (imgDeafen) {
             if (isMuted) {
-                imgDeafen.src = 'uploads/buttons/tasto_cuffie_disatt.png';
+                imgDeafen.src = 'uploads/buttons/tasto_cuffie_disatt.svg';
             } else {
-                imgDeafen.src = 'uploads/buttons/tasto_cuffie_att.png';
+                imgDeafen.src = 'uploads/buttons/tasto_cuffie_att.svg';
             }
         }
 
@@ -943,7 +943,7 @@ Object.assign(window.app, {
                 streamDaChiudere.getTracks().forEach(track => track.stop());
             }
 
-            if (imgScreen) imgScreen.src = 'uploads/buttons/tasto_schermo_disatt.png';
+            if (imgScreen) imgScreen.src = 'uploads/buttons/tasto_schermo_disatt.svg';
 
             if (cardScreen && cardScreen.parentElement?.id === 'vc-main-focus') {
                 document.getElementById('vc-sidebar')?.appendChild(cardScreen);
@@ -990,7 +990,7 @@ Object.assign(window.app, {
             this.isScreenSharePending = false;
             this.screenStreamRef = screenStream;
 
-            if (imgScreen) imgScreen.src = 'uploads/buttons/tasto_schermo_att.png';
+            if (imgScreen) imgScreen.src = 'uploads/buttons/tasto_schermo_att.svg';
             
             if (cardScreen) {
                 cardScreen.classList.remove('hidden');
@@ -1016,7 +1016,7 @@ Object.assign(window.app, {
                 this.isScreenSharePending = false;
                 this.screenStreamRef = null;
 
-                if (imgScreen) imgScreen.src = 'uploads/buttons/tasto_schermo_disatt.png';
+                if (imgScreen) imgScreen.src = 'uploads/buttons/tasto_schermo_disatt.svg';
 
                 if (cardScreen && cardScreen.parentElement?.id === 'vc-main-focus') {
                     document.getElementById('vc-sidebar')?.appendChild(cardScreen);
@@ -1044,7 +1044,7 @@ Object.assign(window.app, {
             this.isScreenSharing = false;
             this.isScreenSharePending = false;
             this.screenStreamRef = null;
-            if (imgScreen) imgScreen.src = 'uploads/buttons/tasto_schermo_disatt.png';
+            if (imgScreen) imgScreen.src = 'uploads/buttons/tasto_schermo_disatt.svg';
             if (cardScreen && cardScreen.parentElement?.id === 'vc-main-focus') {
                 document.getElementById('vc-sidebar')?.appendChild(cardScreen);
             }

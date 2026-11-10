@@ -122,7 +122,38 @@ socket.on('receive_message', (datiMessaggio) => {
         if (typeof app.lanciaNotificaPush === 'function') app.lanciaNotificaPush();
     }
 });
-socket.on('room_history', (storicoMessaggi) => {
+function aggiungiCaricamentoStorico(contenitore, room, beforeId) {
+    const button = app.creaElemento('button', {
+        className: 'chat-load-history',
+        text: 'Carica messaggi precedenti',
+        attrs: { type: 'button' }
+    });
+    button.addEventListener('click', async () => {
+        if (!socket.connected || window.stanzaAttuale !== room) return;
+        button.disabled = true;
+        try {
+            const page = await socket.timeout(7000).emitWithAck('load_room_history', { room, beforeId });
+            if (!button.isConnected || window.stanzaAttuale !== room) return;
+            if (page?.errore || !Array.isArray(page?.messages)) throw new Error('Storico non disponibile');
+            const previousHeight = contenitore.scrollHeight;
+            const previousTop = contenitore.scrollTop;
+            const fragment = document.createDocumentFragment();
+            for (const message of page.messages) app.stampaFumetto(message, { skipScroll: true, target: fragment });
+            button.after(fragment);
+            if (page.hasMore && page.messages.length) beforeId = page.messages[0].id;
+            else button.remove();
+            contenitore.scrollTop = previousTop + contenitore.scrollHeight - previousHeight;
+        } catch {
+            app.mostraNotifica?.('Impossibile caricare i messaggi precedenti. Riprova.', 'warning');
+        } finally {
+            button.disabled = false;
+        }
+    });
+    contenitore.prepend(button);
+}
+
+socket.on('room_history', (storicoMessaggi, page = {}) => {
+    if (page.room && page.room !== window.stanzaAttuale) return;
     const contenitore = document.getElementById('contenitore-messaggi');
     if (!contenitore) return;
     contenitore.replaceChildren();
@@ -143,6 +174,7 @@ socket.on('room_history', (storicoMessaggi) => {
         const tempoMsg = new Date(msg.data_invio).getTime();
         if (tempoMsg > orarioPiuRecente) orarioPiuRecente = tempoMsg;
     });
+    if (page.hasMore) aggiungiCaricamentoStorico(contenitore, page.room, storicoMessaggi[0].id);
     if (orarioPiuRecente > 0) segnaStanzaLetta(window.stanzaAttuale, orarioPiuRecente);
     app.scrollaChatInFondo?.(true);
 });
@@ -464,9 +496,12 @@ Object.assign(window.app, {
             );
         });
 
-        const details = this.creaElemento('div', { className: 'room-details' });
-        const mainRow = this.creaElemento('div', { className: 'room-main-row' });
-        mainRow.appendChild(this.creaElemento('div', {
+        const details = this.creaElemento('button', {
+            className: 'room-details room-open',
+            attrs: { type: 'button', 'aria-label': 'Apri chat ' + roomName }
+        });
+        const mainRow = this.creaElemento('span', { className: 'room-main-row' });
+        mainRow.appendChild(this.creaElemento('span', {
             className: 'room-name',
             text: type === 'general' ? 'Piazza principale' : roomName
         }));
@@ -475,11 +510,11 @@ Object.assign(window.app, {
         }
         details.append(
             mainRow,
-            this.creaElemento('div', {
+            this.creaElemento('span', {
                 className: 'room-preview',
                 text: this.creaAnteprimaStanzaChat(stanza)
             }),
-            this.creaElemento('div', {
+            this.creaElemento('span', {
                 className: 'room-participants',
                 text: this.formattaPartecipantiChat(type === 'private' ? 2 : stanza.participants_count)
             })

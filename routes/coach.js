@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
+const { hasCurrentRole } = require('../utils/session-access');
 
-router.get('/corsi', (req, res) => {
-    if (!req.session.utenteLoggato || req.session.utenteLoggato.ruolo !== 'COACH') {
+router.get('/corsi', async (req, res) => {
+    const user = req.session.utenteLoggato;
+    if (user?.ruolo !== 'COACH' || !await hasCurrentRole(user)) {
         return res.status(403).json({ errore: 'Accesso negato. Area riservata ai coach.' });
     }
 
-    const coachId = req.session.utenteLoggato.id;
+    const coachId = user.id;
 
     const query = `
         SELECT c.id AS corso_id, c.nome AS corso_nome, c.giorno, c.orario_inizio,

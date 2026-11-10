@@ -1,8 +1,6 @@
 const crypto = require('crypto');
-const fs = require('fs');
-const path = require('path');
+const { legacyDir, removeMedia, safeMediaPath } = require('../config/media-storage');
 
-const uploadDir = path.resolve(__dirname, '..', 'public', 'uploads');
 const usedUploadTokens = new Map();
 const TOKEN_TTL_MS = 10 * 60 * 1000;
 const GENERATED_UPLOAD_NAME = /^\d{12,}_[a-f0-9]{16}_[\w.-]+\.[a-z0-9]+$/i;
@@ -12,12 +10,7 @@ function getSigningSecret() {
 }
 
 function safeUploadPath(filename) {
-    if (typeof filename !== 'string' || filename.length < 1 || filename.length > 255) return null;
-    if (filename !== path.basename(filename) || !/^[\w.-]+$/.test(filename)) return null;
-
-    const resolved = path.resolve(uploadDir, filename);
-    if (!resolved.startsWith(`${uploadDir}${path.sep}`)) return null;
-    return resolved;
+    return safeMediaPath(legacyDir, filename);
 }
 
 function uploadFilename(fileOrName) {
@@ -30,34 +23,14 @@ function isGeneratedUploadName(filename) {
         && Boolean(safeUploadPath(filename));
 }
 
-function removeUploadedFile(fileOrName, { force = false } = {}) {
+async function removeUploadedFile(fileOrName) {
     const filename = uploadFilename(fileOrName);
-    if (!force && !isGeneratedUploadName(filename)) return;
-
-    const filePath = safeUploadPath(filename);
-    if (!filePath) return;
-
-    fs.unlink(filePath, (error) => {
-        if (error && error.code !== 'ENOENT') {
-            console.error('Errore rimozione file upload:', error.code);
-        }
-    });
-}
-
-async function removeUploadedFileAsync(fileOrName, { force = false } = {}) {
-    const filename = uploadFilename(fileOrName);
-    if (!force && !isGeneratedUploadName(filename)) return false;
-
-    const filePath = safeUploadPath(filename);
-    if (!filePath) return false;
-
+    if (!isGeneratedUploadName(filename)) return false;
     try {
-        await fs.promises.unlink(filePath);
+        await removeMedia(filename);
         return true;
     } catch (error) {
-        if (error.code !== 'ENOENT') {
-            console.error('Errore rimozione file upload:', error.code);
-        }
+        console.error('Errore rimozione file upload:', error.code || error.name);
         return false;
     }
 }
@@ -88,7 +61,7 @@ async function removeUploadedFileIfUnused(fileOrName, db) {
 
     try {
         if (await uploadIsReferenced(filename, db)) return false;
-        return await removeUploadedFileAsync(filename);
+        return await removeUploadedFile(filename);
     } catch (error) {
         console.error('Errore controllo riferimenti upload:', error.code || error.message);
         return false;

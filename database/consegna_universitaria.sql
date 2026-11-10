@@ -8,6 +8,7 @@ USE `letsgosport`;
 
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS `private_conversations`;
 DROP TABLE IF EXISTS `messages`;
 DROP TABLE IF EXISTS `enrollments_gare`;
 DROP TABLE IF EXISTS `enrollments_corsi`;
@@ -146,13 +147,24 @@ CREATE TABLE `messages` (
     `data_invio` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `file_url` VARCHAR(255) DEFAULT NULL,
     `file_type` VARCHAR(100) DEFAULT NULL,
+    `client_id` CHAR(36) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,
     PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_messages_user_client` (`user_id`, `client_id`),
     KEY `idx_messages_user_id` (`user_id`),
     KEY `idx_messages_room_data` (`room`, `data_invio`),
     KEY `idx_messages_data_invio` (`data_invio`),
     CONSTRAINT `fk_messages_user`
         FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
         ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `private_conversations` (
+    `first_user_id` INT NOT NULL,
+    `second_user_id` INT NOT NULL,
+    PRIMARY KEY (`first_user_id`, `second_user_id`),
+    KEY `idx_private_conversations_second` (`second_user_id`),
+    CONSTRAINT `fk_private_conversations_first` FOREIGN KEY (`first_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_private_conversations_second` FOREIGN KEY (`second_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Tabelle tecniche

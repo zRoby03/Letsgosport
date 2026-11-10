@@ -2,9 +2,13 @@ window.app = window.app || {};
 
 Object.assign(window.app, {
 
-    inviaMessaggio() {
+    inviiDaConfermare: new Map(),
+    invioMessaggioInCorso: false,
+
+    async inviaMessaggio() {
         const input = document.getElementById('input-messaggio');
-        if (!input) return;
+        if (!input || this.invioMessaggioInCorso) return;
+        const bozza = input.value;
         const testo = input.value.trim();
         this.aggiornaComposerChat?.();
         if (testo === '') return;
@@ -15,9 +19,24 @@ Object.assign(window.app, {
             return;
         }
 
-        socket.emit('send_message', { room: window.stanzaAttuale, contenuto: testo });
-        input.value = '';
-        this.aggiornaComposerChat?.();
+        const room = window.stanzaAttuale;
+        const precedente = this.inviiDaConfermare.get(room);
+        const clientId = precedente?.testo === testo ? precedente.clientId : crypto.randomUUID();
+        this.inviiDaConfermare.set(room, { testo, clientId });
+        this.invioMessaggioInCorso = true;
+        try {
+            const result = await socket.timeout(7000).emitWithAck('send_message', { room, contenuto: testo, client_id: clientId });
+            if (!result?.ok) throw new Error(result?.errore || 'Invio non confermato.');
+            this.inviiDaConfermare.delete(room);
+            if (window.stanzaAttuale === room && input.value === bozza) input.value = '';
+        } catch (error) {
+            this.mostraNotifica?.(error.message === 'operation has timed out'
+                ? 'Invio non confermato. Puoi riprovare con lo stesso testo.'
+                : error.message, 'warning');
+        } finally {
+            this.invioMessaggioInCorso = false;
+            this.aggiornaComposerChat?.();
+        }
     },
 
     async eliminaMessaggio(idMessaggio) {
@@ -86,10 +105,14 @@ Object.assign(window.app, {
             this.aggiornaComposerChat?.();
         }
     },
-    creaAllegatoMessaggio(messaggio) {
-        if (!messaggio.file_url) return null;
+    allegatoSrc(messaggio) {
+        const id = Number(messaggio?.id);
+        return Number.isSafeInteger(id) && id > 0 && messaggio.file_url ? '/api/chat/allegati/' + id : '';
+    },
 
-        const fileUrl = this.uploadSrc(messaggio.file_url, '');
+    creaAllegatoMessaggio(messaggio) {
+        const fileUrl = this.allegatoSrc(messaggio);
+        if (!fileUrl) return null;
         const fileType = messaggio.file_type || '';
         const isImage = fileType.startsWith('image/')
             || /\.(jpeg|jpg|gif|png|webp)$/i.test(messaggio.file_url);
@@ -210,7 +233,7 @@ Object.assign(window.app, {
 
     stampaFumetto(messaggio, opzioni = {}) {
         const contenitore = document.getElementById('contenitore-messaggi');
-        if (!contenitore) return;
+        if (!contenitore || document.getElementById('msg-' + messaggio.id)) return;
         
         const isMioMessaggio = (messaggio.user_id === window.app.mioId);
         const restaInFondo = !opzioni.skipScroll && (opzioni.forceScroll === true || isMioMessaggio || this.chatInFondo());
@@ -268,7 +291,7 @@ Object.assign(window.app, {
             });
             deleteButton.appendChild(this.creaElemento('img', {
                 className: 'msg-cestino',
-                attrs: { src: 'uploads/buttons/tasto_cestino.png', alt: '' }
+                attrs: { src: 'uploads/buttons/tasto_cestino.svg', alt: '' }
             }));
             deleteButton.addEventListener('click', () => this.eliminaMessaggio(messaggio.id));
             info.appendChild(deleteButton);
@@ -277,7 +300,7 @@ Object.assign(window.app, {
         bubble.appendChild(info);
         if (isMioMessaggio) riga.append(bubble, avatar);
         else riga.append(avatar, bubble);
-        contenitore.appendChild(riga);
+        (opzioni.target || contenitore).appendChild(riga);
         if (opzioni.skipScroll) return;
         if (restaInFondo) this.scrollaChatInFondo(opzioni.immediato === true);
         else this.mostraPulsanteFondoChat(true);
@@ -405,10 +428,16 @@ Object.assign(window.app, {
         });
     },
 
-    avviaChatPrivata(altroId, altroNome, propic = '', ruolo = '') {
-        if(typeof this.chiudiModale === 'function') this.chiudiModale('modale-contatti');
-        const mioId = window.app.mioId;
-        const room_id = `private_${Math.min(mioId, altroId)}_${Math.max(mioId, altroId)}`;
+    async avviaChatPrivata(altroId, altroNome, propic = '', ruolo = '') {
+        let room_id;
+        try {
+            const result = await this.apiRequest('/api/chat/private/' + encodeURIComponent(altroId), { method: 'POST' });
+            room_id = result.room;
+        } catch (error) {
+            this.mostraNotifica?.(this.apiErrorMessage(error, 'Impossibile aprire la conversazione.'), 'warning');
+            return;
+        }
+        this.chiudiModale?.('modale-contatti');
 
         if (!document.getElementById(`nav-room-${room_id}`)) {
             const lista = document.getElementById('lista-stanze-chat');

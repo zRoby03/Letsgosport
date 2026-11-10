@@ -3,6 +3,7 @@ const { createHmac } = require('node:crypto');
 const router = express.Router();
 const db = require('../config/db');
 const { uploadProfilo, uploadChat } = require('../config/upload');
+const { salvaChatPrivata, utentePuoAccedereAStanza } = require('../utils/chat-access');
 const {
     CHAT_UPLOAD_TOKEN_TTL_MS,
     createChatUploadToken,
@@ -10,7 +11,6 @@ const {
     removeUploadedFileIfUnused
 } = require('../utils/file-security');
 const {
-    getPrivateRoomPeer,
     normalizeChatRoom
 } = require('../utils/socket-security');
 const {
@@ -53,61 +53,6 @@ function getRoomNumericId(roomId, prefix) {
     return match ? Number(match[1]) : null;
 }
 
-async function utentePuoAccedereAStanza(user, room) {
-    const userId = parsePositiveId(user?.id);
-    const ruolo = String(user?.ruolo || '').toUpperCase();
-    const stanza = normalizeChatRoom(room);
-    if (!userId || !stanza) return false;
-    if (stanza.type === 'general') return true;
-
-    if (stanza.type === 'private') {
-        if (!stanza.userIds.includes(userId)) return false;
-
-        const otherId = getPrivateRoomPeer(stanza.room, userId);
-        if (!otherId) return false;
-
-        const users = await queryAsync(
-            'SELECT id, ruolo FROM users WHERE id = ? LIMIT 1',
-            [otherId]
-        );
-        if (users.length === 0) return false;
-        if (ruolo === 'ADMIN' || ruolo === 'COACH') return true;
-        return ['ADMIN', 'COACH'].includes(String(users[0].ruolo || '').toUpperCase());
-    }
-
-    if (stanza.type === 'corso') {
-        if (ruolo === 'ADMIN') {
-            const rows = await queryAsync('SELECT id FROM corsi WHERE id = ? LIMIT 1', [stanza.id]);
-            return rows.length > 0;
-        }
-
-        const rows = await queryAsync(`
-            SELECT c.id
-            FROM corsi c
-            LEFT JOIN enrollments_corsi ec ON ec.corso_id = c.id AND ec.user_id = ?
-            WHERE c.id = ? AND (c.coach_id = ? OR ec.user_id IS NOT NULL)
-            LIMIT 1
-        `, [userId, stanza.id, userId]);
-
-        return rows.length > 0;
-    }
-
-    if (stanza.type === 'gara') {
-        if (ruolo === 'ADMIN') {
-            const rows = await queryAsync('SELECT id FROM gare WHERE id = ? LIMIT 1', [stanza.id]);
-            return rows.length > 0;
-        }
-
-        const rows = await queryAsync(
-            'SELECT gara_id FROM enrollments_gare WHERE gara_id = ? AND user_id = ? LIMIT 1',
-            [stanza.id, userId]
-        );
-        return rows.length > 0;
-    }
-
-    return false;
-}
-
 async function requireChatUploadAccess(req, res, next) {
     const stanza = normalizeChatRoom(req.query.room);
     if (!stanza) return res.status(400).json({ errore: 'Stanza chat non valida.' });
@@ -145,67 +90,40 @@ function utentePuoEliminareMessaggiStanza(stanza, user, managedCourseIds) {
 }
 
 async function preparaStanzeChat(stanze, user) {
-    const [
-        totalUsersRows,
-        adminRows,
-        courseRows,
-        courseEnrollmentRows,
-        raceEnrollmentRows
-    ] = await Promise.all([
-        queryAsync('SELECT COUNT(*) AS total FROM users'),
-        queryAsync('SELECT id FROM users WHERE ruolo = "ADMIN"'),
-        queryAsync('SELECT id, coach_id FROM corsi'),
-        queryAsync('SELECT corso_id, user_id FROM enrollments_corsi'),
-        queryAsync('SELECT gara_id, user_id FROM enrollments_gare')
+    const courseIds = stanze.filter(stanza => stanza.tipo === 'corso').map(stanza => getRoomNumericId(stanza.room_id, 'corso'));
+    const raceIds = stanze.filter(stanza => stanza.tipo === 'gara').map(stanza => getRoomNumericId(stanza.room_id, 'gara'));
+    const [counts, courses, races] = await Promise.all([
+        queryAsync("SELECT COUNT(*) AS total, SUM(ruolo = 'ADMIN') AS admins FROM users"),
+        courseIds.length ? queryAsync(
+            "SELECT c.id, c.coach_id, CASE WHEN coach.id IS NOT NULL AND coach.ruolo <> 'ADMIN' THEN 1 ELSE 0 END AS coach_extra, " +
+            "(SELECT COUNT(*) FROM enrollments_corsi e JOIN users u ON u.id = e.user_id " +
+            "WHERE e.corso_id = c.id AND u.ruolo <> 'ADMIN' AND NOT (e.user_id <=> c.coach_id)) AS enrolled " +
+            "FROM corsi c LEFT JOIN users coach ON coach.id = c.coach_id WHERE c.id IN (?)", [courseIds]
+        ) : [],
+        raceIds.length ? queryAsync(
+            "SELECT e.gara_id AS id, COUNT(*) AS enrolled FROM enrollments_gare e JOIN users u ON u.id = e.user_id " +
+            "WHERE e.gara_id IN (?) AND u.ruolo <> 'ADMIN' GROUP BY e.gara_id", [raceIds]
+        ) : []
     ]);
-
-    const totalUsers = Number(totalUsersRows[0]?.total || 0);
-    const userId = Number(user.id);
-    const adminIds = new Set(adminRows.map(row => Number(row.id)).filter(Boolean));
-    const courseParticipants = new Map();
-    const raceParticipants = new Map();
-    const managedCourseIds = new Set(
-        courseRows
-            .filter(course => Number(course.coach_id) === userId)
-            .map(course => Number(course.id))
-    );
-
-    courseRows.forEach(course => {
-        const participants = new Set(adminIds);
-        if (course.coach_id) participants.add(Number(course.coach_id));
-        courseParticipants.set(Number(course.id), participants);
-    });
-
-    courseEnrollmentRows.forEach(enrollment => {
-        const courseId = Number(enrollment.corso_id);
-        if (!courseParticipants.has(courseId)) courseParticipants.set(courseId, new Set(adminIds));
-        courseParticipants.get(courseId).add(Number(enrollment.user_id));
-    });
-
-    raceEnrollmentRows.forEach(enrollment => {
-        const raceId = Number(enrollment.gara_id);
-        if (!raceParticipants.has(raceId)) raceParticipants.set(raceId, new Set(adminIds));
-        raceParticipants.get(raceId).add(Number(enrollment.user_id));
-    });
+    const admins = Number(counts[0]?.admins || 0);
+    const courseById = new Map(courses.map(course => [Number(course.id), course]));
+    const raceById = new Map(races.map(race => [Number(race.id), Number(race.enrolled)]));
+    const managedCourseIds = new Set(courses
+        .filter(course => Number(course.coach_id) === Number(user.id))
+        .map(course => Number(course.id)));
 
     return stanze.map(stanza => {
-        let participantsCount = 0;
-
-        if (stanza.tipo === 'private') {
-            participantsCount = 2;
-        } else if (stanza.tipo === 'general') {
-            participantsCount = totalUsers;
-        } else if (stanza.tipo === 'corso') {
-            const courseId = getRoomNumericId(stanza.room_id, 'corso');
-            participantsCount = courseParticipants.get(courseId)?.size || adminIds.size;
-        } else if (stanza.tipo === 'gara') {
-            const raceId = getRoomNumericId(stanza.room_id, 'gara');
-            participantsCount = raceParticipants.get(raceId)?.size || adminIds.size;
+        let participantsCount = 2;
+        if (stanza.tipo === 'general') participantsCount = Number(counts[0]?.total || 0);
+        if (stanza.tipo === 'corso') {
+            const course = courseById.get(getRoomNumericId(stanza.room_id, 'corso'));
+            participantsCount = admins + Number(course?.enrolled || 0) + Number(course?.coach_extra || 0);
         }
+        if (stanza.tipo === 'gara') participantsCount = admins + (raceById.get(getRoomNumericId(stanza.room_id, 'gara')) || 0);
 
         return {
             ...stanza,
-            participants_count: Math.max(0, participantsCount),
+            participants_count: participantsCount,
             can_delete_messages: utentePuoEliminareMessaggiStanza(stanza, user, managedCourseIds)
         };
     });
@@ -383,6 +301,17 @@ router.get('/chat/contatti', (req, res) => {
     });
 });
 
+router.post('/chat/private/:id', requireAuth, async (req, res) => {
+    const user = req.session.utenteLoggato;
+    const peerId = parsePositiveId(req.params.id);
+    const stanza = peerId && normalizeChatRoom('private_' + Math.min(user.id, peerId) + '_' + Math.max(user.id, peerId));
+    if (!stanza || !await utentePuoAccedereAStanza(user, stanza.room)) {
+        return res.status(404).json({ errore: 'Conversazione non disponibile.' });
+    }
+    await salvaChatPrivata(stanza);
+    res.json({ room: stanza.room });
+});
+
 router.get('/chat/stanze', (req, res) => {
     if (!req.session.utenteLoggato) return res.status(401).json({ errore: 'Non autorizzato.' });
     const user = req.session.utenteLoggato;
@@ -412,9 +341,12 @@ router.get('/chat/stanze', (req, res) => {
     }
 
     const privateQuery = `
-        SELECT DISTINCT m.room AS room_id, CONCAT(u.nome, ' ', u.cognome) AS nome, 'private' AS tipo, u.propic AS immagine, u.bio AS descrizione, u.ruolo AS ruolo, u.eta AS eta 
-        FROM messages m JOIN users u ON (m.room = CONCAT('private_', ?, '_', u.id) OR m.room = CONCAT('private_', u.id, '_', ?))
-        WHERE m.room LIKE 'private_%' AND u.id != ?
+        SELECT CONCAT('private_', p.first_user_id, '_', p.second_user_id) AS room_id, CONCAT(u.nome, ' ', u.cognome) AS nome,
+            'private' AS tipo, u.propic AS immagine, u.bio AS descrizione, u.ruolo AS ruolo, u.eta AS eta
+        FROM private_conversations p
+        JOIN users u ON u.id = IF(p.first_user_id = ?, p.second_user_id, p.first_user_id)
+        WHERE (p.first_user_id = ? OR p.second_user_id = ?)
+            AND (? IN ('ADMIN', 'COACH') OR u.ruolo IN ('ADMIN', 'COACH'))
     `;
 
     const fullQuery = `
@@ -446,7 +378,7 @@ router.get('/chat/stanze', (req, res) => {
         ORDER BY CASE WHEN stanze.room_id = 'general' THEN 0 ELSE 1 END, last_msg_time DESC, stanze.nome ASC
     `;
 
-    db.query(fullQuery, [...params, user.id, user.id, user.id], async (err, results) => {
+    db.query(fullQuery, [...params, user.id, user.id, user.id, user.ruolo], async (err, results) => {
         if (err) {
             console.error("Errore caricamento stanze chat:", err);
             return res.status(500).json({ errore: 'Errore caricamento stanze.' });

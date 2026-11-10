@@ -1,8 +1,82 @@
 window.app = window.app || {};
+const indirizziPagine = {
+    home: 'home', dashboard: 'corsi', gare: 'gare', chat: 'chat',
+    profilo: 'area', admin: 'admin', coach: 'coach'
+};
 
 Object.assign(window.app, {
+
+    async caricaAnteprimaHome() {
+        const corsi = document.getElementById('home-corsi');
+        const gare = document.getElementById('home-gare');
+        const [corsiResult, gareResult] = await Promise.allSettled([
+            this.apiRequest('/api/corsi'),
+            this.apiRequest('/api/gare')
+        ]);
+        const stato = (element, message) => element.replaceChildren(this.creaElemento('p', { text: message }));
+        const creaVoce = (page, ...children) => {
+            const button = this.creaElemento('button', { attrs: { type: 'button' } });
+            button.append(...children);
+            button.addEventListener('click', () => this.naviga(page));
+            return button;
+        };
+        if (corsi && corsiResult.status === 'fulfilled' && Array.isArray(corsiResult.value)) {
+            const cards = corsiResult.value.slice(0, 8).map(corso => {
+                const visual = this.getCourseVisual(corso.nome || '');
+                return creaVoce('dashboard',
+                    this.creaElemento('span', { className: 'sport-icon sport-icon-' + visual.tone, text: visual.icon }),
+                    this.creaElemento('strong', { text: corso.nome }),
+                    this.creaElemento('small', { text: corso.bio || '' }),
+                    this.creaElemento('span', { text: '›', attrs: { 'aria-hidden': 'true' } })
+                );
+            });
+            if (cards.length) corsi.replaceChildren(...cards);
+            else stato(corsi, 'Nessun corso disponibile al momento.');
+        } else if (corsi) {
+            stato(corsi, 'I corsi sono momentaneamente non disponibili.');
+        }
+
+        if (gare && gareResult.status === 'fulfilled' && Array.isArray(gareResult.value)) {
+            const parts = new Intl.DateTimeFormat('it-IT', {
+                timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+            }).formatToParts(new Date());
+            const now = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+            const cutoff = [now.year, now.month, now.day].join('-') + ' ' + now.hour + ':' + now.minute;
+            const future = gareResult.value.filter(gara =>
+                /^\d{4}-\d{2}-\d{2}$/.test(gara.giorno || '') &&
+                gara.giorno + ' ' + (gara.orario?.slice(0, 5) || '23:59') >= cutoff
+            ).slice(0, 3);
+            const cards = future.map(gara => {
+                const date = new Date(gara.giorno + 'T12:00:00');
+                const chip = this.creaElemento('span', { className: 'date-chip' });
+                chip.append(
+                    this.creaElemento('strong', { text: gara.giorno.slice(8) }),
+                    this.creaElemento('small', { text: date.toLocaleDateString('it-IT', { month: 'short' }) })
+                );
+                return creaVoce('gare', chip,
+                    this.creaElemento('strong', { text: gara.nome }),
+                    this.creaElemento('small', { text: gara.bio || '' }),
+                    this.creaElemento('time', { text: gara.orario?.slice(0, 5) || '', attrs: { datetime: gara.giorno } }),
+                    this.creaElemento('span', { text: 'Vai alle gare' })
+                );
+            });
+            if (cards.length) gare.replaceChildren(...cards);
+            else stato(gare, 'Nessuna gara in programma al momento.');
+        } else if (gare) {
+            stato(gare, 'Le gare sono momentaneamente non disponibili.');
+        }
+    },
     
-    naviga(idPagina) {
+    navigaDaIndirizzo() {
+        const hash = window.location.hash.slice(1);
+        const pagina = Object.keys(indirizziPagine).find(key => indirizziPagine[key] === hash) || 'home';
+        if (!this.naviga(pagina, { aggiornaIndirizzo: false })) {
+            this.naviga('home', { aggiornaIndirizzo: false });
+        }
+    },
+
+    naviga(idPagina, { aggiornaIndirizzo = true } = {}) {
         if (idPagina === 'chat' && !window.app.mioId) {
             this.mostraNotifica?.('Accedi per usare la chat.', 'warning');
             this.apriModale?.('modale-login');
@@ -22,11 +96,14 @@ Object.assign(window.app, {
             return;
         }
 
+        const sezioneScelta = document.getElementById('pagina-' + idPagina);
+        if (!sezioneScelta || !indirizziPagine[idPagina]) return false;
+        const hash = '#' + indirizziPagine[idPagina];
+        if (aggiornaIndirizzo && window.location.hash !== hash) history.pushState(null, '', hash);
         const sezioni = document.querySelectorAll('.sezione-pagina');
         sezioni.forEach(sezione => sezione.classList.add('hidden'));
 
-        const sezioneScelta = document.getElementById('pagina-' + idPagina);
-        if (sezioneScelta) sezioneScelta.classList.remove('hidden');
+        sezioneScelta.classList.remove('hidden');
 
         const navMap = {
             home: ['btn-home'],
@@ -81,6 +158,7 @@ Object.assign(window.app, {
             }
             setTimeout(() => { if(typeof this.scrollaChatInFondo === 'function') this.scrollaChatInFondo(); }, 300);
         }
+        return true;
     },
 
     mostraNotifica(messaggio, tipo = 'success') {
@@ -446,7 +524,7 @@ Object.assign(window.app, {
     creaCardGara(gara) {
         const visual = this.getRaceVisual(gara.nome || '');
         const imgGara = this.uploadSrc(gara.propic, 'uploads/defaults/default_gara.png');
-        const dataGara = gara.giorno ? new Date(gara.giorno).toLocaleDateString('it-IT', {
+        const dataGara = gara.giorno ? new Date(gara.giorno.slice(0, 10) + 'T12:00:00').toLocaleDateString('it-IT', {
             day: '2-digit',
             month: 'long',
             year: 'numeric'
@@ -498,7 +576,7 @@ Object.assign(window.app, {
 
         if (!isLoggato) {
             action.classList.add('card-btn-login');
-            action.textContent = 'Dettagli';
+            action.textContent = 'Accedi per iscriverti';
             action.addEventListener('click', () => this.apriModale('modale-login'));
         } else if (isIscritto) {
             action.classList.add('card-btn-disiscriviti');
@@ -506,7 +584,7 @@ Object.assign(window.app, {
             action.addEventListener('click', () => this.disiscrivitiGara(gara.id));
         } else {
             action.classList.add('card-btn-iscriviti');
-            action.textContent = 'Dettagli / Iscriviti';
+            action.textContent = 'Iscriviti';
             action.addEventListener('click', () => this.iscrivitiGara(gara.id));
         }
 

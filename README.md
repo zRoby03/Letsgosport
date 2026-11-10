@@ -55,7 +55,7 @@ Letsgosport/
     ├── index.html                  # interfaccia principale
     ├── js/                         # moduli JavaScript del browser
     ├── css/                        # stili generali e delle aree applicative
-    ├── uploads/                    # asset statici e file caricati dall'applicazione
+    ├── uploads/                    # asset statici inclusi nel repository
     ├── manifest.json               # configurazione PWA
     └── sw.js                       # service worker
 ```
@@ -70,11 +70,11 @@ File e cartelle principali:
 - `database/consegna_universitaria.sql` crea lo schema completo;
 - `public/js/` contiene la logica dell'interfaccia, della chat e delle chiamate;
 - `public/css/` contiene gli stili responsive;
-- `public/uploads/` contiene pulsanti, immagini predefinite, catalogo, slider e upload dinamici.
+- `public/uploads/` contiene gli asset inclusi nel repository. Gli upload dinamici sono gestiti separatamente.
 
 ## Requisiti per l'avvio locale
 
-- **Node.js 18 o successivo**. `package.json` non blocca una versione precisa, ma Express 5.2.1 e bcrypt 6 richiedono Node.js almeno 18. È consigliata una versione LTS.
+- **Node.js 20 o successivo**. La CI usa Node.js 24.
 - **npm**, normalmente installato insieme a Node.js.
 - **MySQL Server** raggiungibile dal computer.
 - **Git**, necessario se il repository viene clonato.
@@ -202,5 +202,32 @@ Per abilitare il relay sul sito, configura in Render le variabili TURN:
 - TURN_SHARED_SECRET contiene lo stesso segreto configurato sul relay con l'autenticazione REST di coturn (use-auth-secret e static-auth-secret). Il sito usa il segreto sul server per generare credenziali temporanee per gli utenti autenticati.
 
 Dopo il deploy, prova una chiamata con un PC su Wi-Fi e un telefono su rete mobile per verificare ricezione di audio e video e aggiornamento degli indicatori su entrambi i lati.
+
+### Archiviazione degli upload
+
+In locale gli upload vengono salvati in `.data/uploads`. Su Render imposta un bucket S3 compatibile privato con `MEDIA_S3_BUCKET`, `AWS_REGION` e le credenziali AWS come segreti. Per un servizio compatibile come R2 imposta anche `MEDIA_S3_ENDPOINT`. In alternativa, imposta `MEDIA_DIR` su un disco effettivamente persistente. In produzione i nuovi upload rispondono 503 finché non è configurata una destinazione.
+
+Gli allegati sono disponibili su `/api/chat/allegati/:id` solo per chi ha accesso alla stanza. Le foto usate da profili e catalogo continuano a essere servite sul loro URL.
+
+`MESSAGE_RETENTION_DAYS` imposta la conservazione dei messaggi. Il valore predefinito è 15 giorni. La pulizia rimuove gli allegati solo dopo aver eliminato i messaggi scaduti e verificato che il file non abbia altri riferimenti.
+
+Prima di ridistribuire, salva una copia del database e degli upload recuperabili dall'istanza attuale. Con le variabili dello staging e il percorso della copia dei file:
+
+```powershell
+npm run migrate:media -- --source=C:/backup/upload
+npm run migrate:media -- --source=C:/backup/upload --apply
+```
+
+Il primo comando produce l'inventario. Il secondo copia senza sovrascrivere e lascia la sorgente disponibile. Il report elenca i file mancanti o non validi e restituisce codice 2 se richiedono verifica. Ripeti l'inventario dopo la copia, poi verifica un allegato autorizzato e uno negato dopo il riavvio.
+
+I test di integrazione si eseguono con `npm test` e `LGS_TEST_MYSQL_PORT` impostata sulla porta di un MySQL di test locale. Il test crea un database temporaneo e lo rimuove al termine.
+
+### Staging e migrazioni
+
+Il Blueprint `render.staging.yaml` descrive un servizio di staging separato, con `npm ci`, deploy manuale e controllo HTTP su `/api/health`. Seleziona il file e il branch da collaudare durante la configurazione. Usa un database e un bucket dedicati allo staging, con dati e account di prova.
+
+Prima di esporre lo staging, sostituisci l'account amministratore dimostrativo dello schema con un account di prova dedicato.
+
+Su un database già esistente, applica `002_message_delivery.sql` e `003_private_conversations.sql` in quest'ordine prima del deploy, dopo aver provato la migrazione e il ripristino su una copia. La prima migrazione si applica una volta. La seconda ricostruisce le conversazioni dai messaggi già salvati. Per i database nuovi, lo schema completo include già entrambe le strutture.
 
 La versione locale e quella online sono due esecuzioni separate: usano indirizzi e database differenti. Un account creato in locale non compare automaticamente online e viceversa. Di conseguenza, l'account `adminlocale@test.it` è garantito soltanto dopo l'importazione locale di `database/consegna_universitaria.sql` e non deve essere considerato disponibile sul sito Render.

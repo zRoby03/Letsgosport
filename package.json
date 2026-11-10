@@ -6,13 +6,16 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "test": "node --test",
+    "migrate:media": "node scripts/migrate-media.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1165.0",
     "axios": "^1.20.0",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.4.2",
@@ -25,5 +28,8 @@
   },
   "overrides": {
     "mysql2": "3.24.4"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.8.4"
   }
 }

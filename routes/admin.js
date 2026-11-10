@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const { uploadCopertina } = require('../config/upload');
+const { deleteUserSessions, hasCurrentRole } = require('../utils/session-access');
 const {
     removeUploadedFile,
     removeUploadedFileIfUnused
@@ -13,8 +14,9 @@ const {
     validateRace
 } = require('../utils/validation');
 
-function checkAdmin(req, res, next) {
-    if (!req.session.utenteLoggato || req.session.utenteLoggato.ruolo !== 'ADMIN') {
+async function checkAdmin(req, res, next) {
+    const user = req.session.utenteLoggato;
+    if (user?.ruolo !== 'ADMIN' || !await hasCurrentRole(user)) {
         return res.status(403).json({ errore: 'Accesso negato. Area riservata.' });
     }
     next();
@@ -36,6 +38,27 @@ function queryAsync(sql, params = []) {
             else resolve(results);
         });
     });
+}
+
+async function modificaUtente(userId, write) {
+    const connection = await db.promise().getConnection();
+    try {
+        await connection.beginTransaction();
+        const [[user]] = await connection.execute('SELECT ruolo, propic FROM users WHERE id = ? FOR UPDATE', [userId]);
+        if (!user) {
+            await connection.rollback();
+            return null;
+        }
+        const result = await write(connection, user);
+        if (result.revoke) await deleteUserSessions(connection, userId);
+        await connection.commit();
+        return result;
+    } catch (error) {
+        await connection.rollback();
+        throw error;
+    } finally {
+        connection.release();
+    }
 }
 
 function ensureAssignableCoach(coachId, callback) {
@@ -85,7 +108,7 @@ router.get('/utenti', (req, res) => {
     );
 });
 
-router.put('/utenti/:id', (req, res) => {
+router.put('/utenti/:id', async (req, res) => {
     const userId = parseRouteId(req, res);
     if (!userId) return;
 
@@ -106,33 +129,30 @@ router.put('/utenti/:id', (req, res) => {
         SET nome = ?, cognome = ?, eta = ?, ruolo = ?, bio = ?, certificato_scadenza = ?
         WHERE id = ?
     `;
-    db.query(
-        query,
-        [nome, cognome, eta, ruolo, bio, certificato_scadenza, userId],
-        (error, result) => {
-            if (error) return res.status(500).json({ errore: 'Errore nel salvataggio dati.' });
-            if (result.affectedRows === 0) return res.status(404).json({ errore: 'Utente non trovato.' });
+    try {
+        const result = await modificaUtente(userId, async (connection, current) => {
+            await connection.execute(query, [nome, cognome, eta, ruolo, bio, certificato_scadenza, userId]);
+            return { revoke: current.ruolo !== ruolo };
+        });
+        if (!result) return res.status(404).json({ errore: 'Utente non trovato.' });
 
-            if (userId !== Number(req.session.utenteLoggato.id)) {
-                return res.json({ messaggio: 'Dati utente aggiornati.' });
+        const isSelf = userId === Number(req.session.utenteLoggato.id);
+        if (result.revoke) {
+            req.app.locals.revokeUserSockets(userId);
+            if (isSelf) {
+                return req.session.destroy(() => res.json({
+                    messaggio: 'Ruolo aggiornato. Accedi di nuovo.',
+                    sessione_revocata: true
+                }));
             }
-
-            Object.assign(req.session.utenteLoggato, {
-                nome,
-                cognome,
-                eta,
-                ruolo,
-                bio,
-                certificato_scadenza
-            });
-            req.session.save((sessionError) => {
-                if (sessionError) {
-                    return res.status(500).json({ errore: 'Dati aggiornati, ma sessione non sincronizzata.' });
-                }
-                res.json({ messaggio: 'Dati utente aggiornati.' });
-            });
+        } else if (isSelf) {
+            Object.assign(req.session.utenteLoggato, { nome, cognome, eta, ruolo, bio, certificato_scadenza });
         }
-    );
+        return res.json({ messaggio: 'Dati utente aggiornati.' });
+    } catch (error) {
+        console.error('Errore aggiornamento utente:', error.code || error.name);
+        return res.status(500).json({ errore: 'Errore nel salvataggio dati.' });
+    }
 });
 
 router.put('/utenti/:id/reset-propic', async (req, res) => {
@@ -166,18 +186,18 @@ router.delete('/utenti/:id', async (req, res) => {
     }
 
     try {
-        const users = await queryAsync('SELECT propic FROM users WHERE id = ? LIMIT 1', [userId]);
-        if (users.length === 0) return res.status(404).json({ errore: 'Utente non trovato.' });
-
-        const attachments = await queryAsync(
-            'SELECT file_url FROM messages WHERE user_id = ? AND file_url IS NOT NULL',
-            [userId]
-        );
-        const result = await queryAsync('DELETE FROM users WHERE id = ?', [userId]);
-        if (result.affectedRows === 0) return res.status(404).json({ errore: 'Utente non trovato.' });
-
-        removeUploadedFileIfUnused(users[0].propic, db);
-        attachments.forEach(row => removeUploadedFileIfUnused(row.file_url, db));
+        const result = await modificaUtente(userId, async (connection, user) => {
+            const [attachments] = await connection.execute(
+                'SELECT file_url FROM messages WHERE user_id = ? AND file_url IS NOT NULL',
+                [userId]
+            );
+            await connection.execute('DELETE FROM users WHERE id = ?', [userId]);
+            return { revoke: true, oldImage: user.propic, attachments };
+        });
+        if (!result) return res.status(404).json({ errore: 'Utente non trovato.' });
+        req.app.locals.revokeUserSockets(userId);
+        removeUploadedFileIfUnused(result.oldImage, db);
+        result.attachments.forEach(row => removeUploadedFileIfUnused(row.file_url, db));
         res.json({ messaggio: 'Utente eliminato definitivamente.' });
     } catch (error) {
         console.error('Errore cancellazione utente:', error.code || error.message);

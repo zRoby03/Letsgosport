@@ -2,14 +2,17 @@ require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
-const fs = require('fs');
+const path = require('node:path');
 const http = require('http'); 
 const { Server } = require('socket.io'); 
 const db = require('./config/db');
 const {
     consumeChatUploadToken,
-    safeUploadPath
+    isGeneratedUploadName,
+    removeUploadedFileIfUnused
 } = require('./utils/file-security');
+const { salvaChatPrivata, utentePuoAccedereAStanza } = require('./utils/chat-access');
+const { hasCurrentRole } = require('./utils/session-access');
 const {
     cleanText
 } = require('./utils/validation');
@@ -61,7 +64,14 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(express.static('public', { dotfiles: 'deny' }));
+const publicDir = path.join(__dirname, 'public');
+for (const folder of ['css', 'js', 'sounds', 'uploads/buttons', 'uploads/catalog', 'uploads/defaults', 'uploads/sliders']) {
+    app.use('/' + folder, express.static(path.join(publicDir, folder), { dotfiles: 'deny', index: false }));
+}
+app.get(['/', '/index.html'], (req, res) => res.sendFile(path.join(publicDir, 'index.html')));
+for (const asset of ['manifest.json', 'icon.svg', 'sw.js']) {
+    app.get('/' + asset, (req, res) => res.sendFile(path.join(publicDir, asset)));
+}
 app.use(express.json({ limit: '100kb' }));
 
 // Le API che modificano dati accettano richieste browser solo dalla stessa origine.
@@ -102,26 +112,27 @@ const sessionMiddleware = session({
 
 app.use(sessionMiddleware);
 io.engine.use(sessionMiddleware);
+app.locals.revokeUserSockets = userId => io.in('user_' + userId).disconnectSockets(true);
 
+app.use(require('./routes/media'));
 app.use('/api', require('./routes/auth'));       
 app.use('/api', require('./routes/public'));     
 app.use('/api', require('./routes/user'));       
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/coach', require('./routes/coach'));
 
-app.get('/api/health', (req, res) => {
-    db.query('SELECT 1 AS ok', (error) => {
-        if (error) {
-            console.error('Health check database fallito:', error.code, error.message);
-            return res.status(503).json({ status: 'error', database: 'unavailable' });
-        }
-
+app.get('/api/health', async (req, res) => {
+    try {
+        await db.checkConnection();
         res.json({
             status: 'ok',
             database: 'connected',
             release: process.env.RENDER_GIT_COMMIT?.slice(0, 7) || 'local'
         });
-    });
+    } catch (error) {
+        console.error('Health check database fallito:', error.code || error.name);
+        res.status(503).json({ status: 'error', database: 'unavailable' });
+    }
 });
 
 const utentiOnline = {}; 
@@ -137,71 +148,21 @@ function queryAsync(sql, params = []) {
     });
 }
 
-async function utentePuoAccedereAStanza(utente, room) {
-    const userId = parsePositiveSafeId(utente?.id);
-    const ruolo = String(utente?.ruolo || '').toUpperCase();
-    const stanza = normalizeChatRoom(room);
-    if (!userId || !stanza) return false;
-    if (stanza.type === 'general') return true;
-
-    if (stanza.type === 'private') {
-        if (!stanza.userIds.includes(userId)) return false;
-
-        const altroId = getPrivateRoomPeer(stanza.room, userId);
-        if (!altroId) return false;
-
-        const results = await queryAsync(`
-            SELECT id, ruolo
-            FROM users
-            WHERE id = ?
-            LIMIT 1
-        `, [altroId]);
-
-        if (results.length === 0) return false;
-        if (ruolo === 'ADMIN' || ruolo === 'COACH') return true;
-        return ['ADMIN', 'COACH'].includes(String(results[0].ruolo || '').toUpperCase());
+async function caricaStoricoChat(room, beforeId) {
+    const params = [room];
+    let cursorFilter = '';
+    if (beforeId) {
+        const [anchor] = await queryAsync('SELECT data_invio FROM messages WHERE id = ? AND room = ?', [beforeId, room]);
+        if (!anchor) return { messages: [], hasMore: false };
+        cursorFilter = 'AND (m.data_invio < ? OR (m.data_invio = ? AND m.id < ?))';
+        params.push(anchor.data_invio, anchor.data_invio, beforeId);
     }
-
-    if (stanza.type === 'corso') {
-        if (ruolo === 'ADMIN') {
-            const results = await queryAsync(
-                'SELECT id FROM corsi WHERE id = ? LIMIT 1',
-                [stanza.id]
-            );
-            return results.length > 0;
-        }
-
-        const results = await queryAsync(`
-            SELECT c.id
-            FROM corsi c
-            LEFT JOIN enrollments_corsi ec ON ec.corso_id = c.id AND ec.user_id = ?
-            WHERE c.id = ? AND (c.coach_id = ? OR ec.user_id IS NOT NULL)
-            LIMIT 1
-        `, [userId, stanza.id, userId]);
-
-        return results.length > 0;
-    }
-
-    if (stanza.type === 'gara') {
-        if (ruolo === 'ADMIN') {
-            const results = await queryAsync(
-                'SELECT id FROM gare WHERE id = ? LIMIT 1',
-                [stanza.id]
-            );
-            return results.length > 0;
-        }
-
-        const results = await queryAsync(`
-            SELECT gara_id
-            FROM enrollments_gare
-            WHERE gara_id = ? AND user_id = ?
-            LIMIT 1
-        `, [stanza.id, userId]);
-
-        return results.length > 0;
-    }
-
-    return false;
+    const rows = await queryAsync(
+        'SELECT m.*, u.nome, u.cognome, u.propic FROM messages m JOIN users u ON m.user_id = u.id ' +
+        'WHERE m.room = ? ' + cursorFilter + ' ORDER BY m.data_invio DESC, m.id DESC LIMIT 51',
+        params
+    );
+    return { messages: rows.slice(0, 50).reverse(), hasMore: rows.length > 50 };
 }
 
 async function utentePuoModerareStanza(utente, room) {
@@ -321,9 +282,14 @@ function normalizzaUtenteSocket(utente) {
     };
 }
 
-io.use((socket, next) => {
+io.use(async (socket, next) => {
     const utente = normalizzaUtenteSocket(socket.request.session?.utenteLoggato);
-    if (!utente) return next(new Error('Non autorizzato'));
+    try {
+        if (!utente || !await hasCurrentRole(utente)) return next(new Error('Non autorizzato'));
+    } catch (error) {
+        console.error('Errore verifica ruolo socket:', error.code || error.name);
+        return next(new Error('Sessione non disponibile'));
+    }
 
     socket.data.utente = utente;
     next();
@@ -392,16 +358,37 @@ io.on('connection', (socket) => {
         if (!stanza) return;
 
         entraInStanzaChat(socket, stanza);
-        const q = `SELECT m.*, u.nome, u.cognome, u.propic FROM messages m JOIN users u ON m.user_id = u.id WHERE m.room = ? ORDER BY m.data_invio ASC`;
-        db.query(q, [stanza.room], (err, res) => {
-            if (err) return console.error("Errore caricamento storico chat:", err);
-            socket.emit('room_history', res);
-        });
+        try {
+            const page = await caricaStoricoChat(stanza.room);
+            socket.emit('room_history', page.messages, { room: stanza.room, hasMore: page.hasMore });
+        } catch (error) {
+            console.error('Errore caricamento storico chat:', error.code || error.name);
+            emettiErroreChat(socket, 'Impossibile caricare lo storico.');
+        }
     });
 
-    socket.on('send_message', async (data) => {
+    socket.on('load_room_history', async (data, ack) => {
+        if (typeof ack !== 'function') return;
+        if (!allowRoomEvent()) return ack({ errore: 'Troppe richieste chat. Attendi qualche secondo.' });
+        const beforeId = parsePositiveSafeId(data?.beforeId);
+        if (!beforeId) return ack({ errore: 'Punto di partenza non valido.' });
+        const stanza = await richiediStanzaAutorizzata(socket, utente, data?.room, { contesto: 'load_room_history' });
+        if (!stanza) return ack({ errore: 'Impossibile caricare lo storico.' });
+        try {
+            return ack(await caricaStoricoChat(stanza.room, beforeId));
+        } catch (error) {
+            console.error('Errore caricamento messaggi precedenti:', error.code || error.name);
+            return ack({ errore: 'Impossibile caricare i messaggi precedenti.' });
+        }
+    });
+
+    socket.on('send_message', async (data, ack) => {
+        const reject = errore => {
+            if (typeof ack === 'function') return ack({ errore });
+            emettiErroreChat(socket, errore);
+        };
         if (!allowChatEvent()) {
-            return emettiErroreChat(socket, 'Troppi messaggi inviati. Attendi qualche secondo.');
+            return reject('Troppi messaggi inviati. Attendi qualche secondo.');
         }
 
         const {
@@ -416,13 +403,23 @@ io.on('connection', (socket) => {
             messaggioPermessi: 'Non hai i permessi per scrivere in questa chat.',
             messaggioErrore: 'Errore autorizzazione messaggio.'
         });
-        if (!stanza) return;
+        if (!stanza) {
+            if (typeof ack === 'function') ack({ errore: 'Impossibile inviare il messaggio in questa chat.' });
+            return;
+        }
         entraInStanzaChat(socket, stanza);
 
         const contenutoPulito = cleanText(contenuto, { max: 2000 });
         if (contenutoPulito === null) {
-            return emettiErroreChat(socket, 'Messaggio troppo lungo.');
+            return reject('Messaggio troppo lungo.');
         }
+
+        const clientId = data?.client_id ?? null;
+        if (clientId !== null && (
+            typeof clientId !== 'string' ||
+            !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/.test(clientId) ||
+            requestedFileUrl || requestedFileType || uploadToken
+        )) return reject('Identificativo messaggio non valido.');
 
         let fileUrl = null;
         let fileType = null;
@@ -437,12 +434,9 @@ io.on('connection', (socket) => {
                 max: 100,
                 required: true
             });
-            const filePath = safeUploadPath(normalizedFileUrl);
             const validUpload = Boolean(
-                normalizedFileUrl &&
+                isGeneratedUploadName(normalizedFileUrl) &&
                 normalizedFileType &&
-                filePath &&
-                fs.existsSync(filePath) &&
                 consumeChatUploadToken(uploadToken, {
                     filename: normalizedFileUrl,
                     mimetype: normalizedFileType,
@@ -452,7 +446,7 @@ io.on('connection', (socket) => {
             );
 
             if (!validUpload) {
-                return emettiErroreChat(socket, 'Allegato non valido o scaduto. Caricalo nuovamente.');
+                return reject('Allegato non valido o scaduto. Caricalo nuovamente.');
             }
 
             fileUrl = normalizedFileUrl;
@@ -460,14 +454,37 @@ io.on('connection', (socket) => {
         }
 
         if (!contenutoPulito && !fileUrl) {
-            return emettiErroreChat(socket, 'Il messaggio è vuoto.');
+            return reject('Il messaggio è vuoto.');
         }
 
-        db.query('INSERT INTO messages (user_id, room, contenuto, file_url, file_type) VALUES (?,?,?,?,?)',
-        [userId, stanza.room, contenutoPulito, fileUrl, fileType], (err, res) => {
+        if (stanza.type === 'private') {
+            try {
+                await salvaChatPrivata(stanza);
+            } catch (error) {
+                console.error('Errore salvataggio chat privata:', error.code || error.name);
+                return reject('Impossibile salvare la conversazione.');
+            }
+        }
+
+        db.query('INSERT INTO messages (user_id, room, contenuto, file_url, file_type, client_id) VALUES (?,?,?,?,?,?)',
+        [userId, stanza.room, contenutoPulito, fileUrl, fileType, clientId], async (err, res) => {
             if (err) {
-                console.error("Errore salvataggio messaggio nel DB:", err);
-                return emettiErroreChat(socket, 'Errore durante l\'invio del messaggio.');
+                if (clientId && err.code === 'ER_DUP_ENTRY') {
+                    try {
+                        const [existing] = await queryAsync(
+                            'SELECT id, room, contenuto FROM messages WHERE user_id = ? AND client_id = ?',
+                            [userId, clientId]
+                        );
+                        if (existing?.room === stanza.room && existing.contenuto === contenutoPulito) {
+                            if (typeof ack === 'function') ack({ ok: true, id: existing.id });
+                            return;
+                        }
+                    } catch (lookupError) {
+                        console.error('Errore verifica invio ripetuto:', lookupError.code || lookupError.name);
+                    }
+                }
+                console.error('Errore salvataggio messaggio nel DB:', err.code || err.name);
+                return reject('Errore durante l\'invio del messaggio.');
             }
             
             const msg = { 
@@ -480,6 +497,7 @@ io.on('connection', (socket) => {
             };
             
             io.to(stanza.room).emit('receive_message', msg);
+            if (typeof ack === 'function') ack({ ok: true, id: msg.id });
             
             if (stanza.type === 'private') {
                 const target = getPrivateRoomPeer(stanza.room, userId);
@@ -539,19 +557,6 @@ io.on('connection', (socket) => {
                     return emettiErroreChat(socket, 'Errore autorizzazione eliminazione.');
                 }
 
-                // Elimina anche il file fisico collegato al messaggio.
-                if (nomeFile) {
-                    const percorsoFileFisico = safeUploadPath(nomeFile);
-                    
-                    if (percorsoFileFisico) fs.unlink(percorsoFileFisico, (errDelete) => {
-                        if (errDelete) {
-                            if (errDelete.code !== 'ENOENT') {
-                                console.error("Errore durante l'eliminazione del file fisico:", errDelete);
-                            }
-                        }
-                    });
-                }
-
                 // Elimina definitivamente la riga dal database.
                 const queryEliminaDB = "DELETE FROM messages WHERE id = ?";
                 db.query(queryEliminaDB, [idMessaggio], (errDB) => {
@@ -560,6 +565,7 @@ io.on('connection', (socket) => {
                         return;
                     }
                     
+                    if (nomeFile) removeUploadedFileIfUnused(nomeFile, db);
                     // Aggiorna tutti i client connessi alla stanza.
                     io.to(stanza).emit('message_deleted', idMessaggio);
                 });
@@ -689,29 +695,27 @@ io.on('connection', (socket) => {
     });
 });
 
-const GIORNI_SCADENZA = 15; 
+const GIORNI_SCADENZA = Number(process.env.MESSAGE_RETENTION_DAYS || 15);
+if (!Number.isInteger(GIORNI_SCADENZA) || GIORNI_SCADENZA < 1 || GIORNI_SCADENZA > 3650) {
+    throw new Error('MESSAGE_RETENTION_DAYS deve essere un intero tra 1 e 3650.');
+}
 
-function pulisciVecchiMessaggi() {
-    db.query(`SELECT file_url FROM messages WHERE file_url IS NOT NULL AND data_invio < DATE_SUB(NOW(), INTERVAL ? DAY)`, [GIORNI_SCADENZA], (err, res) => {
-        if (err) return console.error("Errore manutenzione messaggi (lettura DB):", err);
-
-        res.forEach(r => {
-            const fp = safeUploadPath(r.file_url);
-            if (!fp) return;
-            fs.unlink(fp, (errFs) => {
-                if (errFs && errFs.code !== 'ENOENT') {
-                    console.error(`Impossibile cancellare il file fisico ${r.file_url}:`, errFs);
-                }
-            });
-        });
-
-        db.query(`DELETE FROM messages WHERE data_invio < DATE_SUB(NOW(), INTERVAL ? DAY)`, [GIORNI_SCADENZA], (errDel, resDel) => {
-            if (errDel) return console.error("Errore manutenzione messaggi (eliminazione DB):", errDel);
-            if (resDel.affectedRows > 0) {
-                console.info(`Pulizia completata: rimossi ${resDel.affectedRows} messaggi più vecchi di ${GIORNI_SCADENZA} giorni.`);
-            }
-        });
-    });
+async function pulisciVecchiMessaggi() {
+    try {
+        const cutoff = new Date(Date.now() - GIORNI_SCADENZA * 86400000);
+        while (true) {
+            const rows = await queryAsync(
+                'SELECT id, file_url FROM messages WHERE data_invio < ? ORDER BY data_invio, id LIMIT 250',
+                [cutoff]
+            );
+            if (rows.length === 0) return;
+            await queryAsync('DELETE FROM messages WHERE id IN (?) AND data_invio < ?', [rows.map(row => row.id), cutoff]);
+            const files = new Set(rows.map(row => row.file_url).filter(Boolean));
+            for (const filename of files) await removeUploadedFileIfUnused(filename, db);
+        }
+    } catch (error) {
+        console.error('Errore manutenzione messaggi:', error.code || error.name);
+    }
 }
 
 if (process.env.NODE_ENV !== 'test') {
@@ -720,6 +724,7 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 app.use((error, req, res, next) => {
+    if (res.headersSent) return next(error);
     if (error instanceof SyntaxError && error.status === 400 && 'body' in error) {
         return res.status(400).json({ errore: 'Corpo JSON non valido.' });
     }
@@ -729,7 +734,7 @@ app.use((error, req, res, next) => {
 
 function startListening() {
     server.listen(PORT, () => {
-        console.info(`Server attivo sulla porta ${PORT}`);
+        console.info(`Server attivo sulla porta ${server.address().port}`);
     });
 }
 
@@ -739,7 +744,7 @@ db.checkConnection()
         startListening();
     })
     .catch((error) => {
-        console.error('Impossibile avviare il server: database non disponibile.');
+        console.error('Impossibile avviare il server: verifica connessione e migrazioni MySQL.');
         console.error(error.code || 'DB_ERROR', error.message);
         process.exit(1);
     });

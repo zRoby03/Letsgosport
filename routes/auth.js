@@ -14,6 +14,32 @@ const saltRounds = 10;
 const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY;
 const LOCAL_RECAPTCHA_TOKEN = 'local-dev-recaptcha-ok';
 
+function limitAuthAttempts(max) {
+    const windowMs = 15 * 60 * 1000;
+    const attempts = new Map();
+    let cleanupAfter = 0;
+    return (req, res, next) => {
+        const now = Date.now();
+        if (now >= cleanupAfter) {
+            for (const [ip, entry] of attempts) {
+                if (entry.expiresAt <= now) attempts.delete(ip);
+            }
+            cleanupAfter = now + windowMs;
+        }
+        const ip = req.ip || req.socket.remoteAddress;
+        let entry = attempts.get(ip);
+        if (!entry || entry.expiresAt <= now) {
+            entry = { count: 0, expiresAt: now + windowMs };
+            attempts.set(ip, entry);
+        }
+        if (++entry.count > max) {
+            res.set('Retry-After', String(Math.ceil((entry.expiresAt - now) / 1000)));
+            return res.status(429).json({ errore: 'Troppi tentativi. Riprova più tardi.' });
+        }
+        next();
+    };
+}
+
 function queryAsync(sql, params = []) {
     return new Promise((resolve, reject) => {
         db.query(sql, params, (error, results) => {
@@ -74,7 +100,7 @@ async function verifyRecaptcha(token, req) {
     return response.data?.success === true;
 }
 
-router.post('/registrati', async (req, res) => {
+router.post('/registrati', limitAuthAttempts(20), async (req, res) => {
     const validation = validateRegistration(req.body);
     if (validation.error) return res.status(400).json({ errore: validation.error });
 
@@ -101,7 +127,7 @@ router.post('/registrati', async (req, res) => {
     }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', limitAuthAttempts(60), async (req, res) => {
     const validation = validateLogin(req.body);
     if (validation.error) return res.status(400).json({ errore: validation.error });
 

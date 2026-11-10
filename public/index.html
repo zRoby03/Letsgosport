@@ -6,11 +6,11 @@
     <title>Let's Go Sport</title>
     <link rel="stylesheet" href="css/tokens.css?v=2">
     <link rel="stylesheet" href="css/style.css?v=35">
-    <link rel="stylesheet" href="css/layout.css?v=4">
+    <link rel="stylesheet" href="css/layout.css?v=5">
     <link rel="stylesheet" href="css/coach.css?v=2">
     <link rel="stylesheet" href="css/admin.css?v=3">
     <link rel="stylesheet" href="css/call.css?v=6">
-    <link rel="stylesheet" href="css/chat.css?v=4">
+    <link rel="stylesheet" href="css/chat.css?v=5">
     <script>
         window.RECAPTCHA_SITE_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
         window.onRecaptchaReady = function () {
@@ -66,6 +66,10 @@
 <button id="mobile-nav-backdrop" class="mobile-nav-backdrop" type="button" aria-label="Chiudi menu"></button>
 
 <main class="app-shell">
+    <div id="stato-backend" class="backend-status" hidden>
+        <span id="stato-backend-testo" role="status"></span>
+        <button id="stato-backend-riprova" type="button">Riprova</button>
+    </div>
 <div id="pagina-home" class="sezione-pagina">
     <section class="landing-hero">
         <div class="hero-copy">
@@ -113,15 +117,8 @@
             <h2>I nostri corsi</h2>
             <button class="link-action" type="button" data-nav="dashboard">Scopri tutti i corsi <span>→</span></button>
         </div>
-        <div class="home-course-grid">
-            <button type="button" data-nav="dashboard"><span class="sport-icon sport-icon-magenta">⚽</span><strong>Calcio</strong><small>Tecnica, gioco di squadra e divertimento.</small><span>›</span></button>
-            <button type="button" data-nav="dashboard"><span class="sport-icon sport-icon-cyan">🏐</span><strong>Pallavolo</strong><small>Tecnica, collaborazione e passione.</small><span>›</span></button>
-            <button type="button" data-nav="dashboard"><span class="sport-icon sport-icon-magenta">🤹</span><strong>Giocoleria</strong><small>Creatività, coordinazione e controllo.</small><span>›</span></button>
-            <button type="button" data-nav="dashboard"><span class="sport-icon sport-icon-cyan">👟</span><strong>Atletica leggera</strong><small>Velocità, resistenza e determinazione.</small><span>›</span></button>
-            <button type="button" data-nav="dashboard"><span class="sport-icon sport-icon-cyan">🏀</span><strong>Basket</strong><small>Strategia, ritmo e spirito di squadra.</small><span>›</span></button>
-            <button type="button" data-nav="dashboard"><span class="sport-icon sport-icon-magenta">🎀</span><strong>Ginnastica ritmica</strong><small>Eleganza, tecnica e armonia.</small><span>›</span></button>
-            <button type="button" data-nav="dashboard"><span class="sport-icon sport-icon-cyan">🥊</span><strong>Boxe</strong><small>Forza, disciplina e autocontrollo.</small><span>›</span></button>
-            <button type="button" data-nav="dashboard"><span class="sport-icon sport-icon-magenta">🧘</span><strong>Pilates</strong><small>Equilibrio, postura e benessere.</small><span>›</span></button>
+        <div id="home-corsi" class="home-course-grid" aria-live="polite">
+            <p>Caricamento corsi…</p>
         </div>
     </section>
 
@@ -130,10 +127,8 @@
             <h2>Prossime gare</h2>
             <button class="link-action" type="button" data-nav="gare">Vedi tutte le gare <span>→</span></button>
         </div>
-        <div class="home-race-list">
-            <button type="button" data-nav="gare"><span class="date-chip"><strong>16</strong><small>DIC</small></span><strong>Maratona 10k invernale</strong><small>Centro Sportivo LetsGoSport</small><time>09:00</time><span>Dettagli</span></button>
-            <button type="button" data-nav="gare"><span class="date-chip date-chip-cyan"><strong>23</strong><small>OTT</small></span><strong>Torneo Basket 3v3</strong><small>Parco Comunale</small><time>16:00</time><span>Dettagli</span></button>
-            <button type="button" data-nav="gare"><span class="date-chip"><strong>29</strong><small>NOV</small></span><strong>Torneo Boxe principiante</strong><small>Tutte le sedi</small><time>10:00</time><span>Dettagli</span></button>
+        <div id="home-gare" class="home-race-list" aria-live="polite">
+            <p>Caricamento gare…</p>
         </div>
     </section>
 
@@ -148,7 +143,9 @@
             <h2 class="modal-title">Bentornato</h2>
             
             <form id="form-login">
+                <label class="auth-field-label" for="input-email">Email</label>
                 <input type="email" id="input-email" name="email" class="form-input" autocomplete="username" placeholder="La tua email" required>
+                <label class="auth-field-label" for="input-password">Password</label>
                 <input type="password" id="input-password" name="password" class="form-input form-input-last" autocomplete="current-password" placeholder="Password" required>
                 
                 <div class="recaptcha-container">
@@ -169,9 +166,13 @@
             <h2 class="modal-title">Unisciti a noi</h2>
             
             <form id="form-registrazione">
+                <label class="auth-field-label" for="reg-nome">Nome</label>
                 <input type="text" id="reg-nome" class="form-input" autocomplete="given-name" placeholder="Nome" required>
+                <label class="auth-field-label" for="reg-cognome">Cognome</label>
                 <input type="text" id="reg-cognome" class="form-input" autocomplete="family-name" placeholder="Cognome" required>
+                <label class="auth-field-label" for="reg-email">Email</label>
                 <input type="email" id="reg-email" class="form-input" autocomplete="email" placeholder="Email" required>
+                <label class="auth-field-label" for="reg-password">Password</label>
                 <input type="password" id="reg-password" class="form-input form-input-last" autocomplete="new-password" placeholder="Scegli una password" required>
                 
                 <div class="recaptcha-container">
@@ -383,7 +384,7 @@
     <span id="chat-connection-status" class="chat-connection-status is-offline">Offline</span>
 
     <button id="btn-avvia-chiamata" class="chat-action-btn" data-mobile-icon="☎" type="button" title="Avvia chiamata">
-        <img src="uploads/buttons/tasto_call.png" alt="">
+        <img src="uploads/buttons/tasto_call.svg" alt="">
     </button>
 </div>
                 <div id="contenitore-messaggi" aria-live="polite" aria-label="Messaggi della chat">
@@ -397,18 +398,18 @@
     <input type="file" id="input-file-chat" class="sr-only" accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.webm,.mp3,.wav,.ogg,.mp4,.aac,.m4a">
     
     <button id="btn-allega-chat" class="chat-action-btn" data-mobile-icon="+" type="button" title="Allega un file">
-        <img src="uploads/buttons/tasto_allega.png" alt="">
+        <img src="uploads/buttons/tasto_allega.svg" alt="">
     </button>
     
     <input type="text" id="input-messaggio" placeholder="Scrivi un messaggio...">
     
     <button id="btn-registra-vocale" class="chat-action-btn" data-mobile-icon="●"
         type="button" title="Tieni premuto per registrare">
-        <img src="uploads/buttons/tasto_audio.png" alt="">
+        <img src="uploads/buttons/tasto_audio.svg" alt="">
     </button>
     
     <button id="btn-invia-chat" class="chat-action-btn chat-send-btn" data-mobile-icon="➤" type="button" title="Invia">
-        <img src="uploads/buttons/tasto_invia.png" alt="">
+        <img src="uploads/buttons/tasto_invia.svg" alt="">
     </button>
 </div>
             </div>
@@ -683,10 +684,10 @@
             
             <div class="incoming-call-actions">
                 <button id="btn-accetta-chiamata" class="incoming-call-action" type="button" aria-label="Accetta chiamata">
-                    <img src="uploads/buttons/tasto_accetta.png" alt="">
+                    <img src="uploads/buttons/tasto_accetta.svg" alt="">
                 </button>
                 <button id="btn-rifiuta-chiamata" class="incoming-call-action" type="button" aria-label="Rifiuta chiamata">
-                    <img src="uploads/buttons/tasto_rifiuta.png" alt="">
+                    <img src="uploads/buttons/tasto_rifiuta.svg" alt="">
                 </button>
             </div>
         </div>
@@ -733,23 +734,23 @@
         <div class="vc-control-group">
             
             <button id="btn-toggle-audio" class="vc-btn spento" data-mobile-icon="M" title="Microfono disattivato" aria-label="Microfono" aria-pressed="false">
-                <img id="img-toggle-audio" src="uploads/buttons/tasto_mic_disatt.png" alt="">
+                <img id="img-toggle-audio" src="uploads/buttons/tasto_mic_disatt.svg" alt="">
             </button>
             
             <button id="btn-toggle-deafen" class="vc-btn is-active" data-mobile-icon="A" title="Audio chiamata attivo" aria-label="Audio chiamata" aria-pressed="true">
-                <img id="img-toggle-deafen" src="uploads/buttons/tasto_cuffie_att.png" alt="">
+                <img id="img-toggle-deafen" src="uploads/buttons/tasto_cuffie_att.svg" alt="">
             </button>
 
             <button id="btn-toggle-video" class="vc-btn spento" data-mobile-icon="V" title="Videocamera disattivata" aria-label="Videocamera" aria-pressed="false">
-                <img id="img-toggle-video" src="uploads/buttons/tasto_cam_disatt.png" alt="">
+                <img id="img-toggle-video" src="uploads/buttons/tasto_cam_disatt.svg" alt="">
             </button>
 
             <button id="btn-share-screen" class="vc-btn spento" data-mobile-icon="S" title="Condivisione schermo disattivata" aria-label="Condivisione schermo" aria-pressed="false">
-                <img id="img-share-screen" src="uploads/buttons/tasto_schermo_disatt.png" alt="">
+                <img id="img-share-screen" src="uploads/buttons/tasto_schermo_disatt.svg" alt="">
             </button>
 
             <button id="btn-end-call" data-mobile-icon="×" class="vc-btn" title="Termina chiamata" aria-label="Termina chiamata">
-                <img src="uploads/buttons/tasto_rifiuta.png" alt="">
+                <img src="uploads/buttons/tasto_rifiuta.svg" alt="">
             </button>
 
         </div>
@@ -763,18 +764,18 @@
     <audio id="suono-squillo" src="sounds/ringtone.mp3" loop preload="auto"></audio>
     
     <script src="/socket.io/socket.io.js"></script> 
-    <script src="js/api.js?v=2"></script>
-    <script src="js/main.js?v=15"></script>
-    <script src="js/ui.js?v=13"></script>
+    <script src="js/api.js?v=3"></script>
+    <script src="js/main.js?v=16"></script>
+    <script src="js/ui.js?v=14"></script>
     <script src="js/auth.js?v=7"></script>
     <script src="js/profilo.js?v=8"></script>
     <script src="js/admin-api.js?v=1"></script>
     <script src="js/admin-ui.js?v=7"></script>
     <script src="js/admin.js?v=8"></script>
-    <script src="js/chat-socket.js?v=14"></script>
-    <script src="js/chat-messaggi.js?v=9"></script>
-    <script src="js/chat-audio.js?v=5"></script>
-    <script src="js/call.js?v=15"></script>
+    <script src="js/chat-socket.js?v=15"></script>
+    <script src="js/chat-messaggi.js?v=11"></script>
+    <script src="js/chat-audio.js?v=7"></script>
+    <script src="js/call.js?v=16"></script>
 
     <script>
   if ('serviceWorker' in navigator) {

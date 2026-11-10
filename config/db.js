@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const mysql = require('mysql2');
 
@@ -53,11 +53,9 @@ const db = mysql.createPool({
     keepAliveInitialDelay: 0
 });
 
-db.checkConnection = () => new Promise((resolve, reject) => {
-    db.query('SELECT 1 AS ok', (error) => {
-        if (error) reject(error);
-        else resolve();
-    });
-});
+db.checkConnection = async () => {
+    await db.promise().query('SELECT client_id FROM messages LIMIT 0');
+    await db.promise().query('SELECT first_user_id FROM private_conversations LIMIT 0');
+};
 
 module.exports = db;

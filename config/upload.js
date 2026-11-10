@@ -1,9 +1,11 @@
 const crypto = require('crypto');
 const fs = require('fs');
+const os = require('node:os');
 const path = require('path');
 const multer = require('multer');
+const { mediaWritable, storeMedia } = require('./media-storage');
 
-const uploadDir = path.join(__dirname, '..', 'public', 'uploads');
+const uploadDir = path.join(os.tmpdir(), 'letsgosport-uploads');
 fs.mkdirSync(uploadDir, { recursive: true });
 
 const IMAGE_TYPES = new Set([
@@ -190,25 +192,38 @@ function singleUpload(middleware, fieldName) {
 
             if (!req.file) return next();
 
+            const file = req.file;
             try {
-                const validSignature = await validateStoredFile(req.file);
-                if (!validSignature) {
-                    await fs.promises.unlink(req.file.path).catch(() => {});
+                if (!mediaWritable()) {
+                    req.file = undefined;
+                    return res.status(503).json({ errore: 'Archiviazione file temporaneamente non disponibile.' });
+                }
+                if (!await validateStoredFile(file)) {
                     req.file = undefined;
                     return res.status(400).json({ errore: 'Contenuto del file non valido.' });
                 }
-                return next();
-            } catch (validationError) {
-                await fs.promises.unlink(req.file.path).catch(() => {});
+                await storeMedia(file);
+            } catch (error) {
                 req.file = undefined;
-                console.error('Errore validazione upload:', validationError.code || validationError.message);
-                return res.status(400).json({ errore: 'Impossibile verificare il file caricato.' });
+                console.error('Errore archiviazione upload:', error.code || error.name);
+                return res.status(503).json({ errore: 'Impossibile salvare il file caricato. Riprova.' });
+            } finally {
+                await fs.promises.unlink(file.path).catch(() => {});
             }
+            return next();
         });
     };
 }
 
+function mediaTypeForName(filename) {
+    if (typeof filename !== 'string' || filename.length > 255 || !/^[\w.-]+$/.test(filename)) return null;
+    const extension = path.extname(filename).toLowerCase();
+    return Object.keys(EXTENSIONS_BY_MIME).find(type => EXTENSIONS_BY_MIME[type].has(extension)) || null;
+}
+
 module.exports = {
+    fileSignatureMatches,
+    mediaTypeForName,
     uploadProfilo: singleUpload(createUpload({
         allowedTypes: IMAGE_TYPES,
         maxSizeBytes: 2 * 1024 * 1024

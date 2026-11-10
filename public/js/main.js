@@ -393,17 +393,26 @@ async function inizializzaApp() {
         if (!window.app.isMobileLayout()) window.app.chiudiMenuMobile();
     });
 
-    const backendDisponibile = typeof window.app.verificaBackend === 'function'
-        ? await window.app.verificaBackend()
-        : true;
-
-    if (backendDisponibile && typeof window.app.controllaSeLoggato === 'function') {
-        await window.app.controllaSeLoggato();
-    } else if (!backendDisponibile) {
-        document.getElementById('btn-login-nav')?.classList.remove('hidden');
-        document.getElementById('btn-registrati-nav')?.classList.remove('hidden');
-        window.app.nascondiSplash?.();
-    }
+    const collegaBackend = async () => {
+        if (await window.app.verificaBackend()) {
+            await Promise.all([window.app.controllaSeLoggato?.(), window.app.caricaAnteprimaHome?.()]);
+        } else {
+            const homeCorsi = document.querySelector('#home-corsi > p');
+            const homeGare = document.querySelector('#home-gare > p');
+            if (homeCorsi) homeCorsi.textContent = 'I corsi sono momentaneamente non disponibili.';
+            if (homeGare) homeGare.textContent = 'Le gare sono momentaneamente non disponibili.';
+            document.getElementById('btn-login-nav')?.classList.remove('hidden');
+            document.getElementById('btn-registrati-nav')?.classList.remove('hidden');
+            window.app.nascondiSplash?.();
+        }
+    };
+    document.getElementById('stato-backend-riprova')?.addEventListener('click', collegaBackend);
+    window.addEventListener('online', () => {
+        if (window.app.backendDisponibile === false) collegaBackend();
+    });
+    await collegaBackend();
+    window.addEventListener('popstate', () => window.app.navigaDaIndirizzo?.());
+    if (window.location.hash) window.app.navigaDaIndirizzo?.();
 
     nascondiSchermataCaricamento();
 }

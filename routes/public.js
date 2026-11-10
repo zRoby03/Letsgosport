@@ -29,7 +29,7 @@ router.get('/corsi', (req, res) => {
 
 router.get('/gare', (req, res) => {
     const query = `
-        SELECT id, nome, bio, propic, giorno, orario, costo
+        SELECT id, nome, bio, propic, DATE_FORMAT(giorno, '%Y-%m-%d') AS giorno, orario, costo
         FROM gare
         ORDER BY giorno, orario
     `;

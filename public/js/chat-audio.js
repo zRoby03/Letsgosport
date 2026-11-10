@@ -5,7 +5,7 @@ Object.assign(window.app, {
     generaPlayerAudio(messaggio) {
         messaggio.contenuto = ''; 
         const uiId = messaggio.id || 'vocale_' + Math.random().toString(36).substr(2, 9);
-        const audioSrc = this.uploadSrc(messaggio.file_url, '');
+        const audioSrc = this.allegatoSrc(messaggio);
 
         const player = this.creaElemento('div', { className: 'audio-player' });
         const playButton = this.creaElemento('button', {
@@ -20,7 +20,7 @@ Object.assign(window.app, {
             className: 'audio-player-toggle-icon',
             attrs: {
                 id: `img-play-${uiId}`,
-                src: 'uploads/buttons/tasto_audio_start.png',
+                src: 'uploads/buttons/tasto_audio_start.svg',
                 alt: ''
             }
         });
@@ -54,7 +54,7 @@ Object.assign(window.app, {
 
         const audioIcon = this.creaElemento('img', {
             className: 'audio-player-icon',
-            attrs: { src: 'uploads/buttons/tasto_audio.png', alt: '' }
+            attrs: { src: 'uploads/buttons/tasto_audio.svg', alt: '' }
         });
         const audio = this.creaElemento('audio', {
             attrs: {
@@ -82,22 +82,22 @@ Object.assign(window.app, {
         
         if (!audio.paused) {
             audio.pause(); 
-            imgPlay.src = 'uploads/buttons/tasto_audio_start.png';
+            imgPlay.src = 'uploads/buttons/tasto_audio_start.svg';
         } else {
             document.querySelectorAll('audio').forEach(a => {
                 if(a.id !== `audio-${id}` && a.id.startsWith('audio-')) {
                     a.pause();
                     const otherId = a.id.replace('audio-', '');
                     const otherImg = document.getElementById(`img-play-${otherId}`);
-                    if(otherImg) otherImg.src = 'uploads/buttons/tasto_audio_start.png';
+                    if(otherImg) otherImg.src = 'uploads/buttons/tasto_audio_start.svg';
                 }
             });
             
             audio.play().then(() => {
-                imgPlay.src = 'uploads/buttons/tasto_audio_pausa.png';
+                imgPlay.src = 'uploads/buttons/tasto_audio_pausa.svg';
             }).catch(e => {
                 console.error("Errore riproduzione:", e);
-                imgPlay.src = 'uploads/buttons/tasto_audio_start.png';
+                imgPlay.src = 'uploads/buttons/tasto_audio_start.svg';
             });
         }
     },
@@ -126,7 +126,7 @@ Object.assign(window.app, {
         const imgPlay = document.getElementById(`img-play-${id}`);
         const progress = document.getElementById(`progress-${id}`);
         const currentTimeEl = document.getElementById(`time-current-${id}`);
-        if(imgPlay) imgPlay.src = 'uploads/buttons/tasto_audio_start.png';
+        if(imgPlay) imgPlay.src = 'uploads/buttons/tasto_audio_start.svg';
         if(progress) progress.value = 0;
         if(currentTimeEl) currentTimeEl.innerText = '0:00';
     },

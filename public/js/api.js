@@ -2,6 +2,7 @@ window.app = window.app || {};
 
 Object.assign(window.app, {
     backendDisponibile: null,
+    verificaBackendInCorso: null,
 
     erroreBackendNonRaggiungibile(cause) {
         const isLocal = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(window.location.hostname);
@@ -15,9 +16,6 @@ Object.assign(window.app, {
 
     async apiRequest(url, options = {}) {
         if (window.location.protocol === 'file:') {
-            throw this.erroreBackendNonRaggiungibile();
-        }
-        if (this.backendDisponibile === false && url !== '/api/health') {
             throw this.erroreBackendNonRaggiungibile();
         }
 
@@ -83,22 +81,39 @@ Object.assign(window.app, {
         }
     },
 
-    async verificaBackend() {
-        try {
-            await this.apiRequest('/api/health', { timeout: 15000 });
-            this.backendDisponibile = true;
-            return true;
-        } catch (error) {
-            this.backendDisponibile = false;
-            const isLocal = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(window.location.hostname)
-                || window.location.protocol === 'file:';
-            const message = isLocal
-                ? 'Backend locale non attivo: usa npm start e apri http://localhost:3000.'
-                : this.apiErrorMessage(error, 'Servizio momentaneamente non disponibile.');
-            this.mostraNotifica?.(message, 'error');
-            console.error('Verifica backend fallita:', message);
-            return false;
+    mostraStatoBackend(message = '', checking = false) {
+        const banner = document.getElementById('stato-backend');
+        const text = document.getElementById('stato-backend-testo');
+        const retry = document.getElementById('stato-backend-riprova');
+        if (banner) banner.hidden = !message;
+        if (text) text.textContent = message;
+        if (retry) retry.disabled = checking;
+    },
+
+    verificaBackend() {
+        if (this.verificaBackendInCorso) return this.verificaBackendInCorso;
+        this.verificaBackendInCorso = this.verificaBackendConRetry().finally(() => {
+            this.verificaBackendInCorso = null;
+        });
+        return this.verificaBackendInCorso;
+    },
+
+    async verificaBackendConRetry() {
+        for (const delay of [0, 1200, 3600]) {
+            if (delay) await new Promise(resolve => setTimeout(resolve, delay));
+            try {
+                await this.apiRequest('/api/health', { timeout: 12000 });
+                this.backendDisponibile = true;
+                this.mostraStatoBackend();
+                return true;
+            } catch {
+                this.mostraStatoBackend('Connessione al servizio in corso…', true);
+            }
         }
+
+        this.backendDisponibile = false;
+        this.mostraStatoBackend(this.erroreBackendNonRaggiungibile().message);
+        return false;
     },
 
     apiErrorMessage(error, fallback = 'Errore di connessione.') {
