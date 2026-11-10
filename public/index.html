@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/layout.css?v=4">
     <link rel="stylesheet" href="css/coach.css?v=2">
     <link rel="stylesheet" href="css/admin.css?v=3">
-    <link rel="stylesheet" href="css/call.css?v=4">
+    <link rel="stylesheet" href="css/call.css?v=6">
     <link rel="stylesheet" href="css/chat.css?v=4">
     <script>
         window.RECAPTCHA_SITE_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
@@ -693,6 +693,7 @@
     </div>
 
 <div id="modale-videochiamata" role="dialog" aria-modal="true" aria-label="Videochiamata">
+    <audio id="audio-remoto" autoplay></audio>
     
     <div class="vc-layout-wrapper">
         
@@ -702,8 +703,13 @@
             
             <div class="vc-card" id="card-remota" data-focus-card="card-remota">
                 <div class="vc-avatar"><img id="img-chiamata-remota" src="uploads/defaults/default_user.png" alt="Partecipante remoto"></div>
-                <video id="video-remoto" autoplay playsinline></video>
-                <div class="vc-camera-status">Videocamera spenta</div>
+                <video id="video-remoto" autoplay playsinline muted></video>
+                <div class="vc-camera-status" id="stato-video-remoto" role="status">Connessione audio e video in corso…</div>
+                <div class="vc-remote-status" aria-live="polite">
+                    <span id="stato-microfono-remoto" hidden>Microfono spento</span>
+                    <span id="stato-ascolto-remoto" hidden>Ascolto disattivato</span>
+                    <button id="btn-riproduci-audio-remoto" type="button" hidden>Attiva l’audio</button>
+                </div>
                 <div class="vc-name-tag" id="nome-chiamata-remota">In attesa...</div>
             </div>
 
@@ -723,6 +729,7 @@
     </div>
 
     <div class="vc-control-bar">
+        <select id="vc-camera-device" class="vc-camera-device" aria-label="Videocamera da usare" hidden></select>
         <div class="vc-control-group">
             
             <button id="btn-toggle-audio" class="vc-btn spento" data-mobile-icon="M" title="Microfono disattivato" aria-label="Microfono" aria-pressed="false">
@@ -767,7 +774,7 @@
     <script src="js/chat-socket.js?v=14"></script>
     <script src="js/chat-messaggi.js?v=9"></script>
     <script src="js/chat-audio.js?v=5"></script>
-    <script src="js/call.js?v=13"></script>
+    <script src="js/call.js?v=15"></script>
 
     <script>
   if ('serviceWorker' in navigator) {

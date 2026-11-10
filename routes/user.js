@@ -1,4 +1,5 @@
 const express = require('express');
+const { createHmac } = require('node:crypto');
 const router = express.Router();
 const db = require('../config/db');
 const { uploadProfilo, uploadChat } = require('../config/upload');
@@ -23,6 +24,20 @@ function requireAuth(req, res, next) {
     }
     next();
 }
+
+router.get('/chiamate/ice', requireAuth, (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    const urls = (process.env.TURN_URLS || '').split(',')
+        .map(url => url.trim())
+        .filter(url => /^turns?:[^\s]+$/i.test(url));
+    const secret = process.env.TURN_SHARED_SECRET;
+    if (!urls.length || !secret) return res.json({ iceServers: [] });
+
+    const expiresAt = Math.floor(Date.now() / 1000) + 4 * 60 * 60;
+    const username = expiresAt + ':' + req.session.utenteLoggato.id;
+    const credential = createHmac('sha1', secret).update(username).digest('base64');
+    res.json({ iceServers: [{ urls, username, credential }] });
+});
 
 function queryAsync(sql, params = []) {
     return new Promise((resolve, reject) => {

@@ -271,6 +271,32 @@ body.call-active {
     opacity: 1;
 }
 
+.vc-remote-status {
+    position: absolute;
+    z-index: 3;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    pointer-events: none;
+}
+
+.vc-remote-status > * {
+    padding: 4px 7px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 8px;
+    background: rgba(4, 7, 13, 0.85);
+    color: #fff;
+    font: 700 11px/1.2 system-ui, sans-serif;
+}
+
+.vc-remote-status button {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
 .vc-name-tag {
     position: absolute;
     left: 14px;
@@ -303,9 +329,21 @@ body.call-active {
     padding: 18px 18px max(20px, env(safe-area-inset-bottom)) !important;
     box-sizing: border-box;
     display: flex;
+    flex-direction: column;
+    gap: 6px;
     align-items: center;
     justify-content: center;
     background: linear-gradient(transparent, rgba(3, 5, 10, 0.9)) !important;
+}
+
+.vc-camera-device {
+    max-width: min(280px, calc(100vw - 24px));
+    padding: 5px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 8px;
+    color: #fff;
+    background: #121622;
+    font: inherit;
 }
 
 .vc-control-group {

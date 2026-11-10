@@ -1,4 +1,4 @@
-const CACHE_NAME = 'letsgosport-v54';
+const CACHE_NAME = 'letsgosport-v56';
 const ASSETS = [
   '/',
   '/index.html',
@@ -9,7 +9,7 @@ const ASSETS = [
   '/css/layout.css?v=4',
   '/css/coach.css?v=2',
   '/css/admin.css?v=3',
-  '/css/call.css?v=4',
+  '/css/call.css?v=6',
   '/css/chat.css?v=4',
   '/js/api.js?v=2',
   '/js/main.js?v=15',
@@ -22,7 +22,7 @@ const ASSETS = [
   '/js/chat-socket.js?v=14',
   '/js/chat-messaggi.js?v=9',
   '/js/chat-audio.js?v=5',
-  '/js/call.js?v=13',
+  '/js/call.js?v=15',
   '/uploads/sliders/associazione-sportiva-1.jpg',
   '/uploads/sliders/associazione-sportiva-2.jpg',
   '/uploads/sliders/associazione-sportiva-3.jpg',

@@ -194,6 +194,13 @@ Il primo caricamento può richiedere più tempo se il servizio Render è inattiv
 2. Il frontend usa richieste `fetch` verso le API `/api/...` dello stesso dominio. Express valida i dati e la sessione, interroga il database MySQL remoto e restituisce JSON.
 3. Il cookie di sessione è `httpOnly`, `sameSite=lax` e, in produzione, `secure`; la sessione viene conservata in MySQL e non nel browser.
 4. Socket.IO mantiene il canale in tempo reale per chat, presenza, digitazione e segnalazione delle chiamate.
-5. Dopo la segnalazione, audio, video e schermo viaggiano tramite WebRTC tra i browser quando la rete lo consente. Il progetto usa server STUN ma non configura un server TURN, quindi alcune reti aziendali, universitarie o particolarmente restrittive possono impedire la chiamata.
+5. Dopo la segnalazione, audio, video e schermo viaggiano tramite WebRTC. Il browser prova una connessione diretta e, se disponibile, può usare un relay TURN quando la rete blocca il collegamento diretto.
+
+Per abilitare il relay sul sito, configura in Render le variabili TURN:
+
+- TURN_URLS contiene gli indirizzi pubblici del relay, separati da virgole. Includi un indirizzo TURN su UDP e, per le reti restrittive, TURN su TCP/TLS sulla porta 443.
+- TURN_SHARED_SECRET contiene lo stesso segreto configurato sul relay con l'autenticazione REST di coturn (use-auth-secret e static-auth-secret). Il sito usa il segreto sul server per generare credenziali temporanee per gli utenti autenticati.
+
+Dopo il deploy, prova una chiamata con un PC su Wi-Fi e un telefono su rete mobile per verificare ricezione di audio e video e aggiornamento degli indicatori su entrambi i lati.
 
 La versione locale e quella online sono due esecuzioni separate: usano indirizzi e database differenti. Un account creato in locale non compare automaticamente online e viceversa. Di conseguenza, l'account `adminlocale@test.it` è garantito soltanto dopo l'importazione locale di `database/consegna_universitaria.sql` e non deve essere considerato disponibile sul sito Render.

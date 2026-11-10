@@ -8,15 +8,22 @@ let remoteStream = null;
 let targetChiamataId = null;
 let tempoInizioChiamata = null;
 let chiamataInCorso = false; 
+let callAttempt = null;
+let remoteVideoEnabled = false;
+let localDescriptionSent = false;
+const incomingCandidates = [];
+const outgoingCandidates = [];
 
-const rtcConfig = {
-    iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'stun:stun1.l.google.com:19302' },
-        { urls: 'stun:stun2.l.google.com:19302' }
-    ],
-    iceCandidatePoolSize: 10 
-};
+const stunServers = [
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+    { urls: 'stun:stun2.l.google.com:19302' }
+];
+
+async function caricaServerIce() {
+    const config = await app.apiRequest('/api/chiamate/ice', { timeout: 5000 }).catch(() => null);
+    return stunServers.concat(Array.isArray(config?.iceServers) ? config.iceServers : []);
+}
 
 function fermaSquillo() {
     const audioSquillo = document.getElementById('suono-squillo');
@@ -26,12 +33,39 @@ function fermaSquillo() {
     }
 }
 
-async function applicaCandidateInCoda() {
-    if (!peerConnection || !window._candidateQueue) return;
-    for (const candidate of window._candidateQueue) {
-        await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+async function aggiungiCandidate(connection, candidate) {
+    try {
+        await connection.addIceCandidate(candidate);
+    } catch (error) {
+        if (connection === peerConnection) console.warn('Impossibile aggiungere ICE candidate:', error);
     }
-    window._candidateQueue = [];
+}
+
+async function applicaCandidateInCoda(connection) {
+    for (const candidate of incomingCandidates.splice(0)) {
+        if (connection !== peerConnection) break;
+        await aggiungiCandidate(connection, candidate);
+    }
+}
+
+function inviaCandidate(candidate) {
+    socket.emit('webrtc_ice_candidate', { targetId: targetChiamataId, candidate });
+}
+
+async function inviaDescrizione(connection, description) {
+    await connection.setLocalDescription(description);
+    if (connection !== peerConnection) return;
+    const data = { targetId: targetChiamataId, sdp: connection.localDescription };
+    if (description.type === 'offer') {
+        const result = await socket.timeout(8000).emitWithAck('webrtc_offer', data);
+        if (connection !== peerConnection) return;
+        if (!result?.ok) throw new Error(result?.errore || 'Impossibile avviare la chiamata.');
+    } else {
+        socket.emit('webrtc_answer', data);
+    }
+    // L'offerta deve essere registrata dal server prima di inviare i candidati.
+    localDescriptionSent = true;
+    outgoingCandidates.splice(0).forEach(inviaCandidate);
 }
 
 function creaRoomPrivata(userId, targetId) {
@@ -62,18 +96,17 @@ socket.on('webrtc_offer', async (data) => {
     
     // Un'offerta dello stesso partecipante durante la chiamata è una rinegoziazione.
     if (chiamataInCorso && Number(targetChiamataId) === callerId && peerConnection) {
+        const connection = peerConnection;
         try {
-            await peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
-            await applicaCandidateInCoda();
-            
-            const answer = await peerConnection.createAnswer();
-            await peerConnection.setLocalDescription(answer);
-            socket.emit('webrtc_answer', { targetId: targetChiamataId, sdp: answer });
+            await connection.setRemoteDescription(data.sdp);
+            if (connection !== peerConnection) return;
+            await applicaCandidateInCoda(connection);
+            await inviaDescrizione(connection, await connection.createAnswer());
         } catch(e) { console.error("Errore rinegoziazione:", e); }
         return;
     }
 
-    if (chiamataInCorso) return; 
+    if (chiamataInCorso || targetChiamataId) return;
 
     const mioStato = localStorage.getItem('mioStatoDND') || 'ONLINE';
     if (mioStato === 'DND') {
@@ -99,28 +132,27 @@ socket.on('webrtc_offer', async (data) => {
 });
 
 socket.on('webrtc_answer', async (data) => {
-    if (!peerConnection || Number(data?.answererId) !== Number(targetChiamataId) || !data?.sdp) return;
+    const connection = peerConnection;
+    if (!connection || Number(data?.answererId) !== targetChiamataId || !data?.sdp) return;
     try {
-        if (!tempoInizioChiamata) tempoInizioChiamata = Date.now(); 
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
-        await applicaCandidateInCoda();
+        await connection.setRemoteDescription(data.sdp);
+        if (connection !== peerConnection) return;
+        await applicaCandidateInCoda(connection);
+        if (connection !== peerConnection) return;
+        if (!tempoInizioChiamata) tempoInizioChiamata = Date.now();
+        app._syncCallControls();
+        app._emitAudioState();
     } catch (err) {
         console.error("Errore nell'impostare la risposta:", err);
     }
 });
 
 socket.on('webrtc_ice_candidate', async (data) => {
-    if (peerConnection && Number(data?.senderId) === Number(targetChiamataId) && data?.candidate) {
-        if (peerConnection.remoteDescription) {
-            try {
-                await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
-            } catch (err) {
-                console.warn("Impossibile aggiungere ICE candidate:", err);
-            }
-        } else {
-            if (!window._candidateQueue) window._candidateQueue = [];
-            window._candidateQueue.push(data.candidate);
-        }
+    if (!targetChiamataId || Number(data?.senderId) !== targetChiamataId || !data?.candidate) return;
+    if (peerConnection?.remoteDescription) {
+        await aggiungiCandidate(peerConnection, data.candidate);
+    } else if (incomingCandidates.length < 128) {
+        incomingCandidates.push(data.candidate);
     }
 });
 
@@ -135,18 +167,14 @@ socket.on('webrtc_end_call', (data) => {
 });
 
 socket.on('webrtc_toggle_video', (data) => {
-    const isVideoOn = typeof data === 'boolean' ? data : data?.isVideoOn;
-    if (
-        typeof isVideoOn !== 'boolean' ||
-        (data?.senderId && Number(data.senderId) !== Number(targetChiamataId))
-    ) return;
-    const cardRemota = document.getElementById('card-remota');
-    if (cardRemota) {
-        if (!isVideoOn) cardRemota.classList.add('vc-video-off');
-        else cardRemota.classList.remove('vc-video-off');
-    }
-    const vid = document.getElementById('video-remoto');
-    if (vid && isVideoOn) vid.srcObject = vid.srcObject;
+    if (!targetChiamataId || Number(data?.senderId) !== targetChiamataId || typeof data.isVideoOn !== 'boolean') return;
+    remoteVideoEnabled = data.isVideoOn;
+    app._syncRemoteVideo();
+});
+
+socket.on('webrtc_audio_state', (data) => {
+    if (!targetChiamataId || Number(data?.senderId) !== targetChiamataId) return;
+    app._syncRemoteAudioState(data);
 });
 
 socket.on('webrtc_error', (data) => {
@@ -163,6 +191,7 @@ Object.assign(window.app, {
     isScreenSharing: false,
     isScreenSharePending: false,
     screenStreamRef: null,
+    cameraRequest: null,
 
     _mediaCallSupported() {
         return Boolean(
@@ -172,9 +201,9 @@ Object.assign(window.app, {
         );
     },
 
-    _setVideoStream(videoId, stream) {
-        const video = document.getElementById(videoId);
-        if (video) video.srcObject = stream || null;
+    _setMediaStream(elementId, stream) {
+        const element = document.getElementById(elementId);
+        if (element) element.srcObject = stream || null;
     },
 
     _getVideoTransceiver() {
@@ -186,13 +215,8 @@ Object.assign(window.app, {
     },
 
     async _renegotiateCall() {
-        if (!peerConnection || !targetChiamataId) return;
-        const offer = await peerConnection.createOffer();
-        await peerConnection.setLocalDescription(offer);
-        socket.emit('webrtc_offer', {
-            targetId: targetChiamataId,
-            sdp: peerConnection.localDescription
-        });
+        const connection = peerConnection;
+        if (connection && targetChiamataId) await inviaDescrizione(connection, await connection.createOffer());
     },
 
     _emitRemoteVideoState(isVideoOn) {
@@ -201,6 +225,52 @@ Object.assign(window.app, {
             targetId: targetChiamataId,
             isVideoOn: Boolean(isVideoOn)
         });
+    },
+
+    _emitAudioState() {
+        if (!chiamataInCorso || !targetChiamataId) return;
+        const remoteAudio = document.getElementById('audio-remoto');
+        socket.emit('webrtc_audio_state', {
+            targetId: targetChiamataId,
+            micOn: Boolean(localStream?.getAudioTracks().some(track => track.enabled && track.readyState === 'live')),
+            listening: !remoteAudio?.muted
+        });
+    },
+
+    _syncRemoteAudioState({ micOn, listening } = {}) {
+        const micBadge = document.getElementById('stato-microfono-remoto');
+        const listeningBadge = document.getElementById('stato-ascolto-remoto');
+        if (micBadge) micBadge.hidden = micOn !== false;
+        if (listeningBadge) listeningBadge.hidden = listening !== false;
+    },
+
+    _syncRemoteVideo() {
+        const video = document.getElementById('video-remoto');
+        const track = video?.srcObject?.getVideoTracks()[0];
+        const iceState = peerConnection?.iceConnectionState;
+        const connected = iceState === 'connected' || iceState === 'completed';
+        const showVideo = remoteVideoEnabled && connected && track?.readyState === 'live' &&
+            !track.muted && !video.paused && video.readyState >= 2 && video.videoWidth > 0;
+        document.getElementById('card-remota')?.classList.toggle('vc-video-off', !showVideo);
+        const status = document.getElementById('stato-video-remoto');
+        if (!status) return;
+        if (iceState === 'failed') status.textContent = 'Connessione audio e video non riuscita';
+        else if (!connected) status.textContent = 'Connessione audio e video in corso…';
+        else if (remoteVideoEnabled) status.textContent = 'In attesa del video…';
+        else status.textContent = 'Videocamera spenta';
+    },
+
+    async _playRemoteAudio() {
+        const audio = document.getElementById('audio-remoto');
+        const button = document.getElementById('btn-riproduci-audio-remoto');
+        const stream = audio?.srcObject;
+        if (!button || !stream) return;
+        try {
+            await audio.play();
+            if (audio.srcObject === stream) button.hidden = true;
+        } catch (error) {
+            if (audio.srcObject === stream && error.name === 'NotAllowedError') button.hidden = false;
+        }
     },
 
     _setCallModalVisible(visible) {
@@ -244,7 +314,10 @@ Object.assign(window.app, {
             });
             stream.getAudioTracks().forEach(track => {
                 track.enabled = true;
-                track.onended = () => this._syncCallControls();
+                track.onended = () => {
+                    this._syncCallControls();
+                    this._emitAudioState();
+                };
             });
             return stream;
         } catch (error) {
@@ -301,6 +374,11 @@ Object.assign(window.app, {
             'Condivisione schermo attiva',
             'Condivisione schermo disattivata'
         );
+        const cameraButton = document.getElementById('btn-toggle-video');
+        const cameraSelect = document.getElementById('vc-camera-device');
+        const cameraDisabled = !peerConnection?.remoteDescription || Boolean(this.cameraRequest) || this.isScreenSharePending;
+        if (cameraButton) cameraButton.disabled = cameraDisabled;
+        if (cameraSelect) cameraSelect.disabled = cameraDisabled;
         this._syncScreenShareAvailability();
     },
 
@@ -318,7 +396,7 @@ Object.assign(window.app, {
         const supported = this._screenShareSupported();
         button.classList.toggle('is-unavailable', !supported);
         button.classList.toggle('is-pending', this.isScreenSharePending);
-        button.disabled = !supported || this.isScreenSharePending;
+        button.disabled = !supported || !peerConnection?.remoteDescription || this.isScreenSharePending || Boolean(this.cameraRequest);
         button.setAttribute('aria-disabled', String(!supported || this.isScreenSharePending));
         button.setAttribute('aria-busy', String(this.isScreenSharePending));
 
@@ -331,11 +409,11 @@ Object.assign(window.app, {
     },
 
     _resetCallAudioOutput() {
-        const remoteVideo = document.getElementById('video-remoto');
+        const remoteAudio = document.getElementById('audio-remoto');
         const button = document.getElementById('btn-toggle-deafen');
         const image = document.getElementById('img-toggle-deafen');
 
-        if (remoteVideo) remoteVideo.muted = false;
+        if (remoteAudio) remoteAudio.muted = false;
         if (image) image.src = 'uploads/buttons/tasto_cuffie_att.png';
         if (button) {
             button.classList.add('is-active');
@@ -345,36 +423,44 @@ Object.assign(window.app, {
         }
     },
 
-    _creaMotoreWebRTC() {
-        if (peerConnection) peerConnection.close();
-        peerConnection = new RTCPeerConnection(rtcConfig);
+    _creaMotoreWebRTC(iceServers) {
+        const connection = new RTCPeerConnection({ iceServers });
+        peerConnection = connection;
         remoteStream = new MediaStream();
-        window._candidateQueue = [];
 
-        peerConnection.ontrack = (event) => {
-            const videoRemoto = document.getElementById('video-remoto');
+        connection.ontrack = (event) => {
+            if (connection !== peerConnection) return;
+            const isAudio = event.track.kind === 'audio';
+            const mediaId = isAudio ? 'audio-remoto' : 'video-remoto';
             remoteStream.addTrack(event.track);
-            if (videoRemoto && videoRemoto.srcObject !== remoteStream) {
-                videoRemoto.srcObject = remoteStream;
+            this._setMediaStream(mediaId, new MediaStream([event.track]));
+            if (isAudio) {
+                this._playRemoteAudio();
+            } else {
+                for (const name of ['mute', 'unmute', 'ended']) {
+                    event.track.addEventListener(name, () => this._syncRemoteVideo());
+                }
+                document.getElementById(mediaId)?.play().catch(() => {});
+                this._syncRemoteVideo();
             }
         };
 
-        peerConnection.onicecandidate = (event) => {
-            if (event.candidate) {
-                socket.emit('webrtc_ice_candidate', { targetId: targetChiamataId, candidate: event.candidate });
+        connection.onicecandidate = (event) => {
+            if (connection !== peerConnection || !event.candidate) return;
+            const candidate = event.candidate.toJSON();
+            if (localDescriptionSent) inviaCandidate(candidate);
+            else outgoingCandidates.push(candidate);
+        };
+
+        connection.oniceconnectionstatechange = () => {
+            if (connection !== peerConnection) return;
+            this._syncRemoteVideo();
+            if (connection.iceConnectionState === 'failed') {
+                this.mostraNotifica?.('Impossibile collegare audio e video tra i due dispositivi.', 'error');
             }
         };
 
-        peerConnection.oniceconnectionstatechange = () => {
-            const stato = peerConnection.iceConnectionState;
-            if (stato === 'disconnected' || stato === 'failed') {
-                if (typeof this.mostraNotifica === 'function') this.mostraNotifica("Connessione di rete instabile...", "error");
-            } else if (stato === 'closed') {
-                this.chiudiChiamata(false);
-            }
-        };
-
-        return peerConnection;
+        return connection;
     },
 
     _preparaInterfacciaChiamata() {
@@ -399,6 +485,7 @@ Object.assign(window.app, {
         cardRemota?.classList.add('vc-video-off');
         this._syncCallControls();
         this._resetCallAudioOutput();
+        this._syncRemoteVideo();
         this.focusCard('card-remota');
 
         this._setCallModalVisible(true);
@@ -439,7 +526,7 @@ Object.assign(window.app, {
 
     async avviaChiamata() {
         if (
-            chiamataInCorso ||
+            chiamataInCorso || targetChiamataId ||
             typeof window.stanzaAttuale !== 'string' ||
             !window.stanzaAttuale.startsWith('private_')
         ) return;
@@ -458,6 +545,7 @@ Object.assign(window.app, {
         }
 
         chiamataInCorso = true;
+        const attempt = callAttempt = Symbol();
         this.isScreenSharing = false;
         this.isScreenSharePending = false;
         this.screenStreamRef = null;
@@ -469,27 +557,30 @@ Object.assign(window.app, {
         }
         aggiornaImmagine('img-chiamata-locale', document.getElementById('img-propic')?.src);
 
+        this._preparaInterfacciaChiamata();
         try {
-            localStream = await this._acquireInitialAudio();
-            this._setVideoStream('video-locale', localStream);
-
-            this._preparaInterfacciaChiamata();
-            this._creaMotoreWebRTC();
-
-            peerConnection.addTransceiver('video', { direction: 'sendrecv' });
-            if (localStream) {
-                localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-            } else {
-                peerConnection.addTransceiver('audio', { direction: 'recvonly' });
+            const [stream, iceServers] = await Promise.all([this._acquireInitialAudio(), caricaServerIce()]);
+            if (attempt !== callAttempt) {
+                this._stopMediaStream(stream);
+                return;
             }
+            localStream = stream;
+            this._setMediaStream('video-locale', localStream);
 
-            const offer = await peerConnection.createOffer();
-            await peerConnection.setLocalDescription(offer);
-            socket.emit('webrtc_offer', { targetId: targetChiamataId, sdp: offer });
+            const connection = this._creaMotoreWebRTC(iceServers);
+            connection.addTransceiver('video', { direction: 'sendrecv' });
+            if (localStream) {
+                localStream.getAudioTracks().forEach(track => connection.addTrack(track, localStream));
+            } else {
+                connection.addTransceiver('audio', { direction: 'sendrecv' });
+            }
+            this._syncCallControls();
+            await inviaDescrizione(connection, await connection.createOffer());
 
         } catch (error) {
+            if (attempt !== callAttempt) return;
             console.error('Errore avvio chiamata:', error);
-            this.mostraNotifica?.('Impossibile avviare la chiamata.', 'error');
+            this.mostraNotifica?.(error.message || 'Impossibile avviare la chiamata.', 'error');
             this.chiudiChiamata();
         }
     },
@@ -511,6 +602,8 @@ Object.assign(window.app, {
 
         targetChiamataId = Number(targetChiamataId);
         chiamataInCorso = true;
+        const attempt = callAttempt = Symbol();
+        const offer = window._offertaRicevuta;
         this.isScreenSharing = false;
         this.isScreenSharePending = false;
         this.screenStreamRef = null;
@@ -534,48 +627,43 @@ Object.assign(window.app, {
         aggiornaImmagine('img-chiamata-remota', document.getElementById('chiamante-img')?.src);
         document.getElementById('nome-chiamata-remota').innerText = nomeAltro;
 
+        this._preparaInterfacciaChiamata();
         try {
-            localStream = await this._acquireInitialAudio();
-            this._setVideoStream('video-locale', localStream);
-
-            this._preparaInterfacciaChiamata();
-            this._creaMotoreWebRTC();
-
-            if (localStream) {
-                localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-            } else {
-                peerConnection.addTransceiver('audio', { direction: 'recvonly' });
+            const [stream, iceServers] = await Promise.all([this._acquireInitialAudio(), caricaServerIce()]);
+            if (attempt !== callAttempt) {
+                this._stopMediaStream(stream);
+                return;
             }
+            localStream = stream;
+            this._setMediaStream('video-locale', localStream);
+            const connection = this._creaMotoreWebRTC(iceServers);
+            await connection.setRemoteDescription(offer);
+            if (attempt !== callAttempt) return;
+            await applicaCandidateInCoda(connection);
+            if (attempt !== callAttempt) return;
 
-            await peerConnection.setRemoteDescription(new RTCSessionDescription(window._offertaRicevuta));
-            
-            await applicaCandidateInCoda();
-            
-            const videoTransceiver = peerConnection.getTransceivers().find(t => t.receiver && t.receiver.track && t.receiver.track.kind === 'video');
-            if (videoTransceiver) {
-                videoTransceiver.direction = 'sendrecv';
+            for (const transceiver of connection.getTransceivers()) {
+                transceiver.direction = 'sendrecv';
+                if (transceiver.receiver.track.kind === 'audio' && localStream) {
+                    await transceiver.sender.replaceTrack(localStream.getAudioTracks()[0]);
+                }
             }
-
-            const answer = await peerConnection.createAnswer();
-            await peerConnection.setLocalDescription(answer);
-            socket.emit('webrtc_answer', { targetId: targetChiamataId, sdp: answer });
-
+            await inviaDescrizione(connection, await connection.createAnswer());
+            if (attempt !== callAttempt) return;
             tempoInizioChiamata = Date.now(); 
+            this._syncCallControls();
+            this._emitAudioState();
 
         } catch (error) {
+            if (attempt !== callAttempt) return;
             console.error("Errore risposta chiamata:", error);
+            this.mostraNotifica?.('Impossibile rispondere alla chiamata.', 'error');
             this.chiudiChiamata();
         }
     },
             
     rifiutaChiamata() {
-        fermaSquillo();
-        this._setIncomingModalVisible(false);
-        if (targetChiamataId) {
-            socket.emit('webrtc_end_call', { targetId: targetChiamataId });
-        }
-        targetChiamataId = null;
-        window._offertaRicevuta = null;
+        this.chiudiChiamata();
     },
 
     chiudiChiamata(inviaSegnale = true) {
@@ -615,13 +703,23 @@ Object.assign(window.app, {
         targetChiamataId = null;
         tempoInizioChiamata = null; 
         chiamataInCorso = false;
+        callAttempt = null;
+        localDescriptionSent = false;
+        remoteVideoEnabled = false;
         this.isScreenSharing = false;
         this.isScreenSharePending = false;
         this.screenStreamRef = null;
-        window._candidateQueue = [];
+        this.cameraRequest = null;
+        const cameraSelect = document.getElementById('vc-camera-device');
+        if (cameraSelect) {
+            cameraSelect.replaceChildren();
+            cameraSelect.hidden = true;
+        }
+        incomingCandidates.length = 0;
+        outgoingCandidates.length = 0;
         window._offertaRicevuta = null;
 
-        ['video-locale', 'video-remoto', 'video-screen'].forEach(id => {
+        ['video-locale', 'video-remoto', 'video-screen', 'audio-remoto'].forEach(id => {
             const video = document.getElementById(id);
             if (video) {
                 video.pause?.();
@@ -631,6 +729,9 @@ Object.assign(window.app, {
 
         this._setCallModalVisible(false);
         this._setIncomingModalVisible(false);
+        const audioButton = document.getElementById('btn-riproduci-audio-remoto');
+        if (audioButton) audioButton.hidden = true;
+        this._syncRemoteAudioState();
         document.getElementById('card-screen')?.classList.add('hidden');
         document.getElementById('card-screen')?.classList.remove('is-screen-sharing');
         document.getElementById('card-locale')?.classList.add('vc-video-off');
@@ -641,8 +742,9 @@ Object.assign(window.app, {
     },
 
     async toggleAudio() {
-        if (!chiamataInCorso) return;
-        let audioTrack = localStream?.getAudioTracks()[0];
+        const connection = peerConnection;
+        if (!chiamataInCorso || !connection) return;
+        let audioTrack = localStream?.getAudioTracks().find(track => track.readyState === 'live');
 
         if (audioTrack) {
             audioTrack.enabled = !audioTrack.enabled;
@@ -655,14 +757,22 @@ Object.assign(window.app, {
 
             try {
                 const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                if (connection !== peerConnection) {
+                    this._stopMediaStream(audioStream);
+                    return;
+                }
                 audioTrack = audioStream.getAudioTracks()[0];
 
                 if (!localStream) {
                     localStream = new MediaStream();
-                    this._setVideoStream('video-locale', localStream);
+                    this._setMediaStream('video-locale', localStream);
                 }
+                for (const oldTrack of localStream.getAudioTracks()) localStream.removeTrack(oldTrack);
                 localStream.addTrack(audioTrack);
-                audioTrack.onended = () => this._syncCallControls();
+                audioTrack.onended = () => {
+                    this._syncCallControls();
+                    this._emitAudioState();
+                };
 
                 if (peerConnection) {
                     const audioTransceiver = peerConnection.getTransceivers().find(
@@ -670,13 +780,15 @@ Object.assign(window.app, {
                     );
 
                     if (audioTransceiver?.sender) {
+                        const needsNegotiation = audioTransceiver.currentDirection === 'recvonly' ||
+                            audioTransceiver.currentDirection === 'inactive';
                         audioTransceiver.direction = 'sendrecv';
                         await audioTransceiver.sender.replaceTrack(audioTrack);
+                        if (needsNegotiation) await this._renegotiateCall();
                     } else {
                         peerConnection.addTrack(audioTrack, localStream);
+                        await this._renegotiateCall();
                     }
-
-                    await this._renegotiateCall();
                 }
             } catch (error) {
                 if (typeof this.mostraNotifica === 'function') {
@@ -685,15 +797,17 @@ Object.assign(window.app, {
             }
         }
         this._syncCallControls();
+        this._emitAudioState();
     },
 
     toggleDeafen() {
-        const videoRemoto = document.getElementById('video-remoto');
+        const remoteAudio = document.getElementById('audio-remoto');
         let isMuted = false;
         
-        if (videoRemoto) {
-            videoRemoto.muted = !videoRemoto.muted;
-            isMuted = videoRemoto.muted;
+        if (remoteAudio) {
+            remoteAudio.muted = !remoteAudio.muted;
+            isMuted = remoteAudio.muted;
+            if (!isMuted) this._playRemoteAudio();
         }
 
         const imgDeafen = document.getElementById('img-toggle-deafen');
@@ -712,80 +826,92 @@ Object.assign(window.app, {
             btnDeafen.setAttribute('aria-pressed', String(!isMuted));
             btnDeafen.title = isMuted ? 'Audio chiamata disattivato' : 'Audio chiamata attivo';
         }
+        this._emitAudioState();
+    },
+
+    async aggiornaElencoVideocamere() {
+        const select = document.getElementById('vc-camera-device');
+        const connection = peerConnection;
+        if (!select || !connection || !navigator.mediaDevices?.enumerateDevices) return;
+        const devices = await navigator.mediaDevices.enumerateDevices().catch(() => []);
+        if (connection !== peerConnection) return;
+        const cameras = devices.filter(device => device.kind === 'videoinput' && device.deviceId);
+        const currentId = localStream?.getVideoTracks()[0]?.getSettings().deviceId || select.value;
+        select.replaceChildren(...cameras.map((device, index) => (
+            new Option(device.label || 'Videocamera ' + (index + 1), device.deviceId)
+        )));
+        if (cameras.some(device => device.deviceId === currentId)) select.value = currentId;
+        select.hidden = cameras.length === 0;
+    },
+
+    async _attivaVideocamera(deviceId) {
+        const connection = peerConnection;
+        const videoSender = this._getVideoTransceiver()?.sender;
+        if (!connection?.remoteDescription || !videoSender || this.cameraRequest || this.isScreenSharePending) return;
+        const cardLocale = document.getElementById('card-locale');
+        let acquiredStream;
+        this.cameraRequest = connection;
+        this._syncCallControls();
+        try {
+            acquiredStream = await navigator.mediaDevices.getUserMedia({
+                video: deviceId ? { deviceId: { exact: deviceId } } : true
+            });
+            if (connection !== peerConnection) return;
+            const [track] = acquiredStream.getVideoTracks();
+            if (!track || track.readyState !== 'live') throw new Error('Traccia video assente');
+            if (!this.isScreenSharing) await videoSender.replaceTrack(track);
+            if (connection !== peerConnection) return;
+
+            if (!localStream) {
+                localStream = new MediaStream();
+                this._setMediaStream('video-locale', localStream);
+            }
+            for (const previous of localStream.getVideoTracks()) {
+                previous.onended = null;
+                previous.stop();
+                localStream.removeTrack(previous);
+            }
+            localStream.addTrack(track);
+            acquiredStream = null;
+            track.onended = () => {
+                cardLocale?.classList.add('vc-video-off');
+                this._emitRemoteVideoState(this.isScreenSharing);
+                this._syncCallControls();
+            };
+            cardLocale?.classList.remove('vc-video-off');
+            this._emitRemoteVideoState(true);
+        } catch (error) {
+            if (connection === peerConnection) {
+                console.error('Errore webcam:', error);
+                this.mostraNotifica?.('Videocamera non disponibile. Controlla i permessi o scegli un altro dispositivo.', 'warning');
+            }
+        } finally {
+            this._stopMediaStream(acquiredStream);
+            if (this.cameraRequest === connection) await this.aggiornaElencoVideocamere();
+            if (this.cameraRequest === connection) {
+                this.cameraRequest = null;
+                this._syncCallControls();
+            }
+        }
     },
 
     async toggleVideo() {
-        if (!chiamataInCorso) return;
-        if (!navigator.mediaDevices?.getUserMedia) {
-            this.mostraNotifica?.('Videocamera non supportata da questo browser.', 'warning');
-            this._syncCallControls();
+        if (!chiamataInCorso || !peerConnection?.remoteDescription || this.cameraRequest || this.isScreenSharePending) return;
+        const selectedId = document.getElementById('vc-camera-device')?.value;
+        const track = localStream?.getVideoTracks().find(candidate => candidate.readyState === 'live');
+        if (!track || (!track.enabled && selectedId && track.getSettings().deviceId !== selectedId)) {
+            await this._attivaVideocamera(selectedId);
             return;
         }
-
-        const cardLocale = document.getElementById('card-locale');
-        let videoTrack = localStream ? localStream.getVideoTracks()[0] : null;
-        let isOraAcceso = false;
-
-        if (videoTrack) {
-            videoTrack.enabled = !videoTrack.enabled;
-            isOraAcceso = videoTrack.enabled;
-            
-            if (!videoTrack.enabled) cardLocale?.classList.add('vc-video-off');
-            else cardLocale?.classList.remove('vc-video-off');
-            this._emitRemoteVideoState(this.isScreenSharing || videoTrack.enabled);
-        } else {
-            try {
-                const newVideoStream = await navigator.mediaDevices.getUserMedia({ video: true });
-                videoTrack = newVideoStream.getVideoTracks()[0];
-
-                if (!localStream) {
-                    localStream = new MediaStream();
-                    this._setVideoStream('video-locale', localStream);
-                }
-                localStream.addTrack(videoTrack);
-
-                if (peerConnection && !this.isScreenSharing) {
-                    const videoTransceiver = this._getVideoTransceiver();
-                    if (videoTransceiver && videoTransceiver.sender) {
-                        videoTransceiver.direction = 'sendrecv'; 
-                        await videoTransceiver.sender.replaceTrack(videoTrack);
-                        
-                        try {
-                            await this._renegotiateCall();
-                        } catch(err) { console.error(err); }
-                    }
-                }
-
-                cardLocale?.classList.remove('vc-video-off');
-                this._emitRemoteVideoState(true);
-                isOraAcceso = true;
-                videoTrack.onended = () => {
-                    cardLocale?.classList.add('vc-video-off');
-                    this._syncCallControls();
-                    this._emitRemoteVideoState(this.isScreenSharing);
-                };
-
-            } catch (error) {
-                console.error("Errore webcam:", error);
-                if (typeof this.mostraNotifica === 'function') this.mostraNotifica("Webcam bloccata o assente.", "warning");
-                this._syncCallControls();
-                return;
-            }
-        }
-
-        const imgCam = document.getElementById('img-toggle-video');
-        if (imgCam) {
-            if (isOraAcceso) {
-                imgCam.src = 'uploads/buttons/tasto_cam_att.png';
-            } else {
-                imgCam.src = 'uploads/buttons/tasto_cam_disatt.png';
-            }
-        }
+        track.enabled = !track.enabled;
+        document.getElementById('card-locale')?.classList.toggle('vc-video-off', !track.enabled);
+        this._emitRemoteVideoState(this.isScreenSharing || track.enabled);
         this._syncCallControls();
     },
 
     async condividiSchermo() {
-        if (!chiamataInCorso) return;
+        const connection = peerConnection;
+        if (!chiamataInCorso || !connection?.remoteDescription || this.cameraRequest) return;
 
         const cardScreen = document.getElementById('card-screen');
         const videoScreen = document.getElementById('video-screen');
@@ -834,9 +960,6 @@ Object.assign(window.app, {
 
                 if (videoTransceiver && videoTransceiver.sender) {
                     await videoTransceiver.sender.replaceTrack(videoTrack || null);
-                    try {
-                        await this._renegotiateCall();
-                    } catch(err) {}
                 }
 
                 const isVideoOn = videoTrack ? videoTrack.enabled : false;
@@ -853,6 +976,10 @@ Object.assign(window.app, {
 
         try {
             screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+            if (connection !== peerConnection) {
+                this._stopMediaStream(screenStream);
+                return;
+            }
             const screenTrack = screenStream.getVideoTracks()[0];
 
             if (!screenTrack || screenTrack.readyState !== 'live') {
@@ -878,9 +1005,6 @@ Object.assign(window.app, {
             const videoTransceiver = this._getVideoTransceiver();
             if (videoTransceiver && videoTransceiver.sender) {
                 await videoTransceiver.sender.replaceTrack(screenTrack);
-                try {
-                    await this._renegotiateCall();
-                } catch(err) {}
             }
 
             this._emitRemoteVideoState(true);
@@ -906,9 +1030,6 @@ Object.assign(window.app, {
                 const videoTrack = localStream ? localStream.getVideoTracks()[0] : null;
                 if (videoTransceiver && videoTransceiver.sender) {
                     await videoTransceiver.sender.replaceTrack(videoTrack || null);
-                    try {
-                        await this._renegotiateCall();
-                    } catch(err) {}
                 }
 
                 const isVideoOn = videoTrack ? videoTrack.enabled : false;
@@ -918,9 +1039,8 @@ Object.assign(window.app, {
             };
             
         } catch (error) {
-            if (screenStream) {
-                screenStream.getTracks().forEach(track => track.stop());
-            }
+            this._stopMediaStream(screenStream);
+            if (connection !== peerConnection) return;
             this.isScreenSharing = false;
             this.isScreenSharePending = false;
             this.screenStreamRef = null;
@@ -953,6 +1073,10 @@ function inizializzaControlliChiamata() {
         'btn-rifiuta-chiamata': () => app.rifiutaChiamata(),
         'btn-toggle-audio': () => app.toggleAudio(),
         'btn-toggle-deafen': () => app.toggleDeafen(),
+        'btn-riproduci-audio-remoto': event => {
+            event.stopPropagation();
+            app._playRemoteAudio();
+        },
         'btn-toggle-video': () => app.toggleVideo(),
         'btn-share-screen': () => app.condividiSchermo(),
         'btn-end-call': () => app.chiudiChiamata()
@@ -960,6 +1084,19 @@ function inizializzaControlliChiamata() {
 
     Object.entries(handlers).forEach(([id, handler]) => {
         document.getElementById(id)?.addEventListener('click', handler);
+    });
+    const remoteVideo = document.getElementById('video-remoto');
+    for (const name of ['playing', 'loadeddata', 'resize', 'emptied']) {
+        remoteVideo?.addEventListener(name, () => app._syncRemoteVideo());
+    }
+    const cameraSelect = document.getElementById('vc-camera-device');
+    cameraSelect?.addEventListener('change', () => {
+        if (localStream?.getVideoTracks().some(track => track.enabled && track.readyState === 'live')) {
+            app._attivaVideocamera(cameraSelect.value);
+        }
+    });
+    navigator.mediaDevices?.addEventListener('devicechange', () => {
+        if (cameraSelect && !cameraSelect.hidden) app.aggiornaElencoVideocamere();
     });
 
     document.querySelectorAll('[data-focus-card]').forEach(card => {

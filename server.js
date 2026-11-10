@@ -567,24 +567,35 @@ io.on('connection', (socket) => {
         });
     });
 
-    socket.on('webrtc_offer', async (data) => {
+    const pendingCallOffers = new Map();
+
+    socket.on('webrtc_offer', async (data, ack) => {
+        const reply = result => {
+            if (typeof ack === 'function') ack(result);
+            else if (result.errore) socket.emit('webrtc_error', { errore: result.errore });
+        };
         if (!allowSignalingEvent()) {
-            return socket.emit('webrtc_error', { errore: 'Troppi eventi di chiamata. Riprova tra poco.' });
+            return reply({ errore: 'Troppi eventi di chiamata. Riprova tra poco.' });
         }
 
         const targetId = parsePositiveSafeId(data?.targetId);
         if (!targetId || !isValidSdp(data?.sdp, 'offer')) {
-            return socket.emit('webrtc_error', { errore: 'Richiesta di chiamata non valida.' });
+            return reply({ errore: 'Richiesta di chiamata non valida.' });
         }
 
+        const offer = Symbol();
+        pendingCallOffers.set(targetId, offer);
         try {
             if (!await utentePuoChiamare(utente, targetId)) {
-                return socket.emit('webrtc_error', { errore: 'Destinatario non autorizzato.' });
+                return reply({ errore: 'Destinatario non autorizzato.' });
+            }
+            if (!socket.connected || pendingCallOffers.get(targetId) !== offer) {
+                return reply({ errore: 'Chiamata annullata.' });
             }
 
             const call = chiamateAttive.start(userId, targetId);
             if (!call) {
-                return socket.emit('webrtc_error', { errore: 'Utente già impegnato in un’altra chiamata.' });
+                return reply({ errore: 'Utente già impegnato in un’altra chiamata.' });
             }
 
             io.to('user_' + targetId).emit('webrtc_offer', {
@@ -593,9 +604,12 @@ io.on('connection', (socket) => {
                 callerName: `${utente.nome} ${utente.cognome}`,
                 callerPropic: utente.propic
             });
+            reply({ ok: true });
         } catch (error) {
             console.error('Errore autorizzazione offerta WebRTC:', error);
-            socket.emit('webrtc_error', { errore: 'Impossibile avviare la chiamata.' });
+            reply({ errore: 'Impossibile avviare la chiamata.' });
+        } finally {
+            if (pendingCallOffers.get(targetId) === offer) pendingCallOffers.delete(targetId);
         }
     });
 
@@ -630,6 +644,7 @@ io.on('connection', (socket) => {
     socket.on('webrtc_end_call', (data) => {
         const targetId = parsePositiveSafeId(data?.targetId);
         if (!targetId) return;
+        pendingCallOffers.delete(targetId);
 
         if (!chiamateAttive.end(userId, targetId)) return;
         io.to('user_' + targetId).emit('webrtc_end_call', { senderId: userId });
@@ -645,6 +660,18 @@ io.on('connection', (socket) => {
         io.to('user_' + targetId).emit('webrtc_toggle_video', {
             isVideoOn: data.isVideoOn,
             senderId: userId
+        });
+    });
+
+    socket.on('webrtc_audio_state', (data) => {
+        if (!allowSignalingEvent()) return;
+        const targetId = parsePositiveSafeId(data?.targetId);
+        if (!targetId || typeof data.micOn !== 'boolean' || typeof data.listening !== 'boolean') return;
+        if (!chiamateAttive.touch(userId, targetId)) return;
+        io.to('user_' + targetId).emit('webrtc_audio_state', {
+            senderId: userId,
+            micOn: data.micOn,
+            listening: data.listening
         });
     });
 
