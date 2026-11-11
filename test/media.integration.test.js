@@ -66,7 +66,8 @@ test('upload privati, migrazione, invio idempotente e revoca dopo riavvio', { sk
         DB_PASSWORD: process.env.LGS_TEST_MYSQL_PASSWORD || '',
         DB_SSL: 'false', DB_NAME: database,
         SESSION_SECRET: randomBytes(32).toString('hex'),
-        MEDIA_S3_BUCKET: '', MEDIA_DIR: path.join(dir, 'stored')
+        MEDIA_S3_BUCKET: '', MEDIA_DIR: path.join(dir, 'stored'),
+        TURN_KEY_ID: '', TURN_KEY_API_TOKEN: '', TURN_URLS: '', TURN_SHARED_SECRET: ''
     };
     let sql;
     let server;
@@ -101,6 +102,11 @@ test('upload privati, migrazione, invio idempotente e revoca dopo riavvio', { sk
     let base = await server.ready;
     const [coach, member, outsider, admin] = await Promise.all(['coach', 'member', 'outsider', 'admin']
         .map(name => login(base, name + '@example.test', password)));
+    assert.equal((await fetch(base + '/api/chiamate/ice')).status, 401);
+    const ice = await fetch(base + '/api/chiamate/ice', { headers: { Cookie: member } });
+    assert.equal(ice.status, 200);
+    assert.match(ice.headers.get('cache-control'), /no-store/);
+    assert.deepEqual(await ice.json(), { iceServers: [] });
     const courseName = 'Mobilit\u00e0 e benessere \ud83c\udfc3';
     const raceName = 'Gara citt\u00e0 \ud83c\udfc5';
     const preview = 'Caff\u00e8 e sport \ud83d\udcac';

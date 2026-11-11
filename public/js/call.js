@@ -13,6 +13,12 @@ let remoteVideoEnabled = false;
 let localDescriptionSent = false;
 const incomingCandidates = [];
 const outgoingCandidates = [];
+const cameraConstraints = {
+    width: { ideal: 640, max: 640 },
+    height: { ideal: 480, max: 480 },
+    frameRate: { ideal: 15, max: 15 }
+};
+const audioConstraints = { channelCount: 1, echoCancellation: true, noiseSuppression: true };
 
 const stunServers = [
     { urls: 'stun:stun.l.google.com:19302' },
@@ -21,7 +27,10 @@ const stunServers = [
 ];
 
 async function caricaServerIce() {
-    const config = await app.apiRequest('/api/chiamate/ice', { timeout: 5000 }).catch(() => null);
+    const config = await app.apiRequest('/api/chiamate/ice', { timeout: 5000 }).catch(error => {
+        app.mostraNotifica?.(error.message, 'warning');
+        return null;
+    });
     return stunServers.concat(Array.isArray(config?.iceServers) ? config.iceServers : []);
 }
 
@@ -219,6 +228,22 @@ Object.assign(window.app, {
         if (connection && targetChiamataId) await inviaDescrizione(connection, await connection.createOffer());
     },
 
+    async _limitaInvioMedia(sender) {
+        if (!sender?.track || !sender.getParameters || !sender.setParameters) return;
+        try {
+            const parameters = sender.getParameters();
+            if (!parameters.encodings?.length) return;
+            const video = sender.track.kind === 'video';
+            for (const encoding of parameters.encodings) {
+                encoding.maxBitrate = video ? 500000 : 32000;
+                if (video) encoding.maxFramerate = 15;
+            }
+            await sender.setParameters(parameters);
+        } catch (error) {
+            console.warn('Limite di invio non applicabile in questo browser:', error.name);
+        }
+    },
+
     _emitRemoteVideoState(isVideoOn) {
         if (!targetChiamataId) return;
         socket.emit('webrtc_toggle_video', {
@@ -310,7 +335,7 @@ Object.assign(window.app, {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: false,
-                audio: true
+                audio: audioConstraints
             });
             stream.getAudioTracks().forEach(track => {
                 track.enabled = true;
@@ -424,7 +449,7 @@ Object.assign(window.app, {
     },
 
     _creaMotoreWebRTC(iceServers) {
-        const connection = new RTCPeerConnection({ iceServers });
+        const connection = new RTCPeerConnection({ iceServers, iceTransportPolicy: 'all' });
         peerConnection = connection;
         remoteStream = new MediaStream();
 
@@ -458,6 +483,11 @@ Object.assign(window.app, {
             if (connection.iceConnectionState === 'failed') {
                 this.mostraNotifica?.('Impossibile collegare audio e video tra i due dispositivi.', 'error');
             }
+        };
+
+        connection.onsignalingstatechange = () => {
+            if (connection !== peerConnection || connection.signalingState !== 'stable') return;
+            connection.getSenders().forEach(sender => this._limitaInvioMedia(sender));
         };
 
         return connection;
@@ -756,7 +786,7 @@ Object.assign(window.app, {
             }
 
             try {
-                const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const audioStream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints });
                 if (connection !== peerConnection) {
                     this._stopMediaStream(audioStream);
                     return;
@@ -854,12 +884,15 @@ Object.assign(window.app, {
         this._syncCallControls();
         try {
             acquiredStream = await navigator.mediaDevices.getUserMedia({
-                video: deviceId ? { deviceId: { exact: deviceId } } : true
+                video: { ...cameraConstraints, ...(deviceId ? { deviceId: { exact: deviceId } } : {}) }
             });
             if (connection !== peerConnection) return;
             const [track] = acquiredStream.getVideoTracks();
             if (!track || track.readyState !== 'live') throw new Error('Traccia video assente');
-            if (!this.isScreenSharing) await videoSender.replaceTrack(track);
+            if (!this.isScreenSharing) {
+                await videoSender.replaceTrack(track);
+                await this._limitaInvioMedia(videoSender);
+            }
             if (connection !== peerConnection) return;
 
             if (!localStream) {
@@ -975,7 +1008,9 @@ Object.assign(window.app, {
         this._syncCallControls();
 
         try {
-            screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+            screenStream = await navigator.mediaDevices.getDisplayMedia({
+                video: { width: { max: 1280 }, height: { max: 720 }, frameRate: { ideal: 10, max: 15 } }
+            });
             if (connection !== peerConnection) {
                 this._stopMediaStream(screenStream);
                 return;
@@ -1005,6 +1040,7 @@ Object.assign(window.app, {
             const videoTransceiver = this._getVideoTransceiver();
             if (videoTransceiver && videoTransceiver.sender) {
                 await videoTransceiver.sender.replaceTrack(screenTrack);
+                await this._limitaInvioMedia(videoTransceiver.sender);
             }
 
             this._emitRemoteVideoState(true);

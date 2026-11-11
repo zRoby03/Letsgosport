@@ -196,7 +196,19 @@ Il primo caricamento può richiedere più tempo se il servizio Render è inattiv
 4. Socket.IO mantiene il canale in tempo reale per chat, presenza, digitazione e segnalazione delle chiamate.
 5. Dopo la segnalazione, audio, video e schermo viaggiano tramite WebRTC. Il browser prova una connessione diretta e, se disponibile, può usare un relay TURN quando la rete blocca il collegamento diretto.
 
-Per abilitare il relay sul sito, configura in Render le variabili TURN:
+Per usare Cloudflare Realtime TURN, crea una chiave TURN nella sezione Realtime di Cloudflare e configura in Render:
+
+- `TURN_KEY_ID`: il TURN Token ID.
+- `TURN_KEY_API_TOKEN`: l'API Token della chiave TURN, distinto dalle credenziali R2. Rimane sul server; il browser riceve credenziali temporanee tramite l'API autenticata `/api/chiamate/ice`.
+- `TURN_ALLOWED_EMAILS`: per lo staging, gli indirizzi degli account di prova separati da virgole. Se vuota, il relay è disponibile a tutti gli utenti autenticati.
+- `TURN_ENABLED=false`: blocca l'emissione di nuove credenziali; quelle già emesse restano valide fino alla scadenza o alla revoca su Cloudflare.
+- `TURN_TTL_SECONDS`: durata delle credenziali, predefinita 14.400 secondi (4 ore), tra 60 e 172.800. La durata deve coprire la chiamata; al momento non viene effettuato il rinnovo durante una chiamata.
+
+Il browser mantiene `iceTransportPolicy: all`, consentendo ICE di preferire un percorso diretto quando disponibile. Il profilo di risparmio limita la webcam a 640×480 e 15 fps, richiede audio mono e prova a limitare l'invio a 500 kbit/s per il video e 32 kbit/s per l'audio. La condivisione schermo usa al massimo 1280×720 e 15 fps con lo stesso limite di bitrate. I limiti RTP dipendono dal supporto del browser e non comprendono tutto l'overhead di rete.
+
+Queste impostazioni riducono i consumi ma non costituiscono un tetto di fatturazione: non è ancora implementata una quota globale di traffico o di spazio R2. Gli avvisi di budget Cloudflare non bloccano i consumi.
+
+In alternativa, per un relay coturn configura:
 
 - TURN_URLS contiene gli indirizzi pubblici del relay, separati da virgole. Includi un indirizzo TURN su UDP e, per le reti restrittive, TURN su TCP/TLS sulla porta 443.
 - TURN_SHARED_SECRET contiene lo stesso segreto configurato sul relay con l'autenticazione REST di coturn (use-auth-secret e static-auth-secret). Il sito usa il segreto sul server per generare credenziali temporanee per gli utenti autenticati.
