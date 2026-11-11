@@ -14,6 +14,7 @@ test('un endpoint S3 non valido restituisce 503 senza interrompere il server', a
         const fs = require('node:fs');
         const open = fs.open;
         fs.open = (...args) => setTimeout(() => open(...args), 50);
+        require('./config/media-quota').reserveMediaStorage = async () => null;
         const express = require('express');
         const { uploadProfilo } = require('./config/upload');
         const app = express();
@@ -61,6 +62,7 @@ test('upload S3 e lettura parziale conservano il contenuto del file', async () =
         const assert = require('node:assert/strict');
         const { once } = require('node:events');
         const http = require('node:http');
+        require('./config/media-quota').reserveMediaStorage = async () => null;
         const express = require('express');
         const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aZd0AAAAASUVORK5CYII=', 'base64');
         let stored;

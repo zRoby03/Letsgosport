@@ -7,11 +7,16 @@ function quotaError(code) {
     return Object.assign(new Error('Quota archiviazione non disponibile.'), { code });
 }
 
-async function reserveMediaStorage(s3, bucket, objectKey, size) {
+function getStorageLimitBytes() {
     const configured = process.env.MEDIA_STORAGE_LIMIT_BYTES;
-    if (configured === undefined || configured.trim() === '') return null;
-    const limit = Number(configured);
-    if (!Number.isSafeInteger(limit) || limit < 1 || !Number.isSafeInteger(size) || size < 0) {
+    const limit = configured === undefined || configured.trim() === '' ? 8000000000 : Number(configured);
+    if (!Number.isSafeInteger(limit) || limit < 1) throw quotaError('MEDIA_INVALID_STORAGE_LIMIT');
+    return limit;
+}
+
+async function reserveMediaStorage(s3, bucket, objectKey, size) {
+    const limit = getStorageLimitBytes();
+    if (!Number.isSafeInteger(size) || size < 0) {
         throw quotaError('MEDIA_INVALID_STORAGE_LIMIT');
     }
     if (size > limit) throw quotaError('MEDIA_STORAGE_QUOTA_EXCEEDED');
@@ -80,4 +85,4 @@ async function reserveMediaStorage(s3, bucket, objectKey, size) {
     };
 }
 
-module.exports = { reserveMediaStorage };
+module.exports = { getStorageLimitBytes, reserveMediaStorage };

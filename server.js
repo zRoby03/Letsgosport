@@ -6,6 +6,7 @@ const path = require('node:path');
 const http = require('http'); 
 const { Server } = require('socket.io'); 
 const db = require('./config/db');
+const { getStorageLimitBytes } = require('./config/media-quota');
 const {
     consumeChatUploadToken,
     isGeneratedUploadName,
@@ -124,17 +125,15 @@ app.use('/api/coach', require('./routes/coach'));
 app.get('/api/health', async (req, res) => {
     try {
         await db.checkConnection();
-        const storageLimit = Number(process.env.MEDIA_STORAGE_LIMIT_BYTES);
         res.json({
             status: 'ok',
             database: 'connected',
             release: process.env.RENDER_GIT_COMMIT?.slice(0, 7) || 'local',
-            storageLimitBytes: process.env.MEDIA_S3_BUCKET?.trim() && Number.isSafeInteger(storageLimit) && storageLimit > 0
-                ? storageLimit : null
+            storageLimitBytes: process.env.MEDIA_S3_BUCKET?.trim() ? getStorageLimitBytes() : null
         });
     } catch (error) {
-        console.error('Health check database fallito:', error.code || error.name);
-        res.status(503).json({ status: 'error', database: 'unavailable' });
+        console.error('Health check fallito:', error.code || error.name);
+        res.status(503).json({ status: 'error', database: error.code === 'MEDIA_INVALID_STORAGE_LIMIT' ? 'connected' : 'unavailable' });
     }
 });
 
