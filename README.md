@@ -206,7 +206,7 @@ Per usare Cloudflare Realtime TURN, crea una chiave TURN nella sezione Realtime 
 
 Il browser mantiene `iceTransportPolicy: all`, consentendo ICE di preferire un percorso diretto quando disponibile. Il profilo di risparmio limita la webcam a 640×480 e 15 fps, richiede audio mono e prova a limitare l'invio a 500 kbit/s per il video e 32 kbit/s per l'audio. La condivisione schermo usa al massimo 1280×720 e 15 fps con lo stesso limite di bitrate. I limiti RTP dipendono dal supporto del browser e non comprendono tutto l'overhead di rete.
 
-Queste impostazioni riducono i consumi ma non costituiscono un tetto di fatturazione: non è ancora implementata una quota globale di traffico o di spazio R2. Gli avvisi di budget Cloudflare non bloccano i consumi.
+Queste impostazioni riducono i consumi ma non costituiscono un tetto di fatturazione: non è ancora implementata una quota globale di traffico TURN. Gli avvisi di budget Cloudflare non bloccano i consumi.
 
 In alternativa, per un relay coturn configura:
 
@@ -216,6 +216,12 @@ In alternativa, per un relay coturn configura:
 Dopo il deploy, prova una chiamata con un PC su Wi-Fi e un telefono su rete mobile per verificare ricezione di audio e video e aggiornamento degli indicatori su entrambi i lati.
 
 ### Archiviazione degli upload
+
+Imposta `MEDIA_STORAGE_LIMIT_BYTES=8000000000` per limitare a 8 GB decimali il bucket S3/R2 utilizzato dal servizio. Prima di ogni scrittura il server legge le dimensioni effettive degli oggetti nel bucket, comprese le pagine successive, e prenota nel database lo spazio dei caricamenti in corso. Le prenotazioni vengono sincronizzate con una transazione per evitare che upload simultanei superino il tetto. Quando lo spazio non basta, l'API risponde con HTTP 409 e conserva i file già presenti; se il controllo dello spazio non riesce, il caricamento viene rifiutato.
+
+La tabella tecnica `media_upload_reservations` viene creata automaticamente al primo upload con quota attiva (il DB user deve avere il permesso CREATE); in alternativa è disponibile la migrazione idempotente `004_media_storage_quota.sql`. Una prenotazione con esito di rete incerto viene mantenuta anche dopo un riavvio: R2 potrebbe ancora completare quella scrittura. Le prenotazioni relative a oggetti visibili in R2 non vengono conteggiate due volte. Quelle di scritture definitivamente rifiutate con HTTP 4xx, escluso 408, vengono liberate. Le altre possono richiedere riconciliazione manuale dopo aver escluso scritture ancora in corso.
+
+Ogni bucket deve essere associato a un solo database di controllo; le istanze che scrivono nello stesso bucket devono usare lo stesso database. La quota protegge le scritture effettuate da questo codice, inclusa la migrazione dei file. Non blocca caricamenti effettuati direttamente da Cloudflare o da applicazioni esterne e non impone un limite alle operazioni fatturabili. I 10 GB-mese gratuiti di R2 Standard sono condivisi tra i bucket dell'account: se si aggiungono altri bucket, bisogna ripartire il budget totale, per esempio 1 GB per staging e 7 GB per produzione.
 
 In locale gli upload vengono salvati in `.data/uploads`. Su Render imposta un bucket S3 compatibile privato con `MEDIA_S3_BUCKET`, `AWS_REGION` e le credenziali AWS come segreti. Per un servizio compatibile come R2 imposta anche `MEDIA_S3_ENDPOINT`. In alternativa, imposta `MEDIA_DIR` su un disco effettivamente persistente. In produzione i nuovi upload rispondono 503 finché non è configurata una destinazione.
 

@@ -89,6 +89,9 @@ test('upload privati, migrazione, invio idempotente e revoca dopo riavvio', { sk
     const quote = String.fromCharCode(96);
     const schema = await fs.readFile(path.join(root, 'database/consegna_universitaria.sql'), 'utf8');
     await sql.query(schema.replaceAll(quote + 'letsgosport' + quote, quote + database + quote));
+    const quotaMigration = await fs.readFile(path.join(root, 'database/migrations/004_media_storage_quota.sql'), 'utf8');
+    await sql.query(quotaMigration);
+    await sql.query(quotaMigration);
 
     const password = randomBytes(16).toString('hex');
     const hash = await bcrypt.hash(password, 4);

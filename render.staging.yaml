@@ -33,6 +33,8 @@ services:
         sync: false
       - key: MEDIA_S3_ENDPOINT
         sync: false
+      - key: MEDIA_STORAGE_LIMIT_BYTES
+        value: '8000000000'
       - key: AWS_REGION
         sync: false
       - key: AWS_ACCESS_KEY_ID

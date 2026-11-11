@@ -205,6 +205,9 @@ function singleUpload(middleware, fieldName) {
                 await storeMedia(file);
             } catch (error) {
                 req.file = undefined;
+                if (error.code === 'MEDIA_STORAGE_QUOTA_EXCEEDED') {
+                    return res.status(409).json({ errore: 'Spazio disponibile per i file esaurito. I nuovi caricamenti sono temporaneamente bloccati.' });
+                }
                 console.error('Errore archiviazione upload:', error.code || error.name);
                 return res.status(503).json({ errore: 'Impossibile salvare il file caricato. Riprova.' });
             } finally {

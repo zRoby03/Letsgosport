@@ -3,6 +3,7 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 const { finished, pipeline } = require('node:stream/promises');
 const { DeleteObjectCommand, GetObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } = require('@aws-sdk/client-s3');
+const { reserveMediaStorage } = require('./media-quota');
 
 const legacyDir = path.resolve(__dirname, '..', 'public', 'uploads');
 const localDir = path.resolve(process.env.MEDIA_DIR || path.join(__dirname, '..', '.data', 'uploads'));
@@ -34,6 +35,7 @@ async function storeMedia(file) {
     const destination = safeMediaPath(localDir, file.filename);
     if (!destination || !mediaWritable()) throw new Error('Storage upload non configurato.');
     if (s3) {
+        const releaseReservation = await reserveMediaStorage(s3, bucket, objectKey(file.filename), file.size);
         const body = createReadStream(file.path);
         // S3 can reject before opening the file: close the stream before temporary-file cleanup.
         const closed = finished(body, { cleanup: true }).catch(() => {});
@@ -46,6 +48,16 @@ async function storeMedia(file) {
                 ContentType: file.mimetype,
                 IfNoneMatch: '*'
             }));
+            if (releaseReservation) await releaseReservation().catch(error => {
+                console.error('Pulizia prenotazione upload:', error.code || error.name);
+            });
+        } catch (error) {
+            const status = error.$metadata?.httpStatusCode;
+            // Keep reservations for uncertain network failures: the PUT may still commit on R2.
+            if (releaseReservation && status >= 400 && status < 500 && status !== 408) {
+                await releaseReservation().catch(() => {});
+            }
+            throw error;
         } finally {
             body.destroy();
             await closed;

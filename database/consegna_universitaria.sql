@@ -9,6 +9,7 @@ USE `letsgosport`;
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS `private_conversations`;
+DROP TABLE IF EXISTS `media_upload_reservations`;
 DROP TABLE IF EXISTS `messages`;
 DROP TABLE IF EXISTS `enrollments_gare`;
 DROP TABLE IF EXISTS `enrollments_corsi`;
@@ -168,6 +169,14 @@ CREATE TABLE `private_conversations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Tabelle tecniche
+
+CREATE TABLE `media_upload_reservations` (
+    `bucket_key` CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+    `object_key` VARCHAR(512) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+    `size_bytes` BIGINT UNSIGNED NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`bucket_key`, `object_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Registro delle migrazioni applicate.
 CREATE TABLE `schema_migrations` (
