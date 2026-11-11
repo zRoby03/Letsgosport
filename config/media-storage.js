@@ -1,16 +1,17 @@
 const { createReadStream } = require('node:fs');
 const fs = require('node:fs/promises');
 const path = require('node:path');
-const { pipeline } = require('node:stream/promises');
+const { finished, pipeline } = require('node:stream/promises');
 const { DeleteObjectCommand, GetObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } = require('@aws-sdk/client-s3');
 
 const legacyDir = path.resolve(__dirname, '..', 'public', 'uploads');
 const localDir = path.resolve(process.env.MEDIA_DIR || path.join(__dirname, '..', '.data', 'uploads'));
 const bucket = process.env.MEDIA_S3_BUCKET?.trim();
+const endpoint = process.env.MEDIA_S3_ENDPOINT?.trim();
 const s3 = bucket ? new S3Client({
     region: process.env.AWS_REGION || 'auto',
-    endpoint: process.env.MEDIA_S3_ENDPOINT || undefined,
-    forcePathStyle: Boolean(process.env.MEDIA_S3_ENDPOINT),
+    endpoint: endpoint || undefined,
+    forcePathStyle: Boolean(endpoint),
     requestChecksumCalculation: 'WHEN_REQUIRED',
     responseChecksumValidation: 'WHEN_REQUIRED'
 }) : null;
@@ -33,14 +34,22 @@ async function storeMedia(file) {
     const destination = safeMediaPath(localDir, file.filename);
     if (!destination || !mediaWritable()) throw new Error('Storage upload non configurato.');
     if (s3) {
-        await s3.send(new PutObjectCommand({
-            Bucket: bucket,
-            Key: objectKey(file.filename),
-            Body: createReadStream(file.path),
-            ContentLength: file.size,
-            ContentType: file.mimetype,
-            IfNoneMatch: '*'
-        }));
+        const body = createReadStream(file.path);
+        // S3 can reject before opening the file: close the stream before temporary-file cleanup.
+        const closed = finished(body, { cleanup: true }).catch(() => {});
+        try {
+            await s3.send(new PutObjectCommand({
+                Bucket: bucket,
+                Key: objectKey(file.filename),
+                Body: body,
+                ContentLength: file.size,
+                ContentType: file.mimetype,
+                IfNoneMatch: '*'
+            }));
+        } finally {
+            body.destroy();
+            await closed;
+        }
     } else {
         await fs.mkdir(localDir, { recursive: true });
         await fs.copyFile(file.path, destination, fs.constants.COPYFILE_EXCL);

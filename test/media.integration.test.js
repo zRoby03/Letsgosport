@@ -101,6 +101,26 @@ test('upload privati, migrazione, invio idempotente e revoca dopo riavvio', { sk
     let base = await server.ready;
     const [coach, member, outsider, admin] = await Promise.all(['coach', 'member', 'outsider', 'admin']
         .map(name => login(base, name + '@example.test', password)));
+    const courseName = 'Mobilit\u00e0 e benessere \ud83c\udfc3';
+    const raceName = 'Gara citt\u00e0 \ud83c\udfc5';
+    const preview = 'Caff\u00e8 e sport \ud83d\udcac';
+    const [course] = await sql.execute(
+        "INSERT INTO corsi (nome,orario_inizio,durata,giorno,coach_id) VALUES (?,'10:00',60,'Lunedi',?)",
+        [courseName, users[0].id]
+    );
+    const [race] = await sql.execute("INSERT INTO gare (nome,giorno,orario) VALUES (?,'2027-01-01','10:00')", [raceName]);
+    await sql.execute('INSERT INTO enrollments_corsi (user_id,corso_id) VALUES (?,?)', [users[1].id, course.insertId]);
+    await sql.execute('INSERT INTO enrollments_gare (user_id,gara_id) VALUES (?,?),(?,?)',
+        [users[0].id, race.insertId, users[1].id, race.insertId]);
+    await sql.execute("INSERT INTO messages (user_id,room,contenuto) VALUES (?,'general',?)", [users[0].id, preview]);
+    for (const cookie of [coach, member, admin, outsider]) {
+        const response = await fetch(base + '/api/chat/stanze', { headers: { Cookie: cookie } });
+        assert.equal(response.status, 200, await response.clone().text());
+        const rooms = await response.json();
+        assert.equal(rooms.find(item => item.room_id === 'general').last_message_preview, preview);
+        assert.equal(rooms.some(item => item.nome === courseName), cookie !== outsider);
+        assert.equal(rooms.some(item => item.nome === raceName), cookie !== outsider);
+    }
     assert.equal((await fetch(base + '/api/admin/utenti', { headers: { Cookie: member } })).status, 403);
     assert.equal((await fetch(base + '/api/coach/corsi', { headers: { Cookie: coach } })).status, 200);
     const privateChat = await fetch(base + '/api/chat/private/' + users[0].id, {

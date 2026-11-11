@@ -42,6 +42,7 @@ const db = mysql.createPool({
     user: process.env.DB_USER.trim(),
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME.trim(),
+    charset: 'utf8mb4_general_ci',
     ssl: useSsl ? {
         minVersion: 'TLSv1.2',
         rejectUnauthorized: true
