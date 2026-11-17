@@ -1,43 +1,65 @@
+/* Regole di impaginazione e adattamenti del sito alle dimensioni dello schermo. */
+/* Un selettore .nome cerca una classe, #nome un id; spazi e > descrivono le relazioni fra gli elementi HTML. */
+/* Le proprietà --nome sono variabili CSS; var(--nome) ne legge il valore secondo la cascata e l’eredità. */
+/* !important dà priorità alla dichiarazione rispetto a quelle normali; fra regole equivalenti contano specificità */
+/* e ordine. */
 /* Regole condivise per mantenere l'interfaccia coerente. */
+/* Configura la rappresentazione per html. */
 html {
+    /* -webkit-text-size-adjust: Regola l’adattamento automatico del testo nei browser mobili compatibili. */
     -webkit-text-size-adjust: 100%;
 }
 
+/* Configura la rappresentazione per .lgs-app, .lgs-app *, .lgs-app *::before e gli altri selettori del gruppo. Lo */
+/* pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
 .lgs-app,
 .lgs-app *,
 .lgs-app *::before,
 .lgs-app *::after {
+    /* box-sizing: Con border-box, bordi e padding sono compresi nella larghezza e altezza dichiarate. */
     box-sizing: border-box;
 }
 
+/* Definisce contenimento e scorrimento per .lgs-app. */
 .lgs-app {
+    /* overflow-x: Gestisce lo scorrimento o il ritaglio sul solo asse orizzontale. */
     overflow-x: hidden;
 }
 
+/* Definisce contenimento e scorrimento per .sezione-pagina. */
 .sezione-pagina {
+    /* overflow-wrap: Permette di spezzare parole troppo lunghe per il contenitore. */
     overflow-wrap: anywhere;
 }
 
+/* Definisce testo e leggibilità per .section-heading, .profile-page-heading, .catalog-hero e gli altri selettori */
+/* del gruppo. */
 .section-heading,
 .profile-page-heading,
 .catalog-hero,
 .landing-hero {
+    /* text-align: Allineamento del testo all’interno del riquadro. */
     text-align: left;
 }
 
+/* Definisce testo e leggibilità per .section-heading h2, .profile-page-heading h1, .catalog-hero h1 e gli altri */
+/* selettori del gruppo. */
 .section-heading h2,
 .profile-page-heading h1,
 .catalog-hero h1,
 .landing-hero h1 {
+    /* text-wrap: Controlla come distribuire il testo sulle righe disponibili. */
     text-wrap: balance;
 }
 
+/* Definisce testo e leggibilità per .hero-subtitle, .catalog-hero p, .profile-page-heading p. */
 .hero-subtitle,
 .catalog-hero p,
 .profile-page-heading p {
     text-wrap: pretty;
 }
 
+/* Definisce testo e leggibilità per .brand-mark, .brand-text, .nav-link e gli altri selettori del gruppo. */
 .brand-mark,
 .brand-text,
 .nav-link,
@@ -50,66 +72,96 @@ html {
 .hero-copy h1,
 .catalog-hero h1,
 .profile-page-heading h1 {
+    /* letter-spacing: Distanza aggiuntiva tra i caratteri. */
     letter-spacing: 0 !important;
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento per .btn-block. */
 .btn-block {
+    /* width: Larghezza del riquadro; percentuali e unità relative la legano al contenitore o al viewport. */
     width: 100%;
+    /* display: Sceglie il modello di impaginazione: flex e grid organizzano i figli, none nasconde il riquadro. */
     display: flex;
 }
 
+/* Definisce dimensioni e adattamento per .profile-tool-button. */
 .profile-tool-button {
+    /* max-width: Limite superiore alla larghezza del riquadro. */
     max-width: 100%;
+    /* touch-action: Indica al browser quali gesti touch gestire direttamente. */
     touch-action: manipulation;
 }
 
+/* Definisce sfondo e aspetto visivo per .btn, .btn-liquid. */
 .btn,
 .btn-liquid {
+    /* border-radius: Arrotonda gli angoli; valori grandi permettono forme circolari o a capsula. */
     border-radius: 14px;
 }
 
+/* Definisce effetti e transizioni per .field-group input, .field-group textarea, .contacts-search-input. */
 .field-group input,
 .field-group textarea,
 .contacts-search-input {
+    /* transition: Interpola nel tempo i cambiamenti delle proprietà indicate. */
     transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 
+/* Definisce spaziatura per .modal-overlay. */
 .modal-overlay {
+    /* padding: Spazio interno fra bordo e contenuto del riquadro. */
     padding: 18px;
 }
 
+/* Definisce dimensioni e adattamento, contenimento e scorrimento per .modal-content. */
 .modal-content {
     width: min(100% - 24px, 430px) !important;
+    /* max-height: Limite superiore all’altezza prima di applicare le regole di overflow. */
     max-height: min(88dvh, 740px);
+    /* overflow-y: Gestisce lo scorrimento o il ritaglio sul solo asse verticale. */
     overflow-y: auto;
+    /* overscroll-behavior: Controlla la propagazione dello scorrimento oltre i bordi del contenitore. */
     overscroll-behavior: contain;
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, testo e leggibilità per .chiudi-modale, .modal-close-btn. */
 .chiudi-modale,
 .modal-close-btn {
     width: 38px;
+    /* height: Altezza del riquadro; le unità dvh seguono il viewport dinamico del dispositivo. */
     height: 38px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: inline-grid;
+    /* place-items: Imposta insieme l’allineamento dei figli sui due assi. */
     place-items: center;
+    /* border: Spessore, stile e colore del bordo del riquadro. */
     border: 1px solid rgba(214, 226, 240, 0.88) !important;
     border-radius: 12px;
+    /* background: Sfondo del riquadro, composto da colori, immagini o gradienti. */
     background: rgba(255, 255, 255, 0.72);
+    /* line-height: Altezza delle righe di testo. */
     line-height: 1;
 }
 
+/* Definisce dimensioni e adattamento per #toast-container. */
 #toast-container {
     max-width: min(420px, calc(100vw - 24px));
 }
 
+/* Definisce dimensioni e adattamento per .toast. */
 .toast {
     max-width: 100%;
 }
 
+/* Definisce dimensioni e adattamento, contenimento e scorrimento per .toast-message. */
 .toast-message {
+    /* min-width: Larghezza minima consentita; zero permette ai figli flex o grid di restringersi. */
     min-width: 0;
     overflow-wrap: anywhere;
 }
 
+/* Definisce dimensioni e adattamento per .feature-strip, .home-course-grid, .home-race-list e gli altri selettori */
+/* del gruppo. */
 .feature-strip,
 .home-course-grid,
 .home-race-list,
@@ -118,6 +170,8 @@ html {
     min-width: 0;
 }
 
+/* Definisce dimensioni e adattamento, contenimento e scorrimento per .feature-strip article, .home-course-grid */
+/* button, .home-race-list button e gli altri selettori del gruppo. */
 .feature-strip article,
 .home-course-grid button,
 .home-race-list button,
@@ -128,36 +182,50 @@ html {
     overflow-wrap: anywhere;
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 900px). */
 @media screen and (max-width: 900px) {
+    /* Definisce spaziatura per .section-heading. */
     .section-heading {
+        /* gap: Distanza fra figli flex o celle grid, senza aggiungere margini esterni. */
         gap: 12px;
     }
 
+    /* Configura la rappresentazione per .section-heading. */
     .section-heading {
+        /* align-items: Allinea i figli lungo l’asse trasversale del contenitore flex o grid. */
         align-items: stretch;
     }
 
+    /* Configura la rappresentazione per .section-heading .link-action. */
     .section-heading .link-action {
+        /* justify-content: Distribuisce i figli lungo l’asse principale del layout. */
         justify-content: flex-start;
     }
 
+    /* Definisce spaziatura per .catalog-hero, .landing-hero. */
     .catalog-hero,
     .landing-hero {
         gap: 22px;
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 767px). */
 @media screen and (max-width: 767px) {
+    /* Definisce dimensioni e adattamento, spaziatura per .app-shell. */
     .app-shell {
         width: min(100% - 16px, 430px) !important;
+        /* margin-inline: Margini sui lati dell’asse di scrittura, adattabili anche alla direzione del testo. */
         margin-inline: auto !important;
     }
 
+    /* Definisce spaziatura, testo e leggibilità per .sezione-pagina. */
     .sezione-pagina {
         padding: 18px 0 24px !important;
         text-align: left;
     }
 
+    /* Definisce sfondo e aspetto visivo per .landing-hero, .catalog-hero, .preview-panel e gli altri selettori del */
+    /* gruppo. */
     .landing-hero,
     .catalog-hero,
     .preview-panel,
@@ -166,24 +234,30 @@ html {
         border-radius: 20px !important;
     }
 
+    /* Definisce spaziatura per .landing-hero, .catalog-hero. */
     .landing-hero,
     .catalog-hero {
         padding: 24px 18px !important;
     }
 
+    /* Definisce sfondo e aspetto visivo, contenimento e scorrimento per .hero-visual. */
     .hero-visual {
+        /* overflow: Controlla contenuti fuori dal riquadro: auto permette lo scorrimento, hidden li ritaglia. */
         overflow: hidden;
         border-radius: 18px;
     }
 
+    /* Definisce testo e leggibilità per .landing-hero h1, .catalog-hero h1, .profile-page-heading h1. */
     .landing-hero h1,
     .catalog-hero h1,
     .profile-page-heading h1 {
+        /* font-size: Dimensione del testo; clamp permette di limitarne l’adattamento allo spazio. */
         font-size: clamp(30px, 9vw, 40px) !important;
         line-height: 1.05 !important;
         letter-spacing: 0 !important;
     }
 
+    /* Definisce testo e leggibilità per .hero-subtitle, .catalog-hero p, .profile-page-heading p. */
     .hero-subtitle,
     .catalog-hero p,
     .profile-page-heading p {
@@ -191,41 +265,55 @@ html {
         line-height: 1.48 !important;
     }
 
+    /* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per .hero-actions, .profile-actions-row. */
     .hero-actions,
     .profile-actions-row {
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid !important;
+        /* grid-template-columns: Definisce le colonne della griglia; fr divide lo spazio disponibile e minmax ne */
+        /* stabilisce i limiti. */
         grid-template-columns: 1fr !important;
         gap: 10px !important;
         width: 100%;
     }
 
+    /* Definisce dimensioni e adattamento per .hero-actions > *, .profile-actions-row > *. */
     .hero-actions > *,
     .profile-actions-row > * {
         width: 100%;
     }
 
+    /* Definisce tracce e posizione nella griglia per .feature-strip, .home-course-grid, .home-race-list e gli altri */
+    /* selettori del gruppo. */
     .feature-strip,
     .home-course-grid,
     .home-race-list,
     .grid-corsi,
     .profile-tools-grid {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr !important;
     }
 
+    /* Definisce tracce e posizione nella griglia per .home-race-list button. */
     .home-race-list button {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: auto minmax(0, 1fr) !important;
     }
 
+    /* Configura la rappresentazione per .home-race-list button time, .home-race-list button > span:last-child. */
     .home-race-list button time,
     .home-race-list button > span:last-child {
+        /* justify-self: Allineamento di questo elemento nella propria cella Grid. */
         justify-self: start;
     }
 
+    /* Definisce spaziatura per .modal-overlay. */
     .modal-overlay {
         padding: 12px;
         align-items: center;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per .modal-content. */
     .modal-content {
         width: min(100%, 430px) !important;
         max-height: calc(100dvh - 24px) !important;
@@ -233,49 +321,64 @@ html {
         border-radius: 22px !important;
     }
 
+    /* Definisce spaziatura, testo e leggibilità per .modal-title. */
     .modal-title {
+        /* padding-right: Spaziatura interna applicata al lato indicato. */
         padding-right: 42px;
         font-size: clamp(26px, 8vw, 34px) !important;
         line-height: 1.08 !important;
     }
 
+    /* Definisce posizione e sovrapposizione per .chiudi-modale, .modal-close-btn. */
     .chiudi-modale,
     .modal-close-btn {
+        /* top: Distanza dal lato superiore nel posizionamento del riquadro. */
         top: 12px !important;
+        /* right: Distanza dal lato destro nel posizionamento del riquadro. */
         right: 12px !important;
     }
 
+    /* Definisce dimensioni e adattamento, contenimento e scorrimento per .recaptcha-container. */
     .recaptcha-container {
         max-width: 100%;
         overflow: hidden;
     }
 
+    /* Definisce dimensioni e adattamento per .recaptcha-local-check. */
     .recaptcha-local-check {
         width: 100%;
     }
 
+    /* Definisce dimensioni e adattamento, testo e leggibilità, contenimento e scorrimento per .nav-chat-badge. */
     .nav-chat-badge {
         max-width: 48px;
         overflow: hidden;
+        /* text-overflow: Aspetto del testo che supera lo spazio disponibile, per esempio i puntini di ellipsis. */
         text-overflow: ellipsis;
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 380px). */
 @media screen and (max-width: 380px) {
+    /* Definisce dimensioni e adattamento, testo e leggibilità per .brand-text. */
     .brand-text {
         max-width: 170px;
         font-size: 21px !important;
     }
 
+    /* Definisce spaziatura per .navbar .nav-left. */
     .navbar .nav-left {
         gap: 3px !important;
     }
 
+    /* Definisce spaziatura, testo e leggibilità per .nav-link. */
     .nav-link {
+        /* padding-inline: Spaziatura interna sui lati dell’asse di scrittura. */
         padding-inline: 2px !important;
         font-size: 10px !important;
     }
 
+    /* Definisce testo e leggibilità per .landing-hero h1, .catalog-hero h1, .profile-page-heading h1. */
     .landing-hero h1,
     .catalog-hero h1,
     .profile-page-heading h1 {
@@ -283,7 +386,10 @@ html {
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (minimo larghezza 768px; massimo larghezza */
+/* 900px). */
 @media screen and (min-width: 768px) and (max-width: 900px) {
+    /* Definisce dimensioni e adattamento, contenimento e scorrimento per html, body, .lgs-app. */
     html,
     body,
     .lgs-app {
@@ -292,44 +398,61 @@ html {
         overflow-x: hidden;
     }
 
+    /* Definisce disposizione Grid, posizione e sovrapposizione, dimensioni e adattamento per .navbar. */
     .navbar {
+        /* position: Sceglie il riferimento di posizionamento; absolute usa un antenato posizionato, fixed il viewport */
+        /* salvo contenitori speciali. */
         position: sticky !important;
         top: max(8px, env(safe-area-inset-top)) !important;
+        /* left: Distanza dal lato sinistro nel posizionamento del riquadro. */
         left: auto !important;
         right: auto !important;
+        /* z-index: Ordine di sovrapposizione nel contesto di impilamento corrente. */
         z-index: 900 !important;
         width: min(100% - 24px, 760px) !important;
         max-width: calc(100% - 24px) !important;
         height: auto !important;
+        /* min-height: Altezza minima consentita; zero permette di limitare il riquadro e usare lo scorrimento interno. */
         min-height: 0 !important;
         max-height: none !important;
+        /* margin: Spazio esterno tra questo riquadro e quelli vicini. */
         margin: 8px auto 16px !important;
         padding: 12px 14px !important;
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid !important;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr !important;
         gap: 10px !important;
         overflow: visible !important;
         border: 1px solid rgba(214, 226, 240, 0.86) !important;
         border-radius: 24px !important;
         background: rgba(255, 255, 255, 0.78) !important;
+        /* box-shadow: Ombra esterna o interna usata per distinguere piani e componenti. */
         box-shadow: 0 18px 42px rgba(18, 34, 68, 0.12) !important;
+        /* opacity: Trasparenza del riquadro e dei suoi contenuti, senza rimuoverlo dal layout. */
         opacity: 1 !important;
+        /* visibility: Mostra o nasconde il componente mantenendone lo spazio nel layout. */
         visibility: visible !important;
+        /* pointer-events: Stabilisce se il componente può ricevere eventi del puntatore. */
         pointer-events: auto !important;
+        /* transform: Trasforma visivamente il riquadro, per esempio spostandolo, ruotandolo o specchiandolo. */
         transform: none !important;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .brand-button. */
     .brand-button {
         justify-self: center;
         min-height: 40px !important;
         height: 40px !important;
         padding: 0 !important;
         gap: 10px !important;
+        /* color: Colore del testo e delle icone che usano currentColor. */
         color: var(--ink) !important;
         background: transparent !important;
         box-shadow: none !important;
     }
 
+    /* Definisce dimensioni e adattamento, sfondo e aspetto visivo per .brand-mark. */
     .brand-mark {
         width: 38px !important;
         min-width: 38px !important;
@@ -337,34 +460,46 @@ html {
         border-radius: 14px !important;
     }
 
+    /* Definisce dimensioni e adattamento, testo e leggibilità per .brand-text. */
     .brand-text {
         max-width: 260px;
         color: var(--ink) !important;
         font-size: 29px !important;
         line-height: 1 !important;
+        /* white-space: Regola conservazione degli spazi e possibilità di andare a capo. */
         white-space: nowrap;
     }
 
+    /* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per .navbar .nav-left. */
     .navbar .nav-left {
+        /* grid-column: Colonne occupate dal singolo elemento nella griglia. */
         grid-column: 1;
         width: 100%;
         margin: 0 !important;
         padding: 8px 0 0 !important;
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid !important;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
         gap: 8px !important;
+        /* border-top: Imposta l’aspetto del bordo o dell’angolo indicato. */
         border-top: 1px solid rgba(214, 226, 240, 0.78);
         overflow: visible !important;
     }
 
+    /* Definisce disposizione Flexbox per .nav-link-area. */
     .nav-link-area {
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: inline-flex !important;
     }
 
+    /* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .navbar .nav-right. */
     .navbar .nav-right {
         grid-column: 1;
         width: 100%;
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: flex !important;
+        /* flex-wrap: Permette ai figli Flexbox di distribuirsi su più righe o colonne. */
         flex-wrap: wrap !important;
         align-items: center !important;
         justify-content: center !important;
@@ -372,10 +507,13 @@ html {
         overflow: visible !important;
     }
 
+    /* Definisce disposizione Flexbox, posizione e sovrapposizione, dimensioni e adattamento per .navbar button, */
+    /* .navbar #btn-admin, .navbar #btn-coach. */
     .navbar button,
     .navbar #btn-admin,
     .navbar #btn-coach {
         position: relative !important;
+        /* flex: Definisce crescita, riduzione e dimensione iniziale di un elemento Flexbox. */
         flex: initial !important;
         width: auto !important;
         min-width: 0 !important;
@@ -383,17 +521,21 @@ html {
         height: auto !important;
         margin: 0 !important;
         padding: 0 12px !important;
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: inline-flex !important;
+        /* flex-direction: Direzione lungo cui Flexbox dispone i figli. */
         flex-direction: row !important;
         gap: 6px !important;
         border-radius: 14px !important;
         color: var(--ink) !important;
         background: rgba(255, 255, 255, 0.62) !important;
         box-shadow: none !important;
+        /* filter: Applica un effetto al contenuto disegnato, come luminosità o scala di grigi. */
         filter: none !important;
         transform: none !important;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .navbar .nav-link. */
     .navbar .nav-link {
         justify-content: center !important;
         width: 100% !important;
@@ -401,19 +543,25 @@ html {
         color: var(--ink) !important;
         background: rgba(255, 255, 255, 0.56) !important;
         font-size: 13px !important;
+        /* font-weight: Peso del carattere: valori maggiori rendono il testo più marcato. */
         font-weight: 900 !important;
         white-space: nowrap;
     }
 
+    /* Definisce testo e leggibilità, sfondo e aspetto visivo per .navbar .nav-link.is-active, .navbar */
+    /* button.is-active. */
     .navbar .nav-link.is-active,
     .navbar button.is-active {
         color: var(--neon-magenta) !important;
         background: linear-gradient(135deg, rgba(236, 11, 140, 0.11), rgba(0, 200, 215, 0.1)) !important;
     }
 
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento, sfondo e aspetto visivo per .navbar */
+    /* button::after. Lo pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
     .navbar button::after {
         left: 50% !important;
         top: auto !important;
+        /* bottom: Distanza dal lato inferiore nel posizionamento del riquadro. */
         bottom: 4px !important;
         width: 24px !important;
         height: 3px !important;
@@ -423,79 +571,119 @@ html {
         transform: translateX(-50%) scaleX(0.5) !important;
     }
 
+    /* Definisce dimensioni e adattamento, sfondo e aspetto visivo, effetti e transizioni per .navbar */
+    /* button.is-active::after. Lo pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
     .navbar button.is-active::after {
         height: 3px !important;
         opacity: 1 !important;
         transform: translateX(-50%) scaleX(1) !important;
     }
 
+    /* Definisce visibilità nascosta per .navbar .mobile-nav-glyph, .navbar .mobile-nav-label, .mobile-nav-toggle e gli */
+    /* altri selettori del gruppo. */
     .navbar .mobile-nav-glyph,
     .navbar .mobile-nav-label,
     .mobile-nav-toggle,
     .mobile-nav-backdrop {
+        /* Nasconde il componente negli stati selezionati. */
         display: none !important;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura per .nav-pill. */
     .nav-pill {
         min-height: 42px !important;
         padding: 0 16px !important;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura per .app-shell. */
     .app-shell {
         width: min(100% - 24px, 760px) !important;
         margin-inline: auto !important;
     }
 
+    /* Definisce spaziatura, testo e leggibilità per .sezione-pagina. */
     .sezione-pagina {
         padding: 22px 0 30px !important;
         text-align: left;
     }
 
+    /* Definisce tracce e posizione nella griglia, dimensioni e adattamento, spaziatura per .landing-hero, */
+    /* .catalog-hero. */
     .landing-hero,
     .catalog-hero {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr !important;
         min-height: 0 !important;
         padding: 30px !important;
         overflow: hidden;
     }
 
+    /* Definisce tracce e posizione nella griglia per .feature-strip, .home-course-grid, .grid-corsi e gli altri */
+    /* selettori del gruppo. */
     .feature-strip,
     .home-course-grid,
     .grid-corsi,
     .profile-tools-grid {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     }
 
+    /* Definisce tracce e posizione nella griglia per .home-race-list. */
     .home-race-list {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr !important;
     }
 
 }
 
 /* Navbar stability */
+/* Le regole responsive dei pulsanti rispettano visibilità e disposizione del marchio. */
+.navbar button.hidden,
+.navbar #btn-admin.hidden,
+.navbar #btn-coach.hidden,
+.navbar #btn-login-nav.hidden,
+.navbar #btn-registrati-nav.hidden,
+.navbar #btn-profilo.hidden,
+.navbar #btn-logout.hidden { display: none !important; }
+.navbar .brand-button { flex-direction: row !important; }
+.navbar .brand-mark, .navbar .brand-text { flex-shrink: 0; }
+
+@media screen and (min-width: 768px) and (max-width: 900px) {
+    .navbar .nav-right { flex-direction: row !important; }
+}
+
+/* Definisce contenimento e scorrimento per .navbar .brand-text, .navbar .nav-link, .navbar .nav-pill e gli altri */
+/* selettori del gruppo. */
 .navbar .brand-text,
 .navbar .nav-link,
 .navbar .nav-pill,
 .navbar .nav-greeting {
     white-space: nowrap !important;
     overflow-wrap: normal !important;
+    /* word-break: Regola dove spezzare parole o sequenze di caratteri. */
     word-break: keep-all !important;
+    /* hyphens: Permette la sillabazione in base alla lingua e alle capacità del browser. */
     hyphens: none !important;
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (minimo larghezza 768px). */
 @media screen and (min-width: 768px) {
+    /* Definisce dimensioni e adattamento, spaziatura per .navbar .nav-right. */
     .navbar .nav-right {
         min-width: 0 !important;
         flex-wrap: nowrap !important;
         gap: clamp(7px, 0.8vw, 10px) !important;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura per .navbar .nav-pill. */
     .navbar .nav-pill {
         flex: 0 0 auto !important;
         min-width: max-content !important;
         padding-inline: clamp(14px, 1.2vw, 20px) !important;
     }
 
+    /* Definisce dimensioni e adattamento per .navbar #btn-admin, .navbar #btn-coach, .navbar #btn-login-nav e gli */
+    /* altri selettori del gruppo. */
     .navbar #btn-admin,
     .navbar #btn-coach,
     .navbar #btn-login-nav,
@@ -503,11 +691,13 @@ html {
         min-width: 72px !important;
     }
 
+    /* Definisce dimensioni e adattamento per .navbar #btn-registrati-nav, .navbar #btn-profilo. */
     .navbar #btn-registrati-nav,
     .navbar #btn-profilo {
         min-width: 132px !important;
     }
 
+    /* Definisce dimensioni e adattamento per .navbar .nav-greeting. */
     .navbar .nav-greeting {
         min-width: 0 !important;
         max-width: clamp(112px, 13vw, 190px) !important;
@@ -516,6 +706,8 @@ html {
 }
 
 /* Reusable image sliders for the home, courses and races hero sections */
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento, spaziatura per .image-slider, */
+/* .hero-visual.image-slider, .catalog-hero .image-slider. */
 .image-slider,
 .hero-visual.image-slider,
 .catalog-hero .image-slider {
@@ -525,6 +717,7 @@ html {
     margin: 0;
     display: block;
     overflow: hidden;
+    /* isolation: Con isolate crea un contesto di sovrapposizione separato per questo componente. */
     isolation: isolate;
     border: 1px solid rgba(255, 255, 255, 0.9);
     border-radius: 30px;
@@ -533,21 +726,28 @@ html {
     transform: none;
 }
 
+/* Definisce dimensioni e adattamento per .hero-visual.image-slider. */
 .hero-visual.image-slider {
     min-height: 420px;
 }
 
+/* Definisce contenuto generato dal CSS per .catalog-hero .image-slider::before, .hero-visual.image-slider::before. */
+/* Lo pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
 .catalog-hero .image-slider::before,
 .hero-visual.image-slider::before {
+    /* content: Contenuto generato dal CSS per uno pseudo-elemento. */
     content: none;
 }
 
+/* Definisce posizione e sovrapposizione per .image-slider-track, .image-slide. */
 .image-slider-track,
 .image-slide {
     position: absolute;
+    /* inset: Imposta insieme le distanze dai quattro lati del contenitore di riferimento. */
     inset: 0;
 }
 
+/* Definisce posizione e sovrapposizione, spaziatura, sfondo e aspetto visivo per .image-slide. */
 .image-slide {
     z-index: 0;
     margin: 0;
@@ -557,6 +757,8 @@ html {
     transition: opacity 0.7s ease, transform 1.1s ease, visibility 0.7s;
 }
 
+/* Definisce posizione e sovrapposizione, sfondo e aspetto visivo, effetti e transizioni per */
+/* .image-slide.is-active. */
 .image-slide.is-active {
     z-index: 1;
     opacity: 1;
@@ -564,6 +766,8 @@ html {
     transform: scale(1);
 }
 
+/* Definisce posizione e sovrapposizione, sfondo e aspetto visivo, interazione con il puntatore per */
+/* .image-slide::after. Lo pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
 .image-slide::after {
     content: "";
     position: absolute;
@@ -572,13 +776,17 @@ html {
     pointer-events: none;
 }
 
+/* Definisce dimensioni e adattamento, adattamento di immagini e video per .image-slide img. */
 .image-slide img {
     width: 100%;
     height: 100%;
     display: block;
+    /* object-fit: Controlla l’adattamento di immagini e video: contain conserva il contenuto intero, cover può */
+    /* ritagliarlo. */
     object-fit: cover;
 }
 
+/* Definisce posizione e sovrapposizione, testo e leggibilità per .image-slide figcaption. */
 .image-slide figcaption {
     position: absolute;
     z-index: 2;
@@ -589,15 +797,18 @@ html {
     font-size: 15px;
     font-weight: 800;
     line-height: 1.3;
+    /* text-shadow: Ombra applicata ai caratteri. */
     text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
 }
 
+/* Definisce disposizione Grid, posizione e sovrapposizione, dimensioni e adattamento per .image-slider-arrow. */
 .image-slider-arrow {
     position: absolute;
     z-index: 4;
     top: 50%;
     width: 42px;
     height: 42px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
     place-items: center;
     border: 1px solid rgba(255, 255, 255, 0.75);
@@ -605,37 +816,48 @@ html {
     color: #fff;
     background: rgba(7, 17, 38, 0.38);
     box-shadow: 0 10px 24px rgba(7, 17, 38, 0.2);
+    /* font: Scorciatoia che imposta più proprietà tipografiche insieme. */
     font: 700 30px/1 Arial, sans-serif;
+    /* backdrop-filter: Applica l’effetto ai contenuti visibili dietro questo riquadro. */
     backdrop-filter: blur(8px);
+    /* -webkit-backdrop-filter: Variante del filtro dello sfondo usata dai browser che richiedono il prefisso. */
     -webkit-backdrop-filter: blur(8px);
     transform: translateY(-50%);
     transition: background 0.2s ease, transform 0.2s ease;
 }
 
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .image-slider-arrow:hover, */
+/* .image-slider-arrow:focus-visible. Si applica al passaggio del puntatore. Evidenzia il controllo raggiunto con */
+/* la tastiera o il focus. */
 .image-slider-arrow:hover,
 .image-slider-arrow:focus-visible {
     background: rgba(7, 17, 38, 0.7);
     transform: translateY(-50%) scale(1.06);
 }
 
+/* Definisce posizione e sovrapposizione per .image-slider-prev. */
 .image-slider-prev {
     left: 14px;
 }
 
+/* Definisce posizione e sovrapposizione per .image-slider-next. */
 .image-slider-next {
     right: 14px;
 }
 
+/* Definisce disposizione Flexbox, posizione e sovrapposizione, spaziatura per .image-slider-dots. */
 .image-slider-dots {
     position: absolute;
     z-index: 4;
     left: 50%;
     bottom: 16px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     gap: 8px;
     transform: translateX(-50%);
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per .image-slider-dot. */
 .image-slider-dot {
     width: 9px;
     height: 9px;
@@ -647,12 +869,16 @@ html {
     transition: width 0.2s ease, background 0.2s ease;
 }
 
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo per .image-slider-dot.is-active. */
 .image-slider-dot.is-active {
     width: 26px;
     background: #fff;
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 900px). */
 @media screen and (max-width: 900px) {
+    /* Definisce dimensioni e adattamento, spaziatura, effetti e transizioni per .hero-visual.image-slider, */
+    /* .catalog-hero .image-slider. */
     .hero-visual.image-slider,
     .catalog-hero .image-slider {
         min-height: clamp(220px, 48vw, 330px);
@@ -662,7 +888,10 @@ html {
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 767px). */
 @media screen and (max-width: 767px) {
+    /* Definisce dimensioni e adattamento, sfondo e aspetto visivo per .hero-visual.image-slider, .catalog-hero */
+    /* .image-slider. */
     .hero-visual.image-slider,
     .catalog-hero .image-slider {
         min-height: 210px;
@@ -671,10 +900,13 @@ html {
         opacity: 1;
     }
 
+    /* Configura la rappresentazione per .hero-visual.image-slider. */
     .hero-visual.image-slider {
+        /* order: Ordine visivo dell’elemento flex o grid, senza spostarlo nel DOM. */
         order: -1;
     }
 
+    /* Definisce posizione e sovrapposizione, testo e leggibilità per .image-slide figcaption. */
     .image-slide figcaption {
         left: 16px;
         right: 16px;
@@ -682,22 +914,28 @@ html {
         font-size: 13px;
     }
 
+    /* Definisce dimensioni e adattamento, testo e leggibilità per .image-slider-arrow. */
     .image-slider-arrow {
         width: 36px;
         height: 36px;
         font-size: 25px;
     }
 
+    /* Definisce posizione e sovrapposizione per .image-slider-prev. */
     .image-slider-prev {
         left: 10px;
     }
 
+    /* Definisce posizione e sovrapposizione per .image-slider-next. */
     .image-slider-next {
         right: 10px;
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate. Rispetta la preferenza dell’utente sulle */
+/* animazioni. */
 @media (prefers-reduced-motion: reduce) {
+    /* Definisce effetti e transizioni per .image-slide, .image-slider-arrow, .image-slider-dot. */
     .image-slide,
     .image-slider-arrow,
     .image-slider-dot {
@@ -705,39 +943,54 @@ html {
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (minimo larghezza 901px; massimo larghezza */
+/* 1180px). */
 @media screen and (min-width: 901px) and (max-width: 1180px) {
+    /* Definisce tracce e posizione nella griglia, spaziatura per .navbar. */
     .navbar {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: auto minmax(260px, 1fr) minmax(0, auto) !important;
         gap: 12px !important;
     }
 
+    /* Definisce spaziatura per .navbar .nav-left. */
     .navbar .nav-left {
         gap: clamp(12px, 2vw, 24px) !important;
     }
 
+    /* Definisce spaziatura per .navbar .nav-pill. */
     .navbar .nav-pill {
         padding-inline: 14px !important;
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (minimo larghezza 768px; massimo larghezza */
+/* 900px). */
 @media screen and (min-width: 768px) and (max-width: 900px) {
+    /* Definisce contenimento e scorrimento per .navbar .nav-right. */
     .navbar .nav-right {
         flex-wrap: nowrap !important;
         justify-content: center !important;
         overflow-x: auto !important;
+        /* scrollbar-width: Dimensione della barra di scorrimento nei browser compatibili. */
         scrollbar-width: none;
     }
 
+    /* Definisce visibilità nascosta per .navbar .nav-right::-webkit-scrollbar. */
     .navbar .nav-right::-webkit-scrollbar {
+        /* Nasconde il componente negli stati selezionati. */
         display: none;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura per .navbar .nav-pill. */
     .navbar .nav-pill {
         min-width: max-content !important;
         padding-inline: 16px !important;
     }
 }
+/* Definisce disposizione Flexbox, spaziatura, testo e leggibilità per .backend-status:not([hidden]). */
 .backend-status:not([hidden]) {
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -749,6 +1002,7 @@ html {
     color: #241b35;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .backend-status button. */
 .backend-status button {
     min-height: 44px;
     padding: 6px 14px;
@@ -757,6 +1011,7 @@ html {
     background: white;
     color: inherit;
 }
+/* Definisce spaziatura, testo e leggibilità per .auth-field-label. */
 .auth-field-label {
     display: block;
     margin: 0 0 4px;

@@ -1,22 +1,45 @@
+/* Variabili CSS condivise: colori, raggi, ombre e transizioni riutilizzati negli altri fogli di stile. */
+/* Un selettore .nome cerca una classe, #nome un id; spazi e > descrivono le relazioni fra gli elementi HTML. */
+/* Configura la rappresentazione per :root. */
 :root {
+    /* --neon-cyan: Colore di accento ciano della palette condivisa. */
     --neon-cyan: #00c8d7;
+    /* --neon-magenta: Colore di accento magenta della palette condivisa. */
     --neon-magenta: #ec0b8c;
+    /* --neon-violet: Colore di accento viola della palette condivisa. */
     --neon-violet: #c400c9;
+    /* --ink: Colore principale del testo del sito. */
     --ink: #071126;
+    /* --muted: Colore dei testi secondari del sito. */
     --muted: #50627a;
+    /* --page-bg: Sfondo generale della pagina. */
     --page-bg: #f8fbff;
+    /* --surface: Sfondo dei pannelli principali. */
     --surface: #ffffff;
+    /* --glass-surface: Sfondo semitrasparente dei pannelli con effetto vetro. */
     --glass-surface: rgba(255, 255, 255, 0.78);
+    /* --glass-strong: Sfondo più opaco dei pannelli con effetto vetro. */
     --glass-strong: rgba(255, 255, 255, 0.92);
+    /* --glass-border: Colore del bordo dei pannelli semitrasparenti. */
     --glass-border: rgba(214, 226, 240, 0.9);
+    /* --soft-shadow: Ombra morbida condivisa dai contenitori principali. */
     --soft-shadow: 0 22px 58px rgba(18, 34, 68, 0.1);
+    /* --card-shadow: Ombra condivisa dalle schede del catalogo. */
     --card-shadow: 0 14px 38px rgba(18, 34, 68, 0.08);
+    /* --glow-cyan: Luce ciano usata dai componenti che richiamano questa variabile. */
     --glow-cyan: 0 18px 48px rgba(0, 200, 215, 0.22);
+    /* --glow-magenta: Luce magenta usata dai componenti che richiamano questa variabile. */
     --glow-magenta: 0 18px 48px rgba(236, 11, 140, 0.18);
+    /* --radius-xl: Raggio degli angoli più ampi della palette. */
     --radius-xl: 32px;
+    /* --radius-lg: Raggio degli angoli grandi della palette. */
     --radius-lg: 24px;
+    /* --radius-md: Raggio degli angoli medi della palette. */
     --radius-md: 18px;
+    /* --transition-soft: Durata e curva delle transizioni condivise. */
     --transition-soft: 260ms cubic-bezier(.2, .8, .2, 1);
+    /* --gradient-primary: Gradiente principale per gli elementi di accento. */
     --gradient-primary: linear-gradient(135deg, #ec0b8c, #d600b8);
+    /* --gradient-cyan: Gradiente ciano per gli elementi della palette secondaria. */
     --gradient-cyan: linear-gradient(135deg, #00c8d7, #00aeca);
 }

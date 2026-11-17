@@ -1,62 +1,106 @@
+/* Aspetto di pannelli, form, liste e riepiloghi dell’area amministrativa. */
+/* Un selettore .nome cerca una classe, #nome un id; spazi e > descrivono le relazioni fra gli elementi HTML. */
+/* Le proprietà --nome sono variabili CSS; var(--nome) ne legge il valore secondo la cascata e l’eredità. */
+/* !important dà priorità alla dichiarazione rispetto a quelle normali; fra regole equivalenti contano specificità */
+/* e ordine. */
 /* Admin base styles */
+/* Definisce testo e leggibilità per #pagina-admin .admin-hero-panel h1, #pagina-admin .admin-section-heading h2. */
 #pagina-admin .admin-hero-panel h1,
 #pagina-admin .admin-section-heading h2 {
+    /* text-wrap: Controlla come distribuire il testo sulle righe disponibili. */
     text-wrap: balance;
 }
 
+/* Definisce testo e leggibilità per #pagina-admin .admin-hero-panel p, #pagina-admin .admin-section-heading p. */
 #pagina-admin .admin-hero-panel p,
 #pagina-admin .admin-section-heading p {
     text-wrap: pretty;
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-admin .admin-form-submit, #pagina-admin .admin-form-cancel, */
+/* #pagina-admin .admin-action-btn. */
 #pagina-admin .admin-form-submit,
 #pagina-admin .admin-form-cancel,
 #pagina-admin .admin-action-btn {
+    /* border-radius: Arrotonda gli angoli; valori grandi permettono forme circolari o a capsula. */
     border-radius: 14px;
 }
 
+/* Definisce effetti e transizioni per #pagina-admin .admin-search-input, #pagina-admin input, #pagina-admin select */
+/* e gli altri selettori del gruppo. */
 #pagina-admin .admin-search-input,
 #pagina-admin input,
 #pagina-admin select,
 #pagina-admin textarea {
+    /* transition: Interpola nel tempo i cambiamenti delle proprietà indicate. */
     transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 
+/* Definisce dimensioni e adattamento per #pagina-admin .admin-stats-grid, #pagina-admin .admin-quick-actions. */
 #pagina-admin .admin-stats-grid,
 #pagina-admin .admin-quick-actions {
+    /* min-width: Larghezza minima consentita; zero permette ai figli flex o grid di restringersi. */
     min-width: 0;
 }
 
+/* Definisce dimensioni e adattamento, contenimento e scorrimento per #pagina-admin .admin-mobile-card, */
+/* #pagina-admin .admin-user-row, #pagina-admin .admin-entity-row. */
 #pagina-admin .admin-mobile-card,
 #pagina-admin .admin-user-row,
 #pagina-admin .admin-entity-row {
     min-width: 0;
+    /* overflow-wrap: Permette di spezzare parole troppo lunghe per il contenitore. */
     overflow-wrap: anywhere;
 }
 
+/* Definisce spaziatura, testo e leggibilità, sfondo e aspetto visivo per .admin-panel. */
 .admin-panel {
+    /* padding: Spazio interno fra bordo e contenuto del riquadro. */
     padding: 20px;
+    /* border: Spessore, stile e colore del bordo del riquadro. */
     border: 1px solid rgba(255,255,255,0.62);
     border-radius: 18px;
+    /* background: Sfondo del riquadro, composto da colori, immagini o gradienti. */
     background: rgba(255,255,255,0.4);
+    /* box-shadow: Ombra esterna o interna usata per distinguere piani e componenti. */
     box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    /* backdrop-filter: Applica l’effetto ai contenuti visibili dietro questo riquadro. */
     backdrop-filter: blur(20px) saturate(150%);
+    /* -webkit-backdrop-filter: Variante del filtro dello sfondo usata dai browser che richiedono il prefisso. */
     -webkit-backdrop-filter: blur(20px) saturate(150%);
+    /* text-align: Allineamento del testo all’interno del riquadro. */
     text-align: left;
 }
+/* Definisce spaziatura per .admin-form-panel. */
+/* margin-bottom: Margine esterno applicato al lato indicato. */
 .admin-form-panel { margin-bottom: 20px; }
+/* Definisce spaziatura, sfondo e aspetto visivo per .admin-divider. */
+/* margin: Spazio esterno tra questo riquadro e quelli vicini. */
+/* border-top: Imposta l’aspetto del bordo o dell’angolo indicato. */
 .admin-divider { margin: 30px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.55); }
+/* Definisce spaziatura per .admin-divider.is-large. */
 .admin-divider.is-large { margin: 40px 0; }
+/* Definisce disposizione Flexbox, spaziatura per .admin-form-row. */
 .admin-form-row {
     margin-bottom: 10px;
+    /* display: Sceglie il modello di impaginazione: flex e grid organizzano i figli, none nasconde il riquadro. */
     display: flex;
+    /* flex-wrap: Permette ai figli Flexbox di distribuirsi su più righe o colonne. */
     flex-wrap: wrap;
+    /* gap: Distanza fra figli flex o celle grid, senza aggiungere margini esterni. */
     gap: 10px;
 }
+/* Definisce spaziatura per .admin-form-row input, .admin-form-row select. */
+/* box-sizing: Con border-box, bordi e padding sono compresi nella larghezza e altezza dichiarate. */
 .admin-form-row input,
 .admin-form-row select { padding: 8px; box-sizing: border-box; }
+/* Configura la rappresentazione per .admin-form-grow. */
+/* flex: Definisce crescita, riduzione e dimensione iniziale di un elemento Flexbox. */
 .admin-form-grow { flex: 1; }
+/* Definisce dimensioni e adattamento per .admin-form-number. */
+/* width: Larghezza del riquadro; percentuali e unità relative la legano al contenitore o al viewport. */
 .admin-form-number { width: 100px; }
+/* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per .admin-form-wide. */
 .admin-form-wide {
     width: 100%;
     margin-bottom: 12px;
@@ -64,70 +108,110 @@
     box-sizing: border-box;
     border-radius: 8px;
 }
+/* Definisce testo e leggibilità per .admin-upload-label. */
+/* font-size: Dimensione del testo; clamp permette di limitarne l’adattamento allo spazio. */
+/* font-weight: Peso del carattere: valori maggiori rendono il testo più marcato. */
 .admin-upload-label { display: block; font-size: 14px; font-weight: 700; }
+/* Definisce spaziatura per .admin-file-input. */
 .admin-file-input { margin: 5px 0 15px; }
+/* Definisce disposizione Flexbox, spaziatura per .admin-form-actions. */
+/* Flexbox dispone e allinea i figli di questo componente. */
 .admin-form-actions { display: flex; gap: 10px; }
+/* Definisce spaziatura, testo e leggibilità, sfondo e aspetto visivo per .admin-form-submit, .admin-form-cancel. */
 .admin-form-submit,
 .admin-form-cancel {
     padding: 10px 20px;
     border: 0;
     border-radius: 8px;
+    /* color: Colore del testo e delle icone che usano currentColor. */
     color: #fff;
     font-weight: 700;
+    /* cursor: Forma del cursore, usata per comunicare clic, attesa o indisponibilità. */
     cursor: pointer;
 }
+/* Definisce sfondo e aspetto visivo per .admin-form-submit.is-course. */
 .admin-form-submit.is-course { background: #2575fc; }
+/* Definisce sfondo e aspetto visivo per .admin-form-submit.is-race. */
 .admin-form-submit.is-race { background: #ff9800; }
+/* Definisce sfondo e aspetto visivo per .admin-form-submit.is-editing. */
 .admin-form-submit.is-editing { background: #28a745; }
+/* Definisce sfondo e aspetto visivo per .admin-form-cancel. */
 .admin-form-cancel { background: #6c757d; }
+/* Definisce spaziatura, testo e leggibilità per .admin-list-state. */
 .admin-list-state { margin: 10px 0; color: #777; text-align: center; }
+/* Definisce testo e leggibilità per .admin-list-state.is-error. */
 .admin-list-state.is-error { color: #dc3545; }
+/* Definisce disposizione Grid, spaziatura per .admin-user-list, .admin-entity-list. */
 .admin-user-list,
 .admin-entity-list {
     margin: 0;
     padding: 0;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
     gap: 12px;
+    /* list-style: Aspetto dei marcatori delle liste. */
     list-style: none;
 }
+/* Definisce spaziatura, sfondo e aspetto visivo per .admin-user-row. */
 .admin-user-row {
     padding: 15px;
     border: 1px solid rgba(255,255,255,0.72);
     border-radius: 14px;
     background: rgba(255,255,255,0.48);
 }
+/* Definisce disposizione Flexbox, spaziatura per .admin-user-header. */
 .admin-user-header {
     margin-bottom: 10px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
+    /* align-items: Allinea i figli lungo l’asse trasversale del contenitore flex o grid. */
     align-items: flex-start;
+    /* justify-content: Distribuisce i figli lungo l’asse principale del layout. */
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 12px;
 }
+/* Definisce disposizione Flexbox, spaziatura per .admin-user-identity, .admin-user-actions, */
+/* .admin-user-name-fields e gli altri selettori del gruppo. */
 .admin-user-identity,
 .admin-user-actions,
 .admin-user-name-fields,
 .admin-certificate-controls {
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
 }
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo, adattamento di immagini e video per */
+/* .admin-user-avatar. */
 .admin-user-avatar {
     width: 50px;
+    /* height: Altezza del riquadro; le unità dvh seguono il viewport dinamico del dispositivo. */
     height: 50px;
     border: 2px solid #ccc;
     border-radius: 50%;
+    /* object-fit: Controlla l’adattamento di immagini e video: contain conserva il contenuto intero, cover può */
+    /* ritagliarlo. */
     object-fit: cover;
 }
+/* Definisce dimensioni e adattamento per .admin-user-data. */
 .admin-user-data { min-width: 0; }
+/* Definisce spaziatura per .admin-user-name-fields. */
 .admin-user-name-fields { gap: 5px; margin-bottom: 5px; }
+/* Definisce spaziatura, sfondo e aspetto visivo per .admin-field. */
 .admin-field { padding: 6px 8px; box-sizing: border-box; border-radius: 6px; }
+/* Definisce dimensioni e adattamento per .admin-field-name. */
 .admin-field-name { width: 110px; }
+/* Definisce dimensioni e adattamento per .admin-field-age. */
 .admin-field-age { width: 65px; }
+/* Definisce dimensioni e adattamento per .admin-field-bio. */
 .admin-field-bio { width: 100%; }
+/* Definisce dimensioni e adattamento per .admin-role-select. */
 .admin-role-select { min-width: 105px; }
+/* Definisce testo e leggibilità per .admin-user-email. */
 .admin-user-email { color: #777; font-size: 13px; }
+/* Definisce spaziatura, testo e leggibilità, sfondo e aspetto visivo per .admin-action-btn. */
 .admin-action-btn {
     padding: 7px 11px;
     border: 0;
@@ -138,15 +222,28 @@
     cursor: pointer;
     transition: filter 0.2s, transform 0.2s;
 }
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .admin-action-btn:hover. Si applica al passaggio */
+/* del puntatore. */
+/* filter: Applica un effetto al contenuto disegnato, come luminosità o scala di grigi. */
+/* transform: Trasforma visivamente il riquadro, per esempio spostandolo, ruotandolo o specchiandolo. */
 .admin-action-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .admin-action-btn.is-warning. */
 .admin-action-btn.is-warning { color: #222; background: #ffc107; }
+/* Definisce sfondo e aspetto visivo per .admin-action-btn.is-success. */
 .admin-action-btn.is-success { background: #28a745; }
+/* Definisce sfondo e aspetto visivo per .admin-action-btn.is-danger. */
 .admin-action-btn.is-danger { background: #dc3545; }
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .admin-action-btn.is-outline. */
 .admin-action-btn.is-outline { color: #17a2b8; border: 1px solid #17a2b8; background: #fff; }
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .admin-action-btn.is-outline:hover. Si applica al */
+/* passaggio del puntatore. */
 .admin-action-btn.is-outline:hover { color: #fff; background: #17a2b8; }
+/* Definisce disposizione Flexbox, spaziatura, sfondo e aspetto visivo per .admin-certificate-box. */
 .admin-certificate-box {
+    /* margin-top: Margine esterno applicato al lato indicato. */
     margin-top: 15px;
     padding: 10px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -156,14 +253,23 @@
     border-radius: 8px;
     background: rgba(255,255,255,0.62);
 }
+/* Definisce testo e leggibilità per .admin-certificate-status. */
 .admin-certificate-status { font-size: 13px; }
+/* Definisce testo e leggibilità per .admin-certificate-status.is-valid. */
 .admin-certificate-status.is-valid { color: #28a745; }
+/* Definisce testo e leggibilità per .admin-certificate-status.is-invalid. */
 .admin-certificate-status.is-invalid { color: #dc3545; }
+/* Definisce testo e leggibilità per .admin-field-label. */
 .admin-field-label { color: #777; font-size: 11px; }
+/* Definisce testo e leggibilità per .admin-field-date. */
 .admin-field-date { font-size: 11px; }
+/* Definisce testo e leggibilità per .admin-save-hint. */
+/* font-style: Stile del carattere, per esempio normale o corsivo. */
 .admin-save-hint { color: #888; font-size: 11px; font-style: italic; }
+/* Definisce disposizione Flexbox, spaziatura, sfondo e aspetto visivo per .admin-entity-row. */
 .admin-entity-row {
     padding: 15px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -172,19 +278,31 @@
     border-radius: 12px;
     background: rgba(255,255,255,0.48);
 }
+/* Definisce disposizione Flexbox, spaziatura per .admin-entity-content. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+/* flex-direction: Direzione lungo cui Flexbox dispone i figli. */
 .admin-entity-content { display: flex; flex-direction: column; gap: 4px; }
+/* Definisce testo e leggibilità per .admin-entity-meta. */
 .admin-entity-meta { color: #777; font-size: 13px; }
+/* Definisce disposizione Flexbox, spaziatura per .admin-entity-actions. */
+/* Flexbox dispone e allinea i figli di questo componente. */
 .admin-entity-actions { display: flex; gap: 10px; }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 768px). */
 @media (max-width: 768px) {
+    /* Configura la rappresentazione per .admin-form-row, .admin-user-header, .admin-certificate-box e gli altri */
+    /* selettori del gruppo. */
     .admin-form-row,
     .admin-user-header,
     .admin-certificate-box,
     .admin-entity-row {
         align-items: stretch;
+        /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
         flex-direction: column;
     }
 
+    /* Definisce dimensioni e adattamento per .admin-form-row input, .admin-form-row select, .admin-form-grow e gli */
+    /* altri selettori del gruppo. */
     .admin-form-row input,
     .admin-form-row select,
     .admin-form-grow,
@@ -195,12 +313,14 @@
         width: 100%;
     }
 
+    /* Definisce dimensioni e adattamento per .admin-user-actions, .admin-entity-actions, .admin-form-actions. */
     .admin-user-actions,
     .admin-entity-actions,
     .admin-form-actions {
         width: 100%;
     }
 
+    /* Configura la rappresentazione per .admin-user-actions > *, .admin-entity-actions > *, .admin-form-actions > *. */
     .admin-user-actions > *,
     .admin-entity-actions > *,
     .admin-form-actions > * {
@@ -209,32 +329,42 @@
 }
 
 /* Admin dashboard layout */
+/* Definisce spaziatura, testo e leggibilità per #pagina-admin > h1. */
 #pagina-admin > h1 {
     margin: 0 0 8px;
     color: var(--ink);
     font-size: clamp(34px, 4vw, 56px);
+    /* letter-spacing: Distanza aggiuntiva tra i caratteri. */
     letter-spacing: -0.06em;
+    /* text-shadow: Ombra applicata ai caratteri. */
     text-shadow: none;
 }
 
+/* Definisce spaziatura, testo e leggibilità per #pagina-admin > p. */
 #pagina-admin > p {
     margin: 0 0 24px;
     color: var(--muted);
     font-weight: 700;
 }
 
+/* Definisce spaziatura, sfondo e aspetto visivo per .admin-panel. */
 .admin-panel {
     padding: 24px;
     border-radius: var(--radius-lg);
 }
 
+/* Definisce disposizione Grid, spaziatura per .admin-stats-grid. */
 .admin-stats-grid {
     margin: 0 0 24px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* grid-template-columns: Definisce le colonne della griglia; fr divide lo spazio disponibile e minmax ne */
+    /* stabilisce i limiti. */
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px;
 }
 
+/* Definisce spaziatura, sfondo e aspetto visivo per .admin-stats-grid article. */
 .admin-stats-grid article {
     padding: 20px;
     border: 1px solid rgba(214, 226, 240, 0.86);
@@ -243,15 +373,18 @@
     box-shadow: var(--card-shadow);
 }
 
+/* Definisce testo e leggibilità per .admin-stats-grid span. */
 .admin-stats-grid span {
     display: block;
     color: var(--neon-magenta);
     font-size: 13px;
     font-weight: 900;
+    /* text-transform: Trasformazione visiva delle lettere senza cambiare il testo originale. */
     text-transform: uppercase;
     letter-spacing: 0.08em;
 }
 
+/* Definisce spaziatura, testo e leggibilità per .admin-stats-grid strong. */
 .admin-stats-grid strong {
     display: block;
     margin-top: 8px;
@@ -260,6 +393,7 @@
     letter-spacing: -0.03em;
 }
 
+/* Definisce sfondo e aspetto visivo per .admin-user-row, .admin-entity-row. */
 .admin-user-row,
 .admin-entity-row {
     border: 1px solid rgba(214, 226, 240, 0.84);
@@ -268,6 +402,8 @@
     box-shadow: var(--card-shadow);
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .admin-action-btn.is-warning, */
+/* .admin-action-btn.is-success, .admin-action-btn.is-danger e gli altri selettori del gruppo. */
 .admin-action-btn.is-warning,
 .admin-action-btn.is-success,
 .admin-action-btn.is-danger,
@@ -279,10 +415,12 @@
 }
 
 /* Admin dashboard polish */
+/* Definisce testo e leggibilità per #pagina-admin. */
 #pagina-admin {
     color: var(--ink);
 }
 
+/* Definisce spaziatura, sfondo e aspetto visivo per #pagina-admin .admin-hero-panel. */
 #pagina-admin .admin-hero-panel {
     margin-bottom: 22px;
     padding: 30px;
@@ -294,6 +432,8 @@
     box-shadow: var(--card-shadow);
 }
 
+/* Definisce spaziatura, testo e leggibilità per #pagina-admin .admin-hero-panel .eyebrow, #pagina-admin */
+/* .admin-section-heading span. */
 #pagina-admin .admin-hero-panel .eyebrow,
 #pagina-admin .admin-section-heading span {
     margin: 0;
@@ -304,15 +444,20 @@
     text-transform: uppercase;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per #pagina-admin .admin-hero-panel h1. */
 #pagina-admin .admin-hero-panel h1 {
     margin: 8px 0 10px;
+    /* max-width: Limite superiore alla larghezza del riquadro. */
     max-width: 760px;
     color: var(--ink);
     font-size: clamp(34px, 3.6vw, 54px);
+    /* line-height: Altezza delle righe di testo. */
     line-height: 1.02;
     letter-spacing: 0;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per #pagina-admin .admin-hero-panel */
+/* p:last-child. */
 #pagina-admin .admin-hero-panel p:last-child {
     margin: 0;
     max-width: 680px;
@@ -322,40 +467,57 @@
     line-height: 1.55;
 }
 
+/* Definisce spaziatura per #pagina-admin .admin-stats-grid. */
 #pagina-admin .admin-stats-grid {
     margin-bottom: 18px;
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per #pagina-admin .admin-stats-grid */
+/* article. */
 #pagina-admin .admin-stats-grid article {
+    /* min-height: Altezza minima consentita; zero permette di limitare il riquadro e usare lo scorrimento interno. */
     min-height: 118px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
+    /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
     flex-direction: column;
     justify-content: center;
     gap: 6px;
 }
 
+/* Definisce testo e leggibilità per #pagina-admin .admin-stats-grid strong. */
 #pagina-admin .admin-stats-grid strong {
     font-size: 26px;
     letter-spacing: 0;
 }
 
+/* Definisce testo e leggibilità per #pagina-admin .admin-stats-grid small. */
 #pagina-admin .admin-stats-grid small {
     color: var(--muted);
     font-weight: 800;
 }
 
+/* Definisce disposizione Grid, spaziatura per #pagina-admin .admin-quick-actions. */
 #pagina-admin .admin-quick-actions {
     margin: 0 0 28px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 14px;
 }
 
+/* Definisce disposizione Flexbox, posizione e sovrapposizione, dimensioni e adattamento per #pagina-admin */
+/* .admin-mobile-card. */
 #pagina-admin .admin-mobile-card {
+    /* position: Sceglie il riferimento di posizionamento; absolute usa un antenato posizionato, fixed il viewport */
+    /* salvo contenitori speciali. */
     position: relative;
     min-height: 122px;
     padding: 18px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
+    /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
@@ -369,13 +531,18 @@
     cursor: pointer;
 }
 
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per #pagina-admin .admin-mobile-card:hover, */
+/* #pagina-admin .admin-mobile-card:focus-visible. Si applica al passaggio del puntatore. Evidenzia il controllo */
+/* raggiunto con la tastiera o il focus. */
 #pagina-admin .admin-mobile-card:hover,
 #pagina-admin .admin-mobile-card:focus-visible {
+    /* border-color: Colore dei bordi già definiti. */
     border-color: rgba(0, 196, 255, 0.42);
     box-shadow: 0 16px 42px rgba(23, 63, 112, 0.14);
     transform: translateY(-1px);
 }
 
+/* Definisce testo e leggibilità per #pagina-admin .admin-mobile-card span. */
 #pagina-admin .admin-mobile-card span {
     color: var(--neon-cyan);
     font-size: 12px;
@@ -384,12 +551,14 @@
     text-transform: uppercase;
 }
 
+/* Definisce testo e leggibilità per #pagina-admin .admin-mobile-card strong. */
 #pagina-admin .admin-mobile-card strong {
     color: var(--ink);
     font-size: 16px;
     line-height: 1.2;
 }
 
+/* Definisce testo e leggibilità per #pagina-admin .admin-mobile-card small. */
 #pagina-admin .admin-mobile-card small {
     color: var(--muted);
     font-size: 13px;
@@ -397,9 +566,12 @@
     line-height: 1.35;
 }
 
+/* Definisce posizione e sovrapposizione, testo e leggibilità per #pagina-admin .admin-mobile-card em. */
 #pagina-admin .admin-mobile-card em {
     position: absolute;
+    /* right: Distanza dal lato destro nel posizionamento del riquadro. */
     right: 16px;
+    /* top: Distanza dal lato superiore nel posizionamento del riquadro. */
     top: 14px;
     color: var(--neon-magenta);
     font-style: normal;
@@ -407,19 +579,25 @@
     line-height: 1;
 }
 
+/* Definisce spaziatura, contenimento e scorrimento per #pagina-admin .admin-section-block. */
 #pagina-admin .admin-section-block {
     margin-top: 36px;
+    /* scroll-margin-top: Spazio da mantenere sopra il componente quando viene portato in vista. */
     scroll-margin-top: 128px;
 }
 
+/* Definisce disposizione Grid, spaziatura per #pagina-admin .admin-section-heading. */
 #pagina-admin .admin-section-heading {
     margin-bottom: 14px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: minmax(0, 1fr) minmax(220px, 330px);
     align-items: end;
     gap: 20px;
 }
 
+/* Definisce spaziatura, testo e leggibilità per #pagina-admin .admin-section-heading h2. */
 #pagina-admin .admin-section-heading h2 {
     margin: 6px 0 6px;
     color: var(--ink);
@@ -428,6 +606,7 @@
     letter-spacing: 0;
 }
 
+/* Definisce spaziatura, testo e leggibilità per #pagina-admin .admin-section-heading p. */
 #pagina-admin .admin-section-heading p {
     margin: 0;
     color: var(--muted);
@@ -435,6 +614,7 @@
     line-height: 1.5;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per #pagina-admin .admin-search-input. */
 #pagina-admin .admin-search-input {
     width: 100%;
     min-height: 46px;
@@ -444,19 +624,25 @@
     color: var(--ink);
     background: rgba(255, 255, 255, 0.9);
     box-shadow: 0 8px 20px rgba(22, 48, 86, 0.08);
+    /* font: Scorciatoia che imposta più proprietà tipografiche insieme. */
     font: inherit;
     font-weight: 800;
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-admin .admin-search-input:focus. Evidenzia il controllo raggiunto */
+/* con la tastiera o il focus. */
 #pagina-admin .admin-search-input:focus {
     border-color: rgba(225, 0, 155, 0.42);
+    /* outline: Bordo di evidenziazione che non occupa spazio nel layout, usato anche per il focus. */
     outline: 3px solid rgba(225, 0, 155, 0.12);
 }
 
+/* Definisce spaziatura per #pagina-admin .admin-form-panel. */
 #pagina-admin .admin-form-panel {
     margin-bottom: 18px;
 }
 
+/* Definisce spaziatura, testo e leggibilità per #pagina-admin .admin-form-panel h3. */
 #pagina-admin .admin-form-panel h3 {
     margin: 0 0 16px;
     color: var(--ink);
@@ -465,24 +651,33 @@
     letter-spacing: 0;
 }
 
+/* Definisce disposizione Grid, spaziatura per #pagina-admin .admin-form-grid. */
 #pagina-admin .admin-form-grid {
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: minmax(220px, 1.8fr) repeat(4, minmax(112px, 1fr));
     align-items: end;
     gap: 14px;
 }
 
+/* Definisce tracce e posizione nella griglia per #pagina-admin #admin-form-gare .admin-form-grid. */
 #pagina-admin #admin-form-gare .admin-form-grid {
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: minmax(220px, 1.7fr) repeat(3, minmax(120px, 1fr));
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per #pagina-admin .admin-field-group. */
 #pagina-admin .admin-field-group {
     min-width: 0;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
+    /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
     flex-direction: column;
     gap: 7px;
 }
 
+/* Definisce testo e leggibilità per #pagina-admin .admin-field-group > span, #pagina-admin .admin-upload-label. */
 #pagina-admin .admin-field-group > span,
 #pagina-admin .admin-upload-label {
     color: var(--muted);
@@ -492,6 +687,8 @@
     text-transform: uppercase;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per #pagina-admin .admin-field-group input, */
+/* #pagina-admin .admin-field-group select, #pagina-admin .admin-field-group textarea. */
 #pagina-admin .admin-field-group input,
 #pagina-admin .admin-field-group select,
 #pagina-admin .admin-field-group textarea {
@@ -506,12 +703,17 @@
     font-weight: 700;
 }
 
+/* Definisce dimensioni e adattamento, testo e leggibilità per #pagina-admin .admin-field-group textarea. */
 #pagina-admin .admin-field-group textarea {
     min-height: 98px;
+    /* resize: Stabilisce se il campo può essere ridimensionato manualmente. */
     resize: vertical;
     line-height: 1.45;
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-admin .admin-field-group input:focus, #pagina-admin */
+/* .admin-field-group select:focus, #pagina-admin .admin-field-group textarea:focus. Evidenzia il controllo */
+/* raggiunto con la tastiera o il focus. */
 #pagina-admin .admin-field-group input:focus,
 #pagina-admin .admin-field-group select:focus,
 #pagina-admin .admin-field-group textarea:focus {
@@ -519,13 +721,16 @@
     outline: 3px solid rgba(0, 196, 255, 0.12);
 }
 
+/* Definisce spaziatura per #pagina-admin .admin-field-group-wide, #pagina-admin .admin-file-box. */
 #pagina-admin .admin-field-group-wide,
 #pagina-admin .admin-file-box {
     margin-top: 14px;
 }
 
+/* Definisce disposizione Grid, spaziatura, sfondo e aspetto visivo per #pagina-admin .admin-file-box. */
 #pagina-admin .admin-file-box {
     padding: 16px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
     gap: 8px;
     border: 1px dashed rgba(137, 154, 178, 0.72);
@@ -533,47 +738,59 @@
     background: rgba(255, 255, 255, 0.58);
 }
 
+/* Definisce testo e leggibilità per #pagina-admin .admin-file-box small. */
 #pagina-admin .admin-file-box small {
     color: var(--muted);
     font-weight: 700;
 }
 
+/* Definisce dimensioni e adattamento per #pagina-admin .admin-file-input. */
 #pagina-admin .admin-file-input {
     max-width: 100%;
 }
 
+/* Definisce disposizione Flexbox, spaziatura per #pagina-admin .admin-form-actions. */
 #pagina-admin .admin-form-actions {
     margin-top: 16px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
 }
 
+/* Definisce spaziatura per #pagina-admin .admin-user-row, #pagina-admin .admin-entity-row. */
 #pagina-admin .admin-user-row,
 #pagina-admin .admin-entity-row {
     padding: 18px;
 }
 
+/* Definisce disposizione Flexbox, spaziatura per #pagina-admin .admin-entity-row. */
 #pagina-admin .admin-entity-row {
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per #pagina-admin .admin-entity-content. */
 #pagina-admin .admin-entity-content {
     min-width: 0;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
+    /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
     flex-direction: column;
     gap: 5px;
 }
 
+/* Definisce testo e leggibilità, contenimento e scorrimento per #pagina-admin .admin-entity-content strong. */
 #pagina-admin .admin-entity-content strong {
     color: var(--ink);
     font-size: 17px;
     overflow-wrap: anywhere;
 }
 
+/* Definisce testo e leggibilità per #pagina-admin .admin-entity-meta. */
 #pagina-admin .admin-entity-meta {
     color: var(--muted);
     font-size: 13px;
@@ -581,14 +798,18 @@
     line-height: 1.35;
 }
 
+/* Definisce disposizione Flexbox, spaziatura per #pagina-admin .admin-entity-actions. */
 #pagina-admin .admin-entity-actions {
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
     gap: 10px;
 }
 
+/* Definisce disposizione Flexbox, spaziatura, testo e leggibilità per #pagina-admin .admin-user-meta. */
 #pagina-admin .admin-user-meta {
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -598,6 +819,7 @@
     font-weight: 800;
 }
 
+/* Definisce spaziatura, testo e leggibilità, sfondo e aspetto visivo per #pagina-admin .admin-role-badge. */
 #pagina-admin .admin-role-badge {
     padding: 5px 9px;
     border: 1px solid rgba(137, 154, 178, 0.26);
@@ -609,164 +831,221 @@
     text-transform: uppercase;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per #pagina-admin .admin-role-badge.is-admin. */
 #pagina-admin .admin-role-badge.is-admin {
     color: #a60073;
     background: rgba(225, 0, 155, 0.1);
     border-color: rgba(225, 0, 155, 0.22);
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per #pagina-admin .admin-role-badge.is-coach. */
 #pagina-admin .admin-role-badge.is-coach {
     color: #007b9d;
     background: rgba(0, 196, 255, 0.1);
     border-color: rgba(0, 196, 255, 0.22);
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per #pagina-admin .admin-role-badge.is-partner. */
 #pagina-admin .admin-role-badge.is-partner {
     color: #475569;
     background: rgba(226, 232, 240, 0.88);
 }
 
+/* Definisce effetti e transizioni per #pagina-admin .admin-highlight. */
 #pagina-admin .admin-highlight {
+    /* animation: Collega al componente una sequenza @keyframes e ne stabilisce durata e ripetizioni. */
     animation: adminRowHighlight 1.8s ease;
 }
 
+/* Definisce l’animazione adminRowHighlight, richiamabile dalla proprietà animation. */
 @keyframes adminRowHighlight {
+    /* Fotogramma dell’animazione nella posizione temporale 0%, 100%. */
     0%,
     100% {
         box-shadow: var(--card-shadow);
     }
 
+    /* Fotogramma dell’animazione nella posizione temporale 30%. */
     30% {
         border-color: rgba(0, 196, 255, 0.66);
         box-shadow: 0 0 0 5px rgba(0, 196, 255, 0.16), var(--card-shadow);
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 1180px). */
 @media screen and (max-width: 1180px) {
+    /* Definisce tracce e posizione nella griglia per #pagina-admin .admin-quick-actions. */
     #pagina-admin .admin-quick-actions {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    /* Definisce tracce e posizione nella griglia per #pagina-admin .admin-form-grid, #pagina-admin #admin-form-gare */
+    /* .admin-form-grid. */
     #pagina-admin .admin-form-grid,
     #pagina-admin #admin-form-gare .admin-form-grid {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    /* Definisce tracce e posizione nella griglia per #pagina-admin .admin-form-grow. */
     #pagina-admin .admin-form-grow {
+        /* grid-column: Colonne occupate dal singolo elemento nella griglia. */
         grid-column: 1 / -1;
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (minimo larghezza 768px; massimo larghezza */
+/* 900px). */
 @media screen and (min-width: 768px) and (max-width: 900px) {
+    /* Definisce tracce e posizione nella griglia per #pagina-admin .admin-stats-grid, #pagina-admin */
+    /* .admin-quick-actions. */
     #pagina-admin .admin-stats-grid,
     #pagina-admin .admin-quick-actions {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     }
 
+    /* Definisce tracce e posizione nella griglia per #pagina-admin .admin-section-heading, #pagina-admin */
+    /* .admin-form-grid, #pagina-admin #admin-form-gare .admin-form-grid. */
     #pagina-admin .admin-section-heading,
     #pagina-admin .admin-form-grid,
     #pagina-admin #admin-form-gare .admin-form-grid {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr !important;
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 767px). */
 @media screen and (max-width: 767px) {
+    /* Definisce sfondo e aspetto visivo per #pagina-admin .admin-hero-panel, #pagina-admin .admin-panel. */
     #pagina-admin .admin-hero-panel,
     #pagina-admin .admin-panel {
         border-radius: 20px !important;
     }
 
+    /* Definisce spaziatura, sfondo e aspetto visivo per #pagina-admin .admin-hero-panel. */
     #pagina-admin .admin-hero-panel {
         padding: 24px;
         border-radius: 20px;
     }
 
+    /* Definisce testo e leggibilità per #pagina-admin .admin-hero-panel h1. */
     #pagina-admin .admin-hero-panel h1 {
         font-size: clamp(30px, 9vw, 40px) !important;
         line-height: 1.05 !important;
         letter-spacing: 0 !important;
     }
 
+    /* Definisce testo e leggibilità per #pagina-admin .admin-hero-panel p:last-child. */
     #pagina-admin .admin-hero-panel p:last-child {
         font-size: 15px !important;
         line-height: 1.48 !important;
     }
 
+    /* Definisce tracce e posizione nella griglia per #pagina-admin .admin-quick-actions, #pagina-admin */
+    /* .admin-section-heading, #pagina-admin .admin-form-grid e gli altri selettori del gruppo. */
     #pagina-admin .admin-quick-actions,
     #pagina-admin .admin-section-heading,
     #pagina-admin .admin-form-grid,
     #pagina-admin #admin-form-gare .admin-form-grid {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr;
     }
 
+    /* Definisce spaziatura, testo e leggibilità per #pagina-admin .admin-section-heading. */
     #pagina-admin .admin-section-heading {
         align-items: stretch;
         gap: 12px;
         text-align: left;
     }
 
+    /* Definisce spaziatura, contenimento e scorrimento per #pagina-admin .admin-section-block. */
     #pagina-admin .admin-section-block {
         margin-top: 30px;
         scroll-margin-top: 96px;
     }
 
+    /* Definisce dimensioni e adattamento per #pagina-admin .admin-mobile-card. */
     #pagina-admin .admin-mobile-card {
         min-height: 108px;
     }
 
+    /* Configura la rappresentazione per #pagina-admin .admin-user-row, #pagina-admin .admin-entity-row. */
     #pagina-admin .admin-user-row,
     #pagina-admin .admin-entity-row {
         align-items: stretch;
+        /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
         flex-direction: column;
     }
 
+    /* Configura la rappresentazione per #pagina-admin .admin-user-header, #pagina-admin .admin-certificate-box, */
+    /* #pagina-admin .admin-user-name-fields. */
     #pagina-admin .admin-user-header,
     #pagina-admin .admin-certificate-box,
     #pagina-admin .admin-user-name-fields {
         align-items: stretch;
     }
 
+    /* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per #pagina-admin .admin-user-actions, */
+    /* #pagina-admin .admin-certificate-controls. */
     #pagina-admin .admin-user-actions,
     #pagina-admin .admin-certificate-controls {
         width: 100%;
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid !important;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr !important;
         gap: 8px !important;
     }
 
+    /* Definisce dimensioni e adattamento per #pagina-admin .admin-field, #pagina-admin .admin-role-select. */
     #pagina-admin .admin-field,
     #pagina-admin .admin-role-select {
         width: 100% !important;
     }
 
+    /* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per #pagina-admin .admin-entity-actions, */
+    /* #pagina-admin .admin-form-actions. */
     #pagina-admin .admin-entity-actions,
     #pagina-admin .admin-form-actions {
         width: 100%;
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid !important;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr !important;
         gap: 10px !important;
         justify-content: stretch;
     }
 
+    /* Definisce dimensioni e adattamento per #pagina-admin .admin-entity-actions > *, #pagina-admin */
+    /* .admin-form-actions > *. */
     #pagina-admin .admin-entity-actions > *,
     #pagina-admin .admin-form-actions > * {
         width: 100%;
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 380px). */
 @media screen and (max-width: 380px) {
+    /* Definisce testo e leggibilità per #pagina-admin .admin-hero-panel h1. */
     #pagina-admin .admin-hero-panel h1 {
         font-size: 29px !important;
     }
 }
 
 /* Admin interactive states */
+/* Definisce sfondo e aspetto visivo, interazione con il puntatore per .admin-form-submit.is-loading, */
+/* .admin-action-btn.is-loading. */
 .admin-form-submit.is-loading,
 .admin-action-btn.is-loading {
     cursor: wait;
+    /* opacity: Trasparenza del riquadro e dei suoi contenuti, senza rimuoverlo dal layout. */
     opacity: 0.72;
 }
 
+/* Definisce sfondo e aspetto visivo, interazione con il puntatore per .admin-form-submit:disabled, */
+/* .admin-action-btn:disabled. */
 .admin-form-submit:disabled,
 .admin-action-btn:disabled {
     cursor: not-allowed;

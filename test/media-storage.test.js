@@ -1,13 +1,28 @@
+// Test automatici Node.js: prepara dati o servizi di prova e verifica gli esiti tramite asserzioni.
+// Mock e contesti isolati sostituiscono le risorse previste dalla prova; le pulizie registrate ripristinano lo
+// stato al termine.
+// Una Promise rappresenta un risultato futuro; le callback ricevono gli esiti e async/await ne rendono sequenziale
+// la gestione.
+// assert: Le asserzioni fanno fallire il test quando risultato ed esito atteso non coincidono.
 const assert = require('node:assert/strict');
+// execFile: Avvia e controlla processi Node.js separati durante i test.
 const { execFile } = require('node:child_process');
+// path: path costruisce e verifica percorsi con i separatori corretti del sistema operativo.
 const path = require('node:path');
+// test: Il test runner integrato di Node.js registra prove, simulazioni e pulizie a fine test.
 const { test } = require('node:test');
+// promisify: Importa la dipendenza util utilizzata dalle operazioni di questo modulo.
 const { promisify } = require('node:util');
 
+// exec: Risultato della chiamata promisify, riutilizzato nelle istruzioni successive.
 const exec = promisify(execFile);
+// root: Risultato della chiamata path.resolve, riutilizzato nelle istruzioni successive.
 const root = path.resolve(__dirname, '..');
 
+// Esegue il caso di prova dichiarato; le asserzioni confrontano il risultato con quello atteso.
+// È async: restituisce una Promise; await sospende questa funzione fino al completamento dell’operazione attesa.
 test('un endpoint S3 non valido restituisce 503 senza interrompere il server', async () => {
+    // script: Codice del servizio di prova da eseguire in un processo separato.
     const script = `
         const assert = require('node:assert/strict');
         const { once } = require('node:events');
@@ -40,6 +55,7 @@ test('un endpoint S3 non valido restituisce 503 senza interrompere il server', a
             }
         })().catch(error => { console.error(error); process.exitCode = 1; });
     `;
+    // result: Risultato dell’operazione asincrona, disponibile dopo il completamento della Promise.
     const result = await exec(process.execPath, ['-e', script], {
         cwd: root,
         env: {
@@ -51,13 +67,17 @@ test('un endpoint S3 non valido restituisce 503 senza interrompere il server', a
             AWS_ACCESS_KEY_ID: 'test-access-key',
             AWS_SECRET_ACCESS_KEY: 'test-secret-key'
         },
+        // timeout: Tempo massimo dell’operazione espresso in millisecondi.
         timeout: 15000,
         windowsHide: true
     });
     assert.doesNotMatch(result.stderr, /Unhandled 'error' event/);
 });
 
+// Esegue il caso di prova dichiarato; le asserzioni confrontano il risultato con quello atteso.
+// È async: restituisce una Promise; await sospende questa funzione fino al completamento dell’operazione attesa.
 test('upload S3 e lettura parziale conservano il contenuto del file', async () => {
+    // script: Codice del servizio di prova da eseguire in un processo separato.
     const script = `
         const assert = require('node:assert/strict');
         const { once } = require('node:events');
@@ -134,6 +154,7 @@ test('upload S3 e lettura parziale conservano il contenuto del file', async () =
             AWS_ACCESS_KEY_ID: 'test-access-key',
             AWS_SECRET_ACCESS_KEY: 'test-secret-key'
         },
+        // timeout: Tempo massimo dell’operazione espresso in millisecondi.
         timeout: 15000,
         windowsHide: true
     });

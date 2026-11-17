@@ -1,41 +1,73 @@
+# GitHub Actions: prepara Node.js e un MySQL temporaneo per controlli sintattici e test automatici.
+# Nome leggibile del servizio, workflow o passaggio.
 name: CI
 
+# Eventi GitHub che avviano il workflow.
 on:
+  # Esegue i controlli quando viene proposta una pull request.
   pull_request:
+  # Esegue il workflow per i push sui rami indicati.
   push:
+    # Elenco dei rami a cui si applica il trigger.
     branches:
       - main
       - 'codex/**'
 
+# Permessi minimi concessi al token del workflow.
 permissions:
+  # Accesso ai contenuti del repository richiesto dal checkout.
   contents: read
 
+# Definisce i lavori eseguiti dal workflow.
 jobs:
+  # Lavoro che prepara ambiente e test.
   test:
+    # Sistema operativo della macchina temporanea di CI.
     runs-on: ubuntu-latest
+    # Servizi da creare nel Blueprint o container di supporto nel workflow.
     services:
+      # Container MySQL dedicato alle prove automatiche.
       mysql:
+        # Immagine del container usato dal servizio di test.
         image: mysql:8.4
+        # Variabili di ambiente fornite al container o ai passaggi della CI.
         env:
+          # Impostazione del database temporaneo della CI, limitata all’ambiente della prova.
           MYSQL_ROOT_PASSWORD: local-ci-only
+          # Host ammessi dal database temporaneo della CI.
           MYSQL_ROOT_HOST: '%'
+        # Associa la porta del container a quella raggiungibile dai test.
         ports:
           - 3306:3306
+        # Opzioni del container; il blocco seguente contiene il controllo di salute.
         options: >-
           --health-cmd "mysqladmin ping -h 127.0.0.1 --silent"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 20
+    # Variabili di ambiente fornite al container o ai passaggi della CI.
     env:
+      # Porta che abilita le integrazioni MySQL della suite di test.
       LGS_TEST_MYSQL_PORT: 3306
+      # Impostazione di accesso usata soltanto dal database di prova.
       LGS_TEST_MYSQL_PASSWORD: local-ci-only
+    # Passaggi eseguiti in ordine nel lavoro di CI.
     steps:
+      # Azione GitHub riutilizzata per preparare repository o ambiente.
       - uses: actions/checkout@v6
+      # Azione GitHub riutilizzata per preparare repository o ambiente.
       - uses: actions/setup-node@v6
+        # Opzioni specifiche dell’azione GitHub.
         with:
+          # Versione Node.js utilizzata dal workflow.
           node-version: '24'
+          # Abilita il riuso della cache del gestore di pacchetti.
           cache: npm
+      # Comando eseguito sul runner della CI.
       - run: npm ci
+      # Nome leggibile del servizio, workflow o passaggio.
       - name: JavaScript syntax
+        # Comando eseguito sul runner della CI.
         run: git ls-files -z '*.js' | xargs -0 -n1 node --check
+      # Comando eseguito sul runner della CI.
       - run: npm test

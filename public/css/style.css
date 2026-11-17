@@ -1,21 +1,40 @@
+/* Stile generale della pagina e dei componenti; a parità di priorità e specificità prevalgono le regole */
+/* successive. */
+/* Un selettore .nome cerca una classe, #nome un id; spazi e > descrivono le relazioni fra gli elementi HTML. */
+/* Le proprietà --nome sono variabili CSS; var(--nome) ne legge il valore secondo la cascata e l’eredità. */
+/* !important dà priorità alla dichiarazione rispetto a quelle normali; fra regole equivalenti contano specificità */
+/* e ordine. */
 /* Sfondo principale */
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per body. */
 body {
+    /* margin: Spazio esterno tra questo riquadro e quelli vicini. */
     margin: 0;
+    /* font-family: Famiglia del carattere e alternative disponibili sul dispositivo. */
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     /* Gradiente statico magenta e turchese. */
+    /* background: Sfondo del riquadro, composto da colori, immagini o gradienti. */
     background: linear-gradient(135deg, #ff007f, #8a2be2, #00ced1, #00e5ff);
+    /* background-attachment: Stabilisce se lo sfondo scorre insieme al contenuto. */
     background-attachment: fixed;
+    /* color: Colore del testo e delle icone che usano currentColor. */
     color: #222;
+    /* min-height: Altezza minima consentita; zero permette di limitare il riquadro e usare lo scorrimento interno. */
     min-height: 100vh;
 }
 
+/* Configura la rappresentazione per button, a. */
 button, a {
+    /* outline: Bordo di evidenziazione che non occupa spazio nel layout, usato anche per il focus. */
     outline: none !important;
 }
+/* Configura la rappresentazione per button:focus, a:focus. Evidenzia il controllo raggiunto con la tastiera o il */
+/* focus. */
 button:focus, a:focus {
     outline: none !important;
 }
 
+/* Definisce sfondo e aspetto visivo per button:focus-visible, a:focus-visible, input:focus-visible e gli altri */
+/* selettori del gruppo. Evidenzia il controllo raggiunto con la tastiera o il focus. */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
@@ -23,53 +42,96 @@ textarea:focus-visible,
 select:focus-visible,
 [tabindex]:focus-visible {
     outline: 3px solid rgba(0, 229, 255, 0.88) !important;
+    /* outline-offset: Distanza fra l’evidenziazione e il bordo del componente. */
     outline-offset: 3px !important;
+    /* box-shadow: Ombra esterna o interna usata per distinguere piani e componenti. */
     box-shadow:
         0 0 0 4px rgba(255, 255, 255, 0.68),
         0 0 18px rgba(0, 229, 255, 0.58) !important;
 }
 
+/* Definisce l’animazione respiroGradiente, richiamabile dalla proprietà animation. */
 @keyframes respiroGradiente {
+    /* Fotogramma dell’animazione nella posizione temporale 0%. */
+    /* background-position: Posizione dell’immagine di sfondo nel riquadro. */
     0% { background-position: 0% 50%; }
+    /* Fotogramma dell’animazione nella posizione temporale 50%. */
     50% { background-position: 100% 50%; }
+    /* Fotogramma dell’animazione nella posizione temporale 100%. */
     100% { background-position: 0% 50%; }
 }
 
+/* Definisce visibilità nascosta per .hidden. */
+/* display: Sceglie il modello di impaginazione: flex e grid organizzano i figli, none nasconde il riquadro. */
 .hidden { display: none !important; }
+/* Definisce spaziatura, testo e leggibilità, effetti e transizioni per .sezione-pagina. */
+/* padding: Spazio interno fra bordo e contenuto del riquadro. */
+/* text-align: Allineamento del testo all’interno del riquadro. */
+/* animation: Collega al componente una sequenza @keyframes e ne stabilisce durata e ripetizioni. */
 .sezione-pagina { padding: 40px; text-align: center; animation: fadeInPage 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+/* Definisce l’animazione fadeInPage, richiamabile dalla proprietà animation. */
 @keyframes fadeInPage {
+    /* Fotogramma dell’animazione nella posizione temporale from. */
+    /* opacity: Trasparenza del riquadro e dei suoi contenuti, senza rimuoverlo dal layout. */
+    /* transform: Trasforma visivamente il riquadro, per esempio spostandolo, ruotandolo o specchiandolo. */
+    /* filter: Applica un effetto al contenuto disegnato, come luminosità o scala di grigi. */
     from { opacity: 0; transform: translateY(20px) scale(0.98); filter: blur(10px); }
+    /* Fotogramma dell’animazione nella posizione temporale to. */
     to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
 }
 
 /* Navbar */
+/* Definisce disposizione Flexbox, posizione e sovrapposizione, spaziatura per .navbar. */
 .navbar {
     background: rgba(255, 255, 255, 0.4) !important;
+    /* backdrop-filter: Applica l’effetto ai contenuti visibili dietro questo riquadro. */
     backdrop-filter: blur(25px) saturate(150%);
+    /* -webkit-backdrop-filter: Variante del filtro dello sfondo usata dai browser che richiedono il prefisso. */
     -webkit-backdrop-filter: blur(25px) saturate(150%);
+    /* border-bottom: Imposta l’aspetto del bordo o dell’angolo indicato. */
     border-bottom: 1px solid rgba(255, 255, 255, 0.6) !important;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+    /* Flexbox dispone e allinea i figli di questo componente. */
+    /* justify-content: Distribuisce i figli lungo l’asse principale del layout. */
     padding: 12px 30px; display: flex; justify-content: space-between;
+    /* align-items: Allinea i figli lungo l’asse trasversale del contenitore flex o grid. */
+    /* position: Sceglie il riferimento di posizionamento; absolute usa un antenato posizionato, fixed il viewport */
+    /* salvo contenitori speciali. */
+    /* top: Distanza dal lato superiore nel posizionamento del riquadro. */
+    /* z-index: Ordine di sovrapposizione nel contesto di impilamento corrente. */
     align-items: center; position: sticky; top: 0; z-index: 1000;
 }
+/* Definisce spaziatura, testo e leggibilità, sfondo e aspetto visivo per .navbar button. */
 .navbar button {
     background: rgba(255, 255, 255, 0.5); color: #333;
+    /* border: Spessore, stile e colore del bordo del riquadro. */
     border: none; padding: 8px 16px; margin: 0 5px;
+    /* border-radius: Arrotonda gli angoli; valori grandi permettono forme circolari o a capsula. */
+    /* font-weight: Peso del carattere: valori maggiori rendono il testo più marcato. */
+    /* font-size: Dimensione del testo; clamp permette di limitarne l’adattamento allo spazio. */
     border-radius: 20px; font-weight: 600; font-size: 14px;
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    /* cursor: Forma del cursore, usata per comunicare clic, attesa o indisponibilità. */
+    /* transition: Interpola nel tempo i cambiamenti delle proprietà indicate. */
     cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
+/* Definisce testo e leggibilità, sfondo e aspetto visivo, effetti e transizioni per .navbar button:hover. Si */
+/* applica al passaggio del puntatore. */
 .navbar button:hover {
     background: linear-gradient(135deg, #ff007f, #00e5ff); color: white;
     box-shadow: 0 8px 20px rgba(255, 0, 127, 0.4); transform: translateY(-2px);
 }
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .btn-accesso-rapido. */
 .btn-accesso-rapido {
     background: linear-gradient(135deg, #ff007f, #00e5ff) !important; color: white !important;
     border: none !important; box-shadow: 0 8px 20px rgba(0, 229, 255, 0.4) !important;
 }
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .btn-accesso-rapido:hover. Si applica al passaggio */
+/* del puntatore. */
 .btn-accesso-rapido:hover { transform: scale(1.05) translateY(-2px) !important; filter: brightness(1.1); }
 
 /* Bottoni icona della navbar */
+/* Definisce disposizione Flexbox, spaziatura, sfondo e aspetto visivo per .btn-icona-nav. */
 .btn-icona-nav {
     background: transparent !important;
     border: none !important;
@@ -78,6 +140,7 @@ select:focus-visible,
     box-shadow: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -86,6 +149,8 @@ select:focus-visible,
     outline: none !important;
 }
 
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .btn-icona-nav:hover. Si applica al passaggio del */
+/* puntatore. */
 .btn-icona-nav:hover {
     transform: scale(1.15) !important;
     filter: brightness(1.2);
@@ -93,16 +158,24 @@ select:focus-visible,
     box-shadow: none !important;
 }
 
+/* Definisce dimensioni e adattamento, effetti e transizioni, adattamento di immagini e video per .btn-icona-nav */
+/* img. */
 .btn-icona-nav img {
+    /* height: Altezza del riquadro; le unità dvh seguono il viewport dinamico del dispositivo. */
     height: 45px;
+    /* width: Larghezza del riquadro; percentuali e unità relative la legano al contenitore o al viewport. */
     width: auto;
+    /* object-fit: Controlla l’adattamento di immagini e video: contain conserva il contenuto intero, cover può */
+    /* ritagliarlo. */
     object-fit: contain;
+    /* mix-blend-mode: Modo in cui i colori del componente vengono combinati con lo sfondo. */
     mix-blend-mode: screen;
     display: block;
     transition: filter 0.3s ease;
 }
 
 /* Bottoni esplora in home */
+/* Definisce spaziatura, sfondo e aspetto visivo, effetti e transizioni per .btn-home-esplora. */
 .btn-home-esplora {
     background: transparent !important;
     border: none !important;
@@ -112,12 +185,18 @@ select:focus-visible,
     outline: none !important;
     animation: float-btn 3s ease-in-out infinite;
 }
+/* Definisce effetti e transizioni per .btn-home-esplora:nth-child(2). */
+/* animation-delay: Attesa prima dell’inizio dell’animazione. */
 .btn-home-esplora:nth-child(2) { animation-delay: 1.5s; }
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .btn-home-esplora:hover. Si applica al passaggio */
+/* del puntatore. */
 .btn-home-esplora:hover {
     transform: scale(1.15) translateY(-5px) !important;
     filter: brightness(1.3);
+    /* animation-play-state: Permette di eseguire o sospendere l’animazione. */
     animation-play-state: paused;
 }
+/* Definisce dimensioni e adattamento, adattamento di immagini e video per .btn-home-esplora img. */
 .btn-home-esplora img {
     height: 75px;
     width: auto;
@@ -125,83 +204,150 @@ select:focus-visible,
     mix-blend-mode: screen;
 }
 
+/* Definisce l’animazione float-btn, richiamabile dalla proprietà animation. */
 @keyframes float-btn {
+    /* Fotogramma dell’animazione nella posizione temporale 0%. */
     0% { transform: translateY(0px); }
+    /* Fotogramma dell’animazione nella posizione temporale 50%. */
     50% { transform: translateY(-10px); }
+    /* Fotogramma dell’animazione nella posizione temporale 100%. */
     100% { transform: translateY(0px); }
 }
 
 /* Loading screen e home */
+/* Definisce disposizione Flexbox, posizione e sovrapposizione, dimensioni e adattamento per .loading-screen. */
 .loading-screen {
+    /* left: Distanza dal lato sinistro nel posizionamento del riquadro. */
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+    /* Flexbox dispone e allinea i figli di questo componente. */
+    /* flex-direction: Direzione lungo cui Flexbox dispone i figli. */
     z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.8s ease;
 }
+/* Definisce sfondo e aspetto visivo, interazione con il puntatore per .loading-screen.is-hidden. */
 .loading-screen.is-hidden {
     opacity: 0;
+    /* pointer-events: Stabilisce se il componente può ricevere eventi del puntatore. */
     pointer-events: none;
 }
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo, effetti e transizioni per .loader-pulse. */
 .loader-pulse {
     width: 60px; height: 60px; background: linear-gradient(135deg, #ff007f, #00e5ff); border-radius: 50%;
     animation: pulse-loading 1.5s infinite ease-in-out; box-shadow: 0 0 30px rgba(255, 0, 127, 0.5);
 }
+/* Definisce spaziatura, testo e leggibilità per .loading-text. */
+/* margin-top: Margine esterno applicato al lato indicato. */
+/* letter-spacing: Distanza aggiuntiva tra i caratteri. */
+/* text-shadow: Ombra applicata ai caratteri. */
 .loading-text { color: #111; font-weight: 800; margin-top: 20px; letter-spacing: 2px; text-shadow: 0 2px 5px rgba(255,255,255,0.8); }
+/* Definisce l’animazione pulse-loading, richiamabile dalla proprietà animation. */
 @keyframes pulse-loading {
+    /* Fotogramma dell’animazione nella posizione temporale 0%. */
     0% { transform: scale(0.8); opacity: 0.5; }
+    /* Fotogramma dell’animazione nella posizione temporale 50%. */
     50% { transform: scale(1.2); opacity: 1; }
+    /* Fotogramma dell’animazione nella posizione temporale 100%. */
     100% { transform: scale(0.8); opacity: 0.5; }
 }
 
 /* Box sede */
+/* Definisce spaziatura, testo e leggibilità, sfondo e aspetto visivo per .sede-box. */
 .sede-box {
     background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%);
     border-radius: 24px; padding: 30px; margin-top: 40px;
     text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.7);
 }
+/* Definisce spaziatura, testo e leggibilità per .sede-titolo. */
+/* margin-bottom: Margine esterno applicato al lato indicato. */
 .sede-titolo { color: #ff007f; font-size: 24px; font-weight: 800; margin-bottom: 10px; margin-top: 0;}
+/* Definisce spaziatura, testo e leggibilità per .sede-indirizzo. */
 .sede-indirizzo { font-size: 18px; color: #444; margin-bottom: 20px; font-weight: 500; }
+/* Definisce disposizione Flexbox, spaziatura, testo e leggibilità per .btn-mappa. */
 .btn-mappa {
+    /* Flexbox dispone e allinea i figli di questo componente. */
+    /* gap: Distanza fra figli flex o celle grid, senza aggiungere margini esterni. */
     display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #00e5ff, #00ced1);
+    /* text-decoration: Decorazioni del testo, come la sottolineatura dei collegamenti. */
     color: white; padding: 12px 25px; border-radius: 50px; text-decoration: none;
     font-weight: 700; transition: 0.3s; box-shadow: 0 8px 20px rgba(0, 229, 255, 0.4); border: none;
 }
+/* Definisce testo e leggibilità, sfondo e aspetto visivo, effetti e transizioni per .btn-mappa:hover. Si applica */
+/* al passaggio del puntatore. */
 .btn-mappa:hover { transform: scale(1.05); filter: brightness(1.1); color: white;}
 
 /* Card corsi e gare */
+/* Definisce disposizione Flexbox, spaziatura per .grid-corsi. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+/* flex-wrap: Permette ai figli Flexbox di distribuirsi su più righe o colonne. */
 .grid-corsi { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+/* Definisce disposizione Flexbox, dimensioni e adattamento, testo e leggibilità per .card. */
 .card {
     background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%);
+    /* overflow: Controlla contenuti fuori dal riquadro: auto permette lo scorrimento, hidden li ritaglia. */
     border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.8);
     box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 300px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
+    /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; display: flex; flex-direction: column; text-align: left;
 }
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .card:hover. Si applica al passaggio del puntatore. */
+/* border-color: Colore dei bordi già definiti. */
 .card:hover { transform: translateY(-10px); box-shadow: 0 25px 50px rgba(0, 229, 255, 0.2); border-color: rgba(255, 255, 255, 1); }
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento per .card-img-wrapper. */
 .card-img-wrapper { position: relative; height: 180px; }
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo, adattamento di immagini e video per .card-img. */
 .card-img { width: 100%; height: 100%; object-fit: cover; border-bottom: 3px solid #00e5ff; }
+/* Definisce sfondo e aspetto visivo per .card.gara .card-img. */
 .card.gara .card-img { border-bottom: 3px solid #ff007f; }
+/* Definisce posizione e sovrapposizione, spaziatura, testo e leggibilità per .card-badge. */
 .card-badge {
+    /* right: Distanza dal lato destro nel posizionamento del riquadro. */
     position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; border: 1px solid rgba(255,255,255,0.3);
 }
+/* Definisce disposizione Flexbox, spaziatura per .card-body. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+/* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
+/* flex-grow: Quota dello spazio libero che l’elemento Flexbox può occupare. */
 .card-body { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
+/* Definisce spaziatura, testo e leggibilità per .card-title. */
 .card-title { margin-top: 0; color: #111; font-size: 22px; font-weight: 800; margin-bottom: 5px; }
+/* Definisce spaziatura, testo e leggibilità per .card-subtitle. */
 .card-subtitle { color: #555; font-size: 14px; margin-bottom: 10px; margin-top: 0; font-weight: 600;}
+/* Definisce spaziatura, testo e leggibilità per .card-desc. */
+/* font-style: Stile del carattere, per esempio normale o corsivo. */
 .card-desc { font-style: italic; font-size: 14px; color: #444; flex-grow: 1; margin-bottom: 20px; margin-top: 0;}
+/* Definisce spaziatura, sfondo e aspetto visivo per .card-info-box. */
 .card-info-box { background: rgba(255, 255, 255, 0.5); padding: 12px; border-radius: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.6); }
+/* Definisce disposizione Flexbox, spaziatura, testo e leggibilità per .card-info-row. */
+/* Flexbox dispone e allinea i figli di questo componente. */
 .card-info-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; font-weight: 500;}
+/* Definisce spaziatura, testo e leggibilità per .card-price. */
 .card-price { text-align: center; margin-top: 10px; font-size: 20px; font-weight: 800; color: #00ced1; text-shadow: 0 1px 2px rgba(255,255,255,0.8); }
+/* Definisce testo e leggibilità per .card.gara .card-price. */
 .card.gara .card-price { color: #ff007f; }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .card-btn. */
 .card-btn {
     border: none; padding: 14px; border-radius: 14px; cursor: pointer;
     font-weight: 700; width: 100%; font-size: 16px; transition: all 0.3s ease;
 }
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .card-btn-login. */
 .card-btn-login { background: linear-gradient(135deg, #00e5ff, #00ced1); color: white; box-shadow: 0 6px 15px rgba(0, 229, 255, 0.3); }
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .card-btn-login:hover. Si applica al passaggio del */
+/* puntatore. */
 .card-btn-login:hover { filter: brightness(1.1); transform: scale(1.03); }
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .card-btn-iscriviti. */
 .card-btn-iscriviti { background: linear-gradient(135deg, #ff007f, #ff00a0); color: white; box-shadow: 0 6px 15px rgba(255, 0, 127, 0.3); }
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .card-btn-iscriviti:hover. Si applica al passaggio */
+/* del puntatore. */
 .card-btn-iscriviti:hover { filter: brightness(1.1); transform: scale(1.03); }
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .card-btn-disiscriviti. */
 .card-btn-disiscriviti { background: rgba(255,255,255,0.3); color: #ff007f; border: 1px solid #ff007f; }
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .card-btn-disiscriviti:hover. Si applica al passaggio */
+/* del puntatore. */
 .card-btn-disiscriviti:hover { background: #ff007f; color: white; }
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .catalog-empty-state. */
 .catalog-empty-state {
     width: 100%;
     margin: 18px 0;
@@ -209,21 +355,33 @@ select:focus-visible,
     font-weight: 700;
     text-align: center;
 }
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento per .pallino-stato. */
+/* bottom: Distanza dal lato inferiore nel posizionamento del riquadro. */
 .pallino-stato { right: 0; bottom: 1px; width: 12px; height: 12px; }
 
+/* Definisce dimensioni e adattamento, spaziatura per .contacts-modal-content. */
+/* max-width: Limite superiore alla larghezza del riquadro. */
 .contacts-modal-content { max-width: 400px; padding: 20px; }
+/* Definisce spaziatura per .contacts-modal-title. */
 .contacts-modal-title { margin: 0 0 15px; }
+/* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per .contacts-search-input. */
 .contacts-search-input {
     width: 100%;
     margin-bottom: 15px;
     padding: 10px;
+    /* box-sizing: Con border-box, bordi e padding sono compresi nella larghezza e altezza dichiarate. */
     box-sizing: border-box;
     border-radius: 8px;
 }
+/* Definisce dimensioni e adattamento, contenimento e scorrimento per .contacts-list. */
+/* max-height: Limite superiore all’altezza prima di applicare le regole di overflow. */
+/* overflow-y: Gestisce lo scorrimento o il ritaglio sul solo asse verticale. */
 .contacts-list { max-height: 350px; overflow-y: auto; }
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .contatto-item. */
 .contatto-item {
     width: 100%;
     padding: 12px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     align-items: center;
     border: 0;
@@ -234,14 +392,30 @@ select:focus-visible,
     cursor: pointer;
     transition: background 0.2s;
 }
+/* Definisce sfondo e aspetto visivo per .contatto-item:hover. Si applica al passaggio del puntatore. */
 .contatto-item:hover { background: rgba(0, 229, 255, 0.1); }
+/* Definisce visibilità nascosta per .contatto-item[hidden]. */
+/* Nasconde il componente negli stati selezionati. */
 .contatto-item[hidden] { display: none; }
+/* Definisce posizione e sovrapposizione, spaziatura per .contact-avatar-wrap. */
+/* margin-right: Margine esterno applicato al lato indicato. */
+/* flex-shrink: Quanto l’elemento Flexbox può restringersi quando manca spazio. */
 .contact-avatar-wrap { position: relative; margin-right: 15px; flex-shrink: 0; }
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo, adattamento di immagini e video per */
+/* .contact-avatar. */
 .contact-avatar { width: 45px; height: 45px; border: 1px solid #ddd; border-radius: 50%; object-fit: cover; }
+/* Definisce dimensioni e adattamento per .contact-content. */
+/* min-width: Larghezza minima consentita; zero permette ai figli flex o grid di restringersi. */
+/* flex: Definisce crescita, riduzione e dimensione iniziale di un elemento Flexbox. */
 .contact-content { min-width: 0; flex: 1; }
+/* Definisce disposizione Flexbox, testo e leggibilità per .nome-contatto. */
+/* Flexbox dispone e allinea i figli di questo componente. */
 .nome-contatto { display: flex; align-items: center; color: #333; font-weight: 700; }
+/* Definisce testo e leggibilità per .contact-chat-icon. */
 .contact-chat-icon { color: #2575fc; font-size: 20px; }
+/* Definisce spaziatura, testo e leggibilità, sfondo e aspetto visivo per .role-badge. */
 .role-badge {
+    /* margin-left: Margine esterno applicato al lato indicato. */
     margin-left: 5px;
     padding: 4px 12px;
     border-radius: 20px;
@@ -249,11 +423,17 @@ select:focus-visible,
     font-size: 12px;
     font-weight: 700;
 }
+/* Definisce spaziatura, testo e leggibilità per .role-badge.is-compact. */
 .role-badge.is-compact { padding: 2px 6px; font-size: 9px; }
+/* Definisce sfondo e aspetto visivo per .role-badge-admin. */
 .role-badge-admin { background: #ff4757; }
+/* Definisce sfondo e aspetto visivo per .role-badge-coach. */
 .role-badge-coach { background: #ffa502; }
+/* Definisce sfondo e aspetto visivo per .role-badge-partner. */
 .role-badge-partner { background: #2ed573; }
+/* Definisce posizione e sovrapposizione per .mini-profile-modal. */
 .mini-profile-modal { z-index: 9999; }
+/* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per .mini-profile-content. */
 .mini-profile-content {
     max-width: 550px;
     padding: 0;
@@ -263,17 +443,25 @@ select:focus-visible,
     background: rgba(255,255,255,0.95);
     box-shadow: 0 20px 40px rgba(0,0,0,0.2);
 }
+/* Definisce sfondo e aspetto visivo per .modal-close-btn. */
 .modal-close-btn { border: 0; background: transparent; }
+/* Definisce disposizione Flexbox per .mini-profile-layout. */
+/* Flexbox dispone e allinea i figli di questo componente. */
 .mini-profile-layout { display: flex; flex-wrap: wrap; }
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .mini-profile-summary. */
 .mini-profile-summary {
     min-width: 250px;
     padding: 40px 30px;
     flex: 1;
+    /* border-right: Imposta l’aspetto del bordo o dell’angolo indicato. */
     border-right: 1px solid #ddd;
     background: linear-gradient(135deg, #f8f9fa, #e9ecef);
     text-align: center;
 }
+/* Definisce posizione e sovrapposizione, spaziatura per .mini-profile-avatar-wrap. */
 .mini-profile-avatar-wrap { position: relative; display: inline-block; margin-bottom: 20px; }
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo, interazione con il puntatore per */
+/* .mini-profile-avatar. */
 .mini-profile-avatar {
     width: 140px;
     height: 140px;
@@ -283,6 +471,8 @@ select:focus-visible,
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     cursor: pointer;
 }
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento, sfondo e aspetto visivo per */
+/* .mini-profile-presence. */
 .mini-profile-presence {
     position: absolute;
     right: 10px;
@@ -292,8 +482,11 @@ select:focus-visible,
     border: 3px solid #fff;
     border-radius: 50%;
 }
+/* Definisce spaziatura, testo e leggibilità per .mini-profile-name. */
 .mini-profile-name { margin: 0; color: #333; font-size: 22px; }
+/* Definisce spaziatura per .mini-profile-role. */
 .mini-profile-role { margin: 10px 0 20px; }
+/* Definisce spaziatura, testo e leggibilità, sfondo e aspetto visivo per .mini-profile-facts. */
 .mini-profile-facts {
     padding: 15px;
     border-radius: 12px;
@@ -302,27 +495,37 @@ select:focus-visible,
     font-size: 14px;
     text-align: left;
 }
+/* Definisce spaziatura, testo e leggibilità per .mini-profile-facts p. */
 .mini-profile-facts p { margin: 5px 0; color: #666; }
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .mini-profile-bio-panel. */
 .mini-profile-bio-panel {
     min-width: 250px;
     padding: 40px 30px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     flex: 1.2;
+    /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
     flex-direction: column;
     justify-content: center;
 }
+/* Definisce spaziatura, testo e leggibilità, sfondo e aspetto visivo per .mini-profile-bio-panel h3. */
 .mini-profile-bio-panel h3 {
     margin: 0 0 20px;
+    /* padding-bottom: Spaziatura interna applicata al lato indicato. */
     padding-bottom: 5px;
     display: inline-block;
     border-bottom: 2px solid #2575fc;
     color: #2575fc;
     font-size: 18px;
 }
+/* Definisce dimensioni e adattamento, contenimento e scorrimento per .mini-profile-bio-scroll. */
 .mini-profile-bio-scroll { max-height: 200px; flex: 1; overflow-y: auto; }
+/* Definisce spaziatura, testo e leggibilità per #mini-profilo-bio. */
+/* line-height: Altezza delle righe di testo. */
 #mini-profilo-bio { margin: 0; color: #444; font-size: 15px; font-style: italic; line-height: 1.6; }
 
 /* Toast, modali e input */
+/* Definisce testo e leggibilità, sfondo e aspetto visivo, effetti e transizioni per input, textarea, select. */
 input, textarea, select {
     background: rgba(255, 255, 255, 0.6) !important;
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
@@ -330,26 +533,52 @@ input, textarea, select {
     color: #111 !important; font-weight: 500;
     box-shadow: inset 0 2px 5px rgba(0,0,0,0.02); transition: 0.3s;
 }
+/* Definisce sfondo e aspetto visivo per input:focus, textarea:focus, select:focus. Evidenzia il controllo */
+/* raggiunto con la tastiera o il focus. */
 input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; background: rgba(255, 255, 255, 0.9) !important; outline: none; box-shadow: 0 0 15px rgba(0, 229, 255, 0.3); }
 
+/* Definisce disposizione Flexbox, posizione e sovrapposizione, spaziatura per #toast-container. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+/* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
 #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .toast. */
+/* Flexbox dispone e allinea i figli di questo componente. */
 .toast { min-width: 250px; padding: 15px 20px; border-radius: 14px; color: white; font-weight: bold; box-shadow: 0 8px 25px rgba(0,0,0,0.2); opacity: 0; transform: translateX(100%); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; gap: 10px; }
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .toast.show. */
 .toast.show { opacity: 1; transform: translateX(0); }
+/* Definisce sfondo e aspetto visivo per .toast.success. */
 .toast.success { background: linear-gradient(135deg, #00ced1, #00e5ff); }
+/* Definisce sfondo e aspetto visivo per .toast.error. */
 .toast.error { background: linear-gradient(135deg, #ff007f, #ff4757); }
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .toast.warning. */
 .toast.warning { background: linear-gradient(135deg, #ff9800, #ffc107); color: #fff; }
+/* Definisce sfondo e aspetto visivo per .toast.info. */
 .toast.info { background: linear-gradient(135deg, #2575fc, #00e5ff); }
+/* Definisce disposizione Flexbox, dimensioni e adattamento, testo e leggibilità per .toast-icon. */
+/* Flexbox dispone e allinea i figli di questo componente. */
 .toast-icon { display: inline-flex; align-items: center; justify-content: center; min-width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); font-size: 12px; letter-spacing: 0.04em; }
+/* Definisce dimensioni e adattamento, contenimento e scorrimento per .toast-message. */
+/* overflow-wrap: Permette di spezzare parole troppo lunghe per il contenitore. */
 .toast-message { min-width: 0; overflow-wrap: anywhere; }
 
+/* Definisce disposizione Flexbox, posizione e sovrapposizione, dimensioni e adattamento per .modal-overlay. */
+/* Flexbox dispone e allinea i figli di questo componente. */
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+/* Definisce sfondo e aspetto visivo, interazione con il puntatore per .modal-overlay.active. */
 .modal-overlay.active { opacity: 1; pointer-events: auto; }
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento, spaziatura per .modal-content. */
 .modal-content { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(25px) saturate(200%); -webkit-backdrop-filter: blur(25px) saturate(200%); padding: 30px; border-radius: 24px; width: 90%; max-width: 400px; transform: translateY(-30px) scale(0.95); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 20px 50px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.8); position: relative; }
+/* Definisce effetti e transizioni per .modal-overlay.active .modal-content. */
 .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
+/* Definisce posizione e sovrapposizione, testo e leggibilità, effetti e transizioni per .chiudi-modale. */
 .chiudi-modale { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #666; transition: 0.2s; font-weight: bold; }
+/* Definisce testo e leggibilità, effetti e transizioni per .chiudi-modale:hover. Si applica al passaggio del */
+/* puntatore. */
 .chiudi-modale:hover { color: #ff007f; transform: rotate(90deg); }
 
 /* Pannelli Profilo in vetro */
+/* Definisce sfondo e aspetto visivo per #info-utente, #lista-mie-iscrizioni, #lista-mie-gare e gli altri selettori */
+/* del gruppo. */
 #info-utente, #lista-mie-iscrizioni, #lista-mie-gare, div[style*="background: white; padding: 20px"] {
     background: rgba(255, 255, 255, 0.4) !important;
     backdrop-filter: blur(20px) saturate(150%) !important; -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
@@ -361,11 +590,13 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
 /* Componenti e utility */
 
 /* --- Moduli Form --- */
+/* Definisce spaziatura per .modal-title. */
 .modal-title {
     margin-top: 0;
     margin-bottom: 25px;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per .form-input. */
 .form-input {
     width: 100%;
     padding: 12px;
@@ -374,17 +605,23 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     box-sizing: border-box;
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .recaptcha-container. */
 .recaptcha-container {
     margin-bottom: 15px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     justify-content: center;
     min-height: 78px;
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per .recaptcha-local-check. */
 .recaptcha-local-check {
     width: 304px;
     min-height: 78px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* grid-template-columns: Definisce le colonne della griglia; fr divide lo spazio disponibile e minmax ne */
+    /* stabilisce i limiti. */
     grid-template-columns: 32px 1fr auto;
     align-items: center;
     gap: 12px;
@@ -397,12 +634,16 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
 }
 
+/* Definisce posizione e sovrapposizione, sfondo e aspetto visivo, interazione con il puntatore per */
+/* .recaptcha-local-check input. */
 .recaptcha-local-check input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
 
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento, sfondo e aspetto visivo per */
+/* .recaptcha-local-box. */
 .recaptcha-local-box {
     width: 28px;
     height: 28px;
@@ -412,17 +653,24 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     position: relative;
 }
 
+/* Configura la rappresentazione per .recaptcha-local-check input:focus-visible + .recaptcha-local-box. Evidenzia */
+/* il controllo raggiunto con la tastiera o il focus. */
 .recaptcha-local-check input:focus-visible + .recaptcha-local-box {
     outline: 3px solid rgba(24, 144, 255, 0.28);
     outline-offset: 2px;
 }
 
+/* Definisce sfondo e aspetto visivo per .recaptcha-local-check input:checked + .recaptcha-local-box. */
 .recaptcha-local-check input:checked + .recaptcha-local-box {
     border-color: #1a73e8;
     background: #1a73e8;
 }
 
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento, sfondo e aspetto visivo per */
+/* .recaptcha-local-check input:checked + .recaptcha-local-box::after. Lo pseudo-elemento aggiunge una parte visiva */
+/* senza nuovo HTML. */
 .recaptcha-local-check input:checked + .recaptcha-local-box::after {
+    /* content: Contenuto generato dal CSS per uno pseudo-elemento. */
     content: '';
     position: absolute;
     left: 8px;
@@ -430,43 +678,53 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     width: 8px;
     height: 16px;
     border: solid #fff;
+    /* border-width: Spessore dei bordi già definiti. */
     border-width: 0 3px 3px 0;
     transform: rotate(45deg);
 }
 
+/* Definisce testo e leggibilità per .recaptcha-local-text. */
 .recaptcha-local-text {
     font-weight: 600;
     line-height: 1.2;
 }
 
+/* Definisce testo e leggibilità per .recaptcha-local-check small. */
 .recaptcha-local-check small {
     color: #697386;
     font-size: 11px;
     font-weight: 700;
     text-align: right;
+    /* text-transform: Trasformazione visiva delle lettere senza cambiare il testo originale. */
     text-transform: uppercase;
 }
 
+/* Definisce spaziatura, testo e leggibilità per .modal-footer-text. */
 .modal-footer-text {
     text-align: center;
     margin-top: 20px;
     font-size: 14px;
 }
 
+/* Definisce testo e leggibilità, interazione con il puntatore per .modal-link. */
 .modal-link {
     font-weight: bold;
     text-decoration: none;
     cursor: pointer;
 }
 
+/* Definisce testo e leggibilità per .modal-link.primary. */
 .modal-link.primary { color: #2575fc; }
+/* Definisce testo e leggibilità per .modal-link.success. */
 .modal-link.success { color: #28a745; }
 
+/* Definisce posizione e sovrapposizione, spaziatura per .app-confirm-overlay. */
 .app-confirm-overlay {
     z-index: 3000;
     padding: 20px;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .app-confirm-dialog. */
 .app-confirm-dialog {
     width: min(420px, 100%);
     padding: 28px;
@@ -477,11 +735,14 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     text-align: center;
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per .app-confirm-icon. */
 .app-confirm-icon {
     width: 46px;
     height: 46px;
     margin: 0 auto 14px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* place-items: Imposta insieme l’allineamento dei figli sui due assi. */
     place-items: center;
     border-radius: 50%;
     background: #fff7ed;
@@ -490,11 +751,13 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     font-weight: 900;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .app-confirm-dialog.is-danger .app-confirm-icon. */
 .app-confirm-dialog.is-danger .app-confirm-icon {
     background: #fff1f2;
     color: #e11d48;
 }
 
+/* Definisce spaziatura, testo e leggibilità per .app-confirm-dialog h2. */
 .app-confirm-dialog h2 {
     margin: 0 0 10px;
     color: var(--text-main);
@@ -502,19 +765,23 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     line-height: 1.2;
 }
 
+/* Definisce spaziatura, testo e leggibilità per .app-confirm-dialog p. */
 .app-confirm-dialog p {
     margin: 0;
     color: var(--text-muted);
     line-height: 1.5;
 }
 
+/* Definisce disposizione Flexbox, spaziatura per .app-confirm-actions. */
 .app-confirm-actions {
     margin-top: 24px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     justify-content: center;
     gap: 12px;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .app-confirm-actions button. */
 .app-confirm-actions button {
     min-width: 128px;
     padding: 12px 18px;
@@ -524,38 +791,48 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     cursor: pointer;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .app-confirm-cancel. */
 .app-confirm-cancel {
     background: #eef4fb;
     color: var(--text-main);
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .app-confirm-submit. */
 .app-confirm-submit {
     background: var(--primary);
     color: #fff;
     box-shadow: 0 10px 22px rgba(225, 0, 152, 0.22);
 }
 
+/* Definisce sfondo e aspetto visivo per .app-confirm-submit.is-danger. */
 .app-confirm-submit.is-danger {
     background: #e11d48;
     box-shadow: 0 10px 22px rgba(225, 29, 72, 0.22);
 }
 
 /* --- Bottoni --- */
+/* Definisce spaziatura, testo e leggibilità, sfondo e aspetto visivo per .btn. */
 .btn {
     border: none; border-radius: 8px; font-weight: bold;
     cursor: pointer; font-size: 16px; padding: 12px;
     transition: filter 0.2s, transform 0.2s; color: white;
 }
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .btn:hover. Si applica al passaggio del puntatore. */
 .btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
+/* Definisce dimensioni e adattamento per .btn-block. */
 .btn-block { width: 100%; }
+/* Definisce sfondo e aspetto visivo per .btn-primary. */
 .btn-primary { background: #2575fc; }
+/* Definisce sfondo e aspetto visivo per .btn-success. */
 .btn-success { background: #28a745; }
+/* Definisce spaziatura, testo e leggibilità per .btn-small. */
 .btn-small {
     font-size: 13px;
     padding: 8px 14px;
 }
 
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento, spaziatura per .sr-only. */
 .sr-only {
     position: absolute !important;
     width: 1px !important;
@@ -563,13 +840,18 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     padding: 0 !important;
     margin: -1px !important;
     overflow: hidden !important;
+    /* clip: Ritaglia il componente secondo il rettangolo indicato. */
     clip: rect(0, 0, 0, 0) !important;
+    /* white-space: Regola conservazione degli spazi e possibilità di andare a capo. */
     white-space: nowrap !important;
     border: 0 !important;
 }
 
+/* Definisce disposizione Grid, spaziatura, testo e leggibilità per .profile-panel. */
 .profile-panel {
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: minmax(210px, 280px) minmax(0, 1fr);
     gap: 24px;
     align-items: stretch;
@@ -577,6 +859,7 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     text-align: left;
 }
 
+/* Definisce sfondo e aspetto visivo per .profile-avatar-card, .profile-form-card, .profile-list-panel. */
 .profile-avatar-card,
 .profile-form-card,
 .profile-list-panel {
@@ -586,8 +869,11 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     box-shadow: 0 10px 28px rgba(42, 0, 56, 0.08);
 }
 
+/* Definisce disposizione Flexbox, spaziatura, testo e leggibilità per .profile-avatar-card. */
 .profile-avatar-card {
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
+    /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
@@ -596,6 +882,8 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     text-align: center;
 }
 
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo, adattamento di immagini e video per */
+/* .profile-avatar. */
 .profile-avatar {
     width: 132px;
     height: 132px;
@@ -607,8 +895,10 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
         0 0 22px rgba(255, 0, 127, 0.18);
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .profile-certificate. */
 .profile-certificate {
     width: 100%;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -620,6 +910,7 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     border: 1px solid rgba(255, 255, 255, 0.72);
 }
 
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo per .profile-certificate-dot. */
 .profile-certificate-dot {
     width: 18px;
     height: 18px;
@@ -629,16 +920,19 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     box-shadow: 0 0 12px rgba(220, 53, 69, 0.55);
 }
 
+/* Definisce sfondo e aspetto visivo per .profile-certificate-dot.is-success. */
 .profile-certificate-dot.is-success {
     background: #28a745;
     box-shadow: 0 0 15px rgba(40, 167, 69, 0.72);
 }
 
+/* Definisce sfondo e aspetto visivo per .profile-certificate-dot.is-danger. */
 .profile-certificate-dot.is-danger {
     background: #dc3545;
     box-shadow: 0 0 15px rgba(220, 53, 69, 0.66);
 }
 
+/* Definisce testo e leggibilità per .profile-certificate-text. */
 .profile-certificate-text {
     font-size: 13px;
     font-weight: 800;
@@ -646,14 +940,19 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     color: #dc3545;
 }
 
+/* Definisce testo e leggibilità per .profile-certificate-text.is-success. */
 .profile-certificate-text.is-success { color: #17863a; }
+/* Definisce testo e leggibilità per .profile-certificate-text.is-danger. */
 .profile-certificate-text.is-danger { color: #dc3545; }
 
+/* Definisce spaziatura per .profile-form-card. */
 .profile-form-card {
     padding: 22px;
 }
 
+/* Definisce disposizione Flexbox, spaziatura per .profile-meta-grid. */
 .profile-meta-grid {
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
@@ -661,11 +960,14 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     justify-content: space-between;
 }
 
+/* Definisce spaziatura per .profile-meta-grid p. */
 .profile-meta-grid p {
     margin: 0;
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .profile-role-badge. */
 .profile-role-badge {
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: inline-flex;
     align-items: center;
     min-height: 24px;
@@ -677,25 +979,34 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     font-weight: 800;
 }
 
+/* Definisce spaziatura, sfondo e aspetto visivo per .profile-divider. */
 .profile-divider {
     border: 0;
+    /* border-top: Imposta l’aspetto del bordo o dell’angolo indicato. */
     border-top: 1px solid rgba(255, 255, 255, 0.58);
     margin: 18px 0;
 }
 
+/* Definisce disposizione Grid, spaziatura per .profile-form-grid. */
 .profile-form-grid {
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
 }
 
+/* Definisce disposizione Flexbox, spaziatura per .field-group. */
 .field-group {
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
+    /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
     flex-direction: column;
     gap: 7px;
     margin-bottom: 14px;
 }
 
+/* Definisce testo e leggibilità per .field-group label. */
 .field-group label {
     color: #3c3c3c;
     font-size: 12px;
@@ -704,6 +1015,8 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     text-transform: uppercase;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per .field-group input, .field-group */
+/* textarea. */
 .field-group input,
 .field-group textarea {
     width: 100%;
@@ -712,24 +1025,30 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     padding: 11px 12px;
 }
 
+/* Definisce dimensioni e adattamento per .field-group-compact. */
 .field-group-compact {
     max-width: 140px;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura per .profile-save-btn. */
 .profile-save-btn {
     min-width: 180px;
+    /* padding-inline: Spaziatura interna sui lati dell’asse di scrittura. */
     padding-inline: 18px;
 }
 
+/* Definisce spaziatura per .profile-section-title. */
 .profile-section-title {
     margin-top: 30px;
 }
 
+/* Definisce spaziatura, testo e leggibilità per .profile-list-panel. */
 .profile-list-panel {
     padding: 20px;
     text-align: left;
 }
 
+/* Definisce spaziatura, testo e leggibilità per .profile-empty-state. */
 .profile-empty-state {
     margin: 0;
     color: #555;
@@ -737,20 +1056,27 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
     text-align: center;
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 768px). */
 @media (max-width: 768px) {
+    /* Definisce tracce e posizione nella griglia, spaziatura per .profile-panel. */
     .profile-panel {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr;
         padding: 18px;
     }
 
+    /* Definisce tracce e posizione nella griglia per .profile-form-grid. */
     .profile-form-grid {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr;
     }
 
+    /* Definisce dimensioni e adattamento per .field-group-compact. */
     .field-group-compact {
         max-width: none;
     }
 
+    /* Definisce dimensioni e adattamento per .profile-save-btn. */
     .profile-save-btn {
         width: 100%;
     }
@@ -758,13 +1084,18 @@ input:focus, textarea:focus, select:focus { border-color: #00e5ff !important; ba
 }
 
 /* --- STILE SLIDER AUDIO FORZATO (MAGENTA/TURCHESE) --- */
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo per input[type=range].audio-slider. */
 input[type=range].audio-slider {
+    /* -webkit-appearance: Variante dell’aspetto nativo per i browser che usano il prefisso. */
     -webkit-appearance: none !important;
+    /* appearance: Controlla l’aspetto nativo del campo o del pulsante. */
     appearance: none !important;
     width: 100%;
     background: transparent !important;
     outline: none !important;
 }
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo per */
+/* input[type=range].audio-slider::-webkit-slider-runnable-track. */
 input[type=range].audio-slider::-webkit-slider-runnable-track {
     width: 100%;
     height: 6px;
@@ -772,6 +1103,8 @@ input[type=range].audio-slider::-webkit-slider-runnable-track {
     border-radius: 10px;
     border: 1px solid rgba(0,0,0,0.05) !important;
 }
+/* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per */
+/* input[type=range].audio-slider::-webkit-slider-thumb. */
 input[type=range].audio-slider::-webkit-slider-thumb {
     -webkit-appearance: none !important;
     height: 18px;
@@ -785,108 +1118,168 @@ input[type=range].audio-slider::-webkit-slider-thumb {
 }
 
 /* Modale immagine fullscreen */
+/* Definisce visibilità nascosta, posizione e sovrapposizione, dimensioni e adattamento per */
+/* #modale-immagine-fullscreen. */
 #modale-immagine-fullscreen {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    /* Nasconde il componente negli stati selezionati. */
     z-index: 10000; display: none; justify-content: center; align-items: center;
     opacity: 0; transition: opacity 0.3s ease;
 }
+/* Definisce disposizione Flexbox, sfondo e aspetto visivo per #modale-immagine-fullscreen.active. */
+/* Flexbox dispone e allinea i figli di questo componente. */
 #modale-immagine-fullscreen.active { display: flex; opacity: 1; }
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo, effetti e transizioni per */
+/* #modale-immagine-fullscreen img. */
 #modale-immagine-fullscreen img { max-width: 90%; max-height: 90%; border-radius: 12px; box-shadow: 0 15px 50px rgba(0,0,0,0.5); object-fit: contain; transform: scale(0.95); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+/* Definisce effetti e transizioni per #modale-immagine-fullscreen.active img. */
 #modale-immagine-fullscreen.active img { transform: scale(1); }
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento, testo e leggibilità per .chiudi-fullscreen. */
 .chiudi-fullscreen { position: absolute; top: 20px; right: 30px; width: 54px; height: 54px; border: 1px solid rgba(255,255,255,0.35); border-radius: 50%; background: rgba(0,0,0,0.22); font-size: 36px; line-height: 1; color: white; cursor: pointer; transition: 0.2s; font-weight: bold; text-shadow: 0 2px 10px rgba(0,0,0,0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+/* Definisce testo e leggibilità, effetti e transizioni per .chiudi-fullscreen:hover. Si applica al passaggio del */
+/* puntatore. */
 .chiudi-fullscreen:hover { color: #ff007f; transform: scale(1.2); }
 
 
 /* Ottimizzazione mobile */
 
 /* Quando lo schermo è più piccolo di 768px (Tablet e Smartphone) */
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 768px; massimo larghezza */
+/* 950px; massimo altezza 500px). Riguarda l’orientamento orizzontale. */
 @media screen and (max-width: 768px),
        screen and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
 
     /* 1. Layout Base e Padding (Riduce lo spreco di spazio) */
+    /* Definisce spaziatura per .sezione-pagina. */
     .sezione-pagina { padding: 15px !important; }
+    /* Definisce spaziatura per .sede-box. */
     .sede-box { padding: 15px; }
+    /* Definisce testo e leggibilità per .sede-titolo. */
     .sede-titolo { font-size: 20px; }
 
     /* 2. Griglia dei Corsi e delle Gare (A pila centrata) */
+    /* Definisce disposizione Grid, spaziatura per .grid-corsi. */
     .grid-corsi {
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: minmax(0, 350px);
         justify-content: center;
         align-items: stretch;
         gap: 15px;
     }
+    /* Definisce dimensioni e adattamento per .card. */
     .card { width: 100% !important; max-width: 350px !important; }
 
     /* 3. La Navbar diventa avvolgente */
+    /* Definisce spaziatura per .navbar. */
     .navbar {
+        /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
         flex-direction: column;
         padding: 10px;
         gap: 10px;
     }
+    /* Definisce dimensioni e adattamento, spaziatura per .nav-left, .nav-right. */
     .nav-left, .nav-right { flex-wrap: wrap; justify-content: center; width: 100%; gap: 8px; }
+    /* Definisce dimensioni e adattamento per .btn-icona-nav img. */
     .btn-icona-nav img { height: 38px; } /* Icone Navbar più snelle */
+    /* Definisce dimensioni e adattamento per .btn-home-esplora img. */
     .btn-home-esplora img { height: 60px; }
 
     /* 4. Profilo Utente: incolonna i campi uno sopra l'altro */
+    /* Definisce testo e leggibilità per #info-utente. */
+    /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
     #info-utente { flex-direction: column; align-items: center; text-align: center; }
+    /* Definisce dimensioni e adattamento per #info-utente > div. */
     #info-utente > div { min-width: 100% !important; width: 100% !important; }
+    /* Definisce spaziatura per #info-utente > div:last-child > div[style*="display: flex"]. */
+    /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
     #info-utente > div:last-child > div[style*="display: flex"] { flex-direction: column; gap: 10px; }
+    /* Definisce dimensioni e adattamento per #info-utente > div:last-child > div[style*="display: flex"] > div. */
     #info-utente > div:last-child > div[style*="display: flex"] > div { width: 100% !important; }
 
     /* 7. Home Page - Ridimensiona il titolone enorme */
+    /* Definisce testo e leggibilità per #pagina-home h1. */
     #pagina-home h1 { font-size: 2.2rem !important; }
+    /* Definisce spaziatura, testo e leggibilità per #pagina-home p. */
     #pagina-home p { font-size: 1rem !important; padding: 0 10px; }
 
     /* 8. Toast Notifications - Occupano tutto lo schermo in basso */
+    /* Definisce posizione e sovrapposizione per #toast-container. */
     #toast-container { right: 10px !important; left: 10px !important; bottom: 10px !important; align-items: stretch; }
+    /* Definisce dimensioni e adattamento, testo e leggibilità per .toast. */
     .toast { min-width: 100% !important; text-align: center; box-sizing: border-box; }
 
     /* 9. Modale Mini Profilo - Incolonnalo correttamente ed evita righe verticali rotte */
+    /* Configura la rappresentazione per #modale-mini-profilo .modal-content > div. */
+    /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
     #modale-mini-profilo .modal-content > div { flex-direction: column; }
+    /* Definisce spaziatura, sfondo e aspetto visivo per #modale-mini-profilo .modal-content > div > div:first-child. */
     #modale-mini-profilo .modal-content > div > div:first-child { border-right: none !important; border-bottom: 1px solid #ddd; padding: 20px !important; }
+    /* Definisce spaziatura per #modale-mini-profilo .modal-content > div > div:last-child. */
     #modale-mini-profilo .modal-content > div > div:last-child { padding: 20px !important; }
 
     /* 11. Liste personali - Permetti lo scorrimento orizzontale se i dati sforano. */
+    /* Definisce contenimento e scorrimento per #lista-mie-iscrizioni, #lista-mie-gare. */
+    /* overflow-x: Gestisce lo scorrimento o il ritaglio sul solo asse orizzontale. */
     #lista-mie-iscrizioni, #lista-mie-gare { overflow-x: auto; }
 
     /* 12. ReCaptcha - Scala leggermente il widget per entrare anche negli schermi molto stretti (es. iPhone SE) */
+    /* Definisce spaziatura, effetti e transizioni per .recaptcha-container. */
+    /* transform-origin: Punto rispetto al quale vengono applicate le trasformazioni. */
     .recaptcha-container { transform: scale(0.85); transform-origin: center; margin-bottom: 5px; }
     }
 
 /* App shell mobile */
+/* Configura la rappresentazione per :root. */
 :root {
+    /* --discord-bg: Sfondo di base dei componenti che usano questa palette. */
     --discord-bg: #313338;
+    /* --discord-panel: Sfondo dei pannelli della palette locale. */
     --discord-panel: #2b2d31;
+    /* --discord-deep: Tonalità più scura della palette locale. */
     --discord-deep: #1e1f22;
+    /* --discord-hover: Colore dello stato al passaggio del puntatore. */
     --discord-hover: #35373c;
+    /* --discord-text: Colore dei testi nella palette locale. */
     --discord-text: #f2f3f5;
+    /* --discord-muted: Colore delle informazioni secondarie nella palette locale. */
     --discord-muted: #b5bac1;
+    /* --discord-brand: Colore di accento della palette locale. */
     --discord-brand: #5865f2;
+    /* --mobile-nav-height: Altezza riservata alla navigazione mobile. */
     --mobile-nav-height: 64px;
 }
 
+/* Definisce visibilità nascosta per .mobile-nav-glyph, .mobile-nav-label. */
 .mobile-nav-glyph,
 .mobile-nav-label {
+    /* Nasconde il componente negli stati selezionati. */
     display: none;
 }
 
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .navbar button.is-active. */
 .navbar button.is-active {
     filter: brightness(1.18);
     transform: translateY(-2px);
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 768px; massimo larghezza */
+/* 950px; massimo altezza 500px). Riguarda l’orientamento orizzontale. */
 @media screen and (max-width: 768px),
        screen and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+    /* Definisce dimensioni e adattamento, contenimento e scorrimento per html, body. */
     html,
     body {
         max-width: 100%;
         overflow-x: hidden;
+        /* overscroll-behavior-y: Controlla la propagazione verticale dello scorrimento ai contenitori esterni. */
         overscroll-behavior-y: none;
     }
 
     /* Single-row app navigation */
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento, spaziatura per .navbar. */
     .navbar {
         position: sticky !important;
         top: 0;
@@ -895,29 +1288,36 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         height: var(--mobile-nav-height);
         min-height: var(--mobile-nav-height);
         padding: 8px 10px !important;
+        /* padding-top: Spaziatura interna applicata al lato indicato. */
         padding-top: max(8px, env(safe-area-inset-top)) !important;
         box-sizing: border-box;
+        /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
         flex-direction: row !important;
         flex-wrap: nowrap !important;
         justify-content: flex-start !important;
         gap: 8px !important;
         overflow-x: auto;
         overflow-y: hidden;
+        /* scrollbar-width: Dimensione della barra di scorrimento nei browser compatibili. */
         scrollbar-width: none;
         background: rgba(30, 31, 34, 0.96) !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
         box-shadow: 0 4px 18px rgba(0, 0, 0, 0.28) !important;
     }
 
+    /* Definisce visibilità nascosta per .navbar::-webkit-scrollbar. */
     .navbar::-webkit-scrollbar {
+        /* Nasconde il componente negli stati selezionati. */
         display: none;
     }
 
+    /* Configura la rappresentazione per .navbar .nav-left, .navbar .nav-right. */
     .navbar .nav-left,
     .navbar .nav-right {
         display: contents !important;
     }
 
+    /* Definisce disposizione Flexbox, posizione e sovrapposizione, dimensioni e adattamento per .navbar button. */
     .navbar button {
         position: relative;
         flex: 0 0 46px;
@@ -926,7 +1326,9 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         min-width: 46px;
         margin: 0 !important;
         padding: 0 !important;
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: inline-flex;
+        /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
         flex-direction: column;
         align-items: center;
         justify-content: center;
@@ -938,6 +1340,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         overflow: visible !important;
     }
 
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento, sfondo e aspetto visivo per .navbar */
+    /* button::after. Lo pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
     .navbar button::after {
         content: "";
         position: absolute;
@@ -951,6 +1355,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         transition: height 0.18s ease;
     }
 
+    /* Definisce sfondo e aspetto visivo, effetti e transizioni per .navbar button.is-active. */
     .navbar button.is-active {
         border-radius: 13px !important;
         background: var(--discord-brand) !important;
@@ -958,14 +1363,19 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         filter: none !important;
     }
 
+    /* Definisce dimensioni e adattamento per .navbar button.is-active::after. Lo pseudo-elemento aggiunge una parte */
+    /* visiva senza nuovo HTML. */
     .navbar button.is-active::after {
         height: 28px;
     }
 
+    /* Definisce visibilità nascosta per .navbar .btn-icona-nav img. */
     .navbar .btn-icona-nav img {
+        /* Nasconde il componente negli stati selezionati. */
         display: none !important;
     }
 
+    /* Definisce testo e leggibilità per .navbar .mobile-nav-glyph. */
     .navbar .mobile-nav-glyph {
         display: block;
         color: var(--discord-text);
@@ -974,6 +1384,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         line-height: 19px;
     }
 
+    /* Definisce dimensioni e adattamento, testo e leggibilità, contenimento e scorrimento per .navbar */
+    /* .mobile-nav-label. */
     .navbar .mobile-nav-label {
         display: block;
         max-width: 44px;
@@ -983,16 +1395,20 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         line-height: 10px;
         letter-spacing: 0.1px;
         overflow: hidden;
+        /* text-overflow: Aspetto del testo che supera lo spazio disponibile, per esempio i puntini di ellipsis. */
         text-overflow: ellipsis;
         white-space: nowrap;
     }
 
+    /* Definisce testo e leggibilità per .navbar button.is-active .mobile-nav-label. */
     .navbar button.is-active .mobile-nav-label {
         color: #fff;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per #btn-admin, #btn-coach. */
     #btn-admin,
     #btn-coach {
+        /* flex-basis: Dimensione iniziale dell’elemento prima della distribuzione dello spazio Flexbox. */
         flex-basis: auto;
         width: auto;
         min-width: 72px;
@@ -1000,25 +1416,31 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         font-size: 11px;
     }
 
+    /* Definisce visibilità nascosta per #container-saluto. */
     #container-saluto {
+        /* Nasconde il componente negli stati selezionati. */
         display: none !important;
     }
 
+    /* Definisce posizione e sovrapposizione per #badge-nav-chat. */
     #badge-nav-chat {
         top: -4px !important;
         right: -4px !important;
     }
 
+    /* Definisce spaziatura per .sezione-pagina. */
     .sezione-pagina {
         padding: 16px 12px !important;
     }
 
+    /* Definisce posizione e sovrapposizione, testo e leggibilità per #indicatore-scrittura. */
     #indicatore-scrittura {
         left: 56px !important;
         top: -20px !important;
         color: var(--discord-muted) !important;
     }
 
+    /* Definisce dimensioni e adattamento, contenimento e scorrimento per .modal-content. */
     .modal-content {
         max-height: calc(var(--app-height, 100dvh) - 24px);
         overflow-y: auto;
@@ -1026,11 +1448,14 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 380px). */
 @media screen and (max-width: 380px) {
+    /* Definisce spaziatura per .navbar. */
     .navbar {
         gap: 6px !important;
     }
 
+    /* Definisce dimensioni e adattamento per .navbar button. */
     .navbar button {
         flex-basis: 42px;
         width: 42px;
@@ -1038,6 +1463,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         min-width: 42px;
     }
 
+    /* Definisce dimensioni e adattamento per .navbar .btn-icona-nav img. */
     .navbar .btn-icona-nav img {
         width: 38px !important;
         height: 38px !important;
@@ -1046,22 +1472,30 @@ input[type=range].audio-slider::-webkit-slider-thumb {
 }
 
 /* Menu mobile */
+/* Definisce visibilità nascosta per .mobile-nav-toggle, .mobile-nav-backdrop. */
 .mobile-nav-toggle,
 .mobile-nav-backdrop {
+    /* Nasconde il componente negli stati selezionati. */
     display: none;
 }
 
 /* Layout desktop */
+/* Media query: applica le regole soltanto nelle condizioni indicate (minimo larghezza 1024px). */
 @media screen and (min-width: 1024px) {
+    /* Configura la rappresentazione per :root. */
     :root {
+        /* --desktop-content-gap: Spaziatura di riferimento per i contenuti desktop. */
         --desktop-content-gap: 24px;
+        /* --desktop-page-max: Larghezza massima del contenuto desktop. */
         --desktop-page-max: 1440px;
     }
 
+    /* Definisce contenimento e scorrimento per body. */
     body {
         overflow-x: hidden;
     }
 
+    /* Definisce disposizione Flexbox, posizione e sovrapposizione, dimensioni e adattamento per .navbar. */
     .navbar {
         position: sticky;
         top: 0;
@@ -1071,7 +1505,9 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         min-height: 0;
         padding: 12px 30px !important;
         box-sizing: border-box;
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: flex;
+        /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
@@ -1080,28 +1516,36 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         border-radius: 0;
     }
 
+    /* Definisce visibilità nascosta, contenuto generato dal CSS per .navbar::before, .navbar .nav-left::before, */
+    /* .navbar .nav-right::before. Lo pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
     .navbar::before,
     .navbar .nav-left::before,
     .navbar .nav-right::before {
         content: none;
+        /* Nasconde il componente negli stati selezionati. */
         display: none;
     }
 
+    /* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .navbar .nav-left, .navbar .nav-right. */
     .navbar .nav-left,
     .navbar .nav-right {
         width: auto;
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: flex !important;
+        /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
         flex-direction: row;
         align-items: center !important;
         gap: 10px !important;
         min-width: 0;
     }
 
+    /* Configura la rappresentazione per .navbar .nav-left. */
     .navbar .nav-left {
         flex: 1 1 auto;
         justify-content: flex-start;
     }
 
+    /* Definisce spaziatura, sfondo e aspetto visivo per .navbar .nav-right. */
     .navbar .nav-right {
         flex: 0 1 auto;
         justify-content: flex-end;
@@ -1109,6 +1553,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         border-top: 0;
     }
 
+    /* Definisce disposizione Flexbox, posizione e sovrapposizione, dimensioni e adattamento per .navbar button, */
+    /* .navbar #btn-admin, .navbar #btn-coach. */
     .navbar button,
     .navbar #btn-admin,
     .navbar #btn-coach {
@@ -1118,6 +1564,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         margin: 0 3px !important;
         padding: 8px 14px !important;
         box-sizing: border-box;
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -1125,15 +1572,18 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         overflow: visible;
     }
 
+    /* Definisce spaziatura per .navbar .btn-icona-nav. */
     .navbar .btn-icona-nav {
         padding: 0 !important;
         margin: 0 5px !important;
     }
 
+    /* Definisce effetti e transizioni per .navbar button:hover. Si applica al passaggio del puntatore. */
     .navbar button:hover {
         transform: translateY(-2px) scale(1.03) !important;
     }
 
+    /* Definisce testo e leggibilità, sfondo e aspetto visivo per .navbar button.is-active. */
     .navbar button.is-active {
         color: #fff !important;
         filter: none;
@@ -1143,6 +1593,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
             0 0 20px rgba(0, 229, 255, 0.28) !important;
     }
 
+    /* Definisce sfondo e aspetto visivo per .navbar .btn-icona-nav.is-active. */
     .navbar .btn-icona-nav.is-active {
         background: transparent !important;
         box-shadow: none !important;
@@ -1151,6 +1602,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
             drop-shadow(0 0 10px rgba(0, 229, 255, 0.44));
     }
 
+    /* Definisce dimensioni e adattamento, adattamento di immagini e video per .navbar .btn-icona-nav img. */
     .navbar .btn-icona-nav img {
         width: auto;
         max-width: 170px;
@@ -1158,12 +1610,14 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         object-fit: contain;
     }
 
+    /* Definisce testo e leggibilità per #btn-admin, #btn-coach. */
     #btn-admin,
     #btn-coach {
         font-size: 14px;
         font-weight: 800;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per #container-saluto. */
     #container-saluto {
         width: auto;
         margin: 0 8px 0 0 !important;
@@ -1174,11 +1628,13 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         background: rgba(255, 255, 255, 0.32);
     }
 
+    /* Definisce posizione e sovrapposizione per #badge-nav-chat. */
     #badge-nav-chat {
         top: -5px !important;
         right: -5px !important;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per body > .sezione-pagina. */
     body > .sezione-pagina {
         width: min(calc(100% - 2 * var(--desktop-content-gap)), var(--desktop-page-max));
         min-height: calc(100vh - 96px);
@@ -1192,6 +1648,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         -webkit-backdrop-filter: blur(8px) saturate(120%);
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura per body > .sezione-pagina > h1, body > .sezione-pagina > h2, */
+    /* body > .sezione-pagina > p e gli altri selettori del gruppo. */
     body > .sezione-pagina > h1,
     body > .sezione-pagina > h2,
     body > .sezione-pagina > p,
@@ -1205,6 +1663,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         margin-right: auto;
     }
 
+    /* Definisce spaziatura, sfondo e aspetto visivo per #pagina-home > div. */
     #pagina-home > div {
         padding: 48px clamp(24px, 4vw, 64px) !important;
         border: 1px solid rgba(255, 255, 255, 0.42);
@@ -1217,6 +1676,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         -webkit-backdrop-filter: blur(16px) saturate(135%);
     }
 
+    /* Definisce spaziatura, testo e leggibilità per #pagina-dashboard > h1, #pagina-gare > h1, #pagina-profilo > h1. */
     #pagina-dashboard > h1,
     #pagina-gare > h1,
     #pagina-profilo > h1 {
@@ -1228,14 +1688,18 @@ input[type=range].audio-slider::-webkit-slider-thumb {
             0 0 14px rgba(0, 229, 255, 0.42);
     }
 
+    /* Definisce disposizione Grid, spaziatura per .grid-corsi. */
     .grid-corsi {
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(2, minmax(280px, 1fr));
         align-items: stretch;
         justify-content: flex-start;
         gap: 24px;
     }
 
+    /* Definisce dimensioni e adattamento per .card. */
     .card {
         width: 100%;
         min-width: 0;
@@ -1243,23 +1707,32 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (minimo larghezza 1360px). */
 @media screen and (min-width: 1360px) {
+    /* Definisce tracce e posizione nella griglia per #pagina-dashboard .grid-corsi, #pagina-gare .grid-corsi. */
     #pagina-dashboard .grid-corsi,
     #pagina-gare .grid-corsi {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(3, minmax(280px, 1fr));
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (minimo larghezza 769px; massimo larghezza */
+/* 1023px). */
 @media screen and (min-width: 769px) and (max-width: 1023px) {
+    /* Definisce disposizione Grid, spaziatura per #pagina-dashboard .grid-corsi, #pagina-gare .grid-corsi. */
     #pagina-dashboard .grid-corsi,
     #pagina-gare .grid-corsi {
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(2, minmax(260px, 1fr));
         align-items: stretch;
         justify-content: center;
         gap: 20px;
     }
 
+    /* Definisce dimensioni e adattamento per #pagina-dashboard .card, #pagina-gare .card. */
     #pagina-dashboard .card,
     #pagina-gare .card {
         width: 100%;
@@ -1268,30 +1741,50 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 768px; massimo larghezza */
+/* 950px; massimo altezza 500px). Riguarda l’orientamento orizzontale. */
 @media screen and (max-width: 768px),
        screen and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+    /* Configura la rappresentazione per :root. */
     :root {
+        /* --mobile-nav-height: Altezza riservata alla navigazione mobile. */
         --mobile-nav-height: 0px;
+        /* --mobile-glass: Sfondo semitrasparente della vista mobile. */
         --mobile-glass: rgba(255, 255, 255, 0.58);
+        /* --mobile-glass-strong: Sfondo più opaco dei pannelli mobili. */
         --mobile-glass-strong: rgba(255, 255, 255, 0.78);
+        /* --mobile-text: Colore principale dei testi mobili. */
         --mobile-text: #222;
+        /* --mobile-muted: Colore dei testi secondari mobili. */
         --mobile-muted: #5d5363;
+        /* --mobile-magenta: Accento magenta della vista mobile. */
         --mobile-magenta: #ff007f;
+        /* --mobile-cyan: Accento ciano della vista mobile. */
         --mobile-cyan: #00e5ff;
+        /* --mobile-gradient: Gradiente riutilizzato dai componenti mobili. */
         --mobile-gradient: linear-gradient(135deg, #ff007f, #8a2be2, #00ced1, #00e5ff);
+        /* --discord-bg: Sfondo di base dei componenti che usano questa palette. */
         --discord-bg: rgba(255, 255, 255, 0.2);
+        /* --discord-panel: Sfondo dei pannelli della palette locale. */
         --discord-panel: rgba(255, 255, 255, 0.78);
+        /* --discord-deep: Tonalità più scura della palette locale. */
         --discord-deep: #1a0033;
+        /* --discord-hover: Colore dello stato al passaggio del puntatore. */
         --discord-hover: rgba(255, 0, 127, 0.16);
+        /* --discord-text: Colore dei testi nella palette locale. */
         --discord-text: #222;
+        /* --discord-muted: Colore delle informazioni secondarie nella palette locale. */
         --discord-muted: #5d5363;
+        /* --discord-brand: Colore di accento della palette locale. */
         --discord-brand: #ff007f;
     }
 
+    /* Definisce contenimento e scorrimento per body.mobile-nav-open. */
     body.mobile-nav-open {
         overflow: hidden;
     }
 
+    /* Definisce disposizione Flexbox, posizione e sovrapposizione, dimensioni e adattamento per .mobile-nav-toggle. */
     .mobile-nav-toggle {
         position: fixed;
         right: max(16px, env(safe-area-inset-right));
@@ -1300,12 +1793,14 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         width: 60px;
         height: 60px;
         padding: 0;
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: flex;
         align-items: center;
         justify-content: center;
         border: 1px solid rgba(255, 255, 255, 0.75);
         border-radius: 50%;
         background: var(--mobile-gradient);
+        /* background-size: Dimensione dell’immagine di sfondo rispetto all’area disponibile. */
         background-size: 180% 180%;
         box-shadow:
             0 0 18px rgba(0, 229, 255, 0.72),
@@ -1313,13 +1808,16 @@ input[type=range].audio-slider::-webkit-slider-thumb {
             0 10px 28px rgba(61, 0, 74, 0.34);
         cursor: pointer;
         transition: transform 0.28s ease, box-shadow 0.28s ease;
+        /* touch-action: Indica al browser quali gesti touch gestire direttamente. */
         touch-action: manipulation;
     }
 
+    /* Definisce effetti e transizioni per .mobile-nav-toggle:active. */
     .mobile-nav-toggle:active {
         transform: scale(0.94);
     }
 
+    /* Definisce sfondo e aspetto visivo, effetti e transizioni per body.mobile-nav-open .mobile-nav-toggle. */
     body.mobile-nav-open .mobile-nav-toggle {
         transform: rotate(135deg);
         box-shadow:
@@ -1327,6 +1825,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
             0 0 34px rgba(0, 229, 255, 0.62);
     }
 
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento, sfondo e aspetto visivo per .mobile-nav-wheel. */
     .mobile-nav-wheel {
         position: relative;
         width: 24px;
@@ -1337,10 +1836,14 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.85));
     }
 
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento, sfondo e aspetto visivo per */
+    /* .mobile-nav-wheel::before, .mobile-nav-wheel::after. Lo pseudo-elemento aggiunge una parte visiva senza nuovo */
+    /* HTML. */
     .mobile-nav-wheel::before,
     .mobile-nav-wheel::after {
         content: "";
         position: absolute;
+        /* inset: Imposta insieme le distanze dai quattro lati del contenitore di riferimento. */
         inset: 50% auto auto 50%;
         width: 30px;
         height: 4px;
@@ -1349,10 +1852,13 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         transform: translate(-50%, -50%);
     }
 
+    /* Definisce effetti e transizioni per .mobile-nav-wheel::after. Lo pseudo-elemento aggiunge una parte visiva senza */
+    /* nuovo HTML. */
     .mobile-nav-wheel::after {
         transform: translate(-50%, -50%) rotate(90deg);
     }
 
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento, spaziatura per .mobile-nav-backdrop. */
     .mobile-nav-backdrop {
         position: fixed;
         inset: 0;
@@ -1363,6 +1869,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         padding: 0;
         border: 0;
         opacity: 0;
+        /* visibility: Mostra o nasconde il componente mantenendone lo spazio nel layout. */
         visibility: hidden;
         pointer-events: none;
         background: rgba(31, 0, 45, 0.38);
@@ -1371,12 +1878,14 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         transition: opacity 0.24s ease, visibility 0.24s ease;
     }
 
+    /* Definisce sfondo e aspetto visivo, interazione con il puntatore per body.mobile-nav-open .mobile-nav-backdrop. */
     body.mobile-nav-open .mobile-nav-backdrop {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
     }
 
+    /* Definisce disposizione Flexbox, posizione e sovrapposizione, dimensioni e adattamento per .navbar. */
     .navbar {
         position: fixed !important;
         top: auto !important;
@@ -1389,7 +1898,9 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         min-height: 0;
         max-height: calc(var(--app-height, 100dvh) - 112px);
         padding: 14px !important;
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: flex !important;
+        /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
         flex-direction: column !important;
         align-items: stretch !important;
         justify-content: flex-start !important;
@@ -1413,6 +1924,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         transition: none;
     }
 
+    /* Definisce effetti e transizioni per body.mobile-nav-ready .navbar. */
     body.mobile-nav-ready .navbar {
         transition:
             transform 0.28s cubic-bezier(.2, .8, .2, 1),
@@ -1420,6 +1932,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
             visibility 0.22s ease;
     }
 
+    /* Definisce sfondo e aspetto visivo, effetti e transizioni, interazione con il puntatore per body.mobile-nav-open */
+    /* .navbar. */
     body.mobile-nav-open .navbar {
         opacity: 1;
         visibility: visible;
@@ -1427,24 +1941,31 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         transform: translateX(0) scale(1);
     }
 
+    /* Definisce dimensioni e adattamento per .navbar::-webkit-scrollbar. */
     .navbar::-webkit-scrollbar {
         width: 4px;
     }
 
+    /* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .navbar .nav-left, .navbar .nav-right. */
     .navbar .nav-left,
     .navbar .nav-right {
         width: 100%;
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: flex !important;
+        /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
         flex-direction: column;
         align-items: stretch !important;
         gap: 8px !important;
     }
 
+    /* Definisce spaziatura, sfondo e aspetto visivo per .navbar .nav-right. */
     .navbar .nav-right {
         padding-top: 10px;
         border-top: 1px solid rgba(255, 255, 255, 0.58);
     }
 
+    /* Definisce disposizione Flexbox, posizione e sovrapposizione, dimensioni e adattamento per .navbar button, */
+    /* .navbar #btn-admin, .navbar #btn-coach. */
     .navbar button,
     .navbar #btn-admin,
     .navbar #btn-coach {
@@ -1456,6 +1977,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         height: auto;
         margin: 0 !important;
         padding: 5px 10px !important;
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1468,14 +1990,19 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
     }
 
+    /* Definisce visibilità nascosta per .navbar button::after. Lo pseudo-elemento aggiunge una parte visiva senza */
+    /* nuovo HTML. */
     .navbar button::after {
+        /* Nasconde il componente negli stati selezionati. */
         display: none;
     }
 
+    /* Definisce effetti e transizioni per .navbar button:active. */
     .navbar button:active {
         transform: scale(0.97) !important;
     }
 
+    /* Definisce testo e leggibilità, sfondo e aspetto visivo per .navbar button.is-active. */
     .navbar button.is-active {
         color: #fff !important;
         background: linear-gradient(135deg, rgba(255, 0, 127, 0.88), rgba(0, 229, 255, 0.88)) !important;
@@ -1484,6 +2011,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
             0 0 20px rgba(0, 229, 255, 0.32) !important;
     }
 
+    /* Definisce dimensioni e adattamento, adattamento di immagini e video per .navbar .btn-icona-nav img. */
     .navbar .btn-icona-nav img {
         width: auto !important;
         max-width: 100%;
@@ -1493,12 +2021,15 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         mix-blend-mode: screen;
     }
 
+    /* Definisce visibilità nascosta per .navbar .mobile-nav-glyph, .navbar .mobile-nav-label, #container-saluto. */
     .navbar .mobile-nav-glyph,
     .navbar .mobile-nav-label,
     #container-saluto {
+        /* Nasconde il componente negli stati selezionati. */
         display: none !important;
     }
 
+    /* Definisce posizione e sovrapposizione per #badge-nav-chat. */
     #badge-nav-chat {
         top: 3px !important;
         right: 8px !important;
@@ -1507,6 +2038,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
 }
 
 /* Interfaccia principale */
+/* Definisce dimensioni e adattamento, testo e leggibilità, sfondo e aspetto visivo per .lgs-app. */
 .lgs-app {
     min-height: 100vh;
     overflow-x: hidden;
@@ -1520,6 +2052,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
+/* Definisce posizione e sovrapposizione, sfondo e aspetto visivo, interazione con il puntatore per */
+/* .lgs-app::before, .lgs-app::after. Lo pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
 .lgs-app::before,
 .lgs-app::after {
     content: "";
@@ -1530,6 +2064,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     filter: blur(2px);
 }
 
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento, sfondo e aspetto visivo per .lgs-app::before. */
+/* Lo pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
 .lgs-app::before {
     top: 110px;
     right: -90px;
@@ -1539,6 +2075,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     transform: rotate(-12deg);
 }
 
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento, sfondo e aspetto visivo per .lgs-app::after. Lo */
+/* pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
 .lgs-app::after {
     bottom: -110px;
     left: -100px;
@@ -1547,25 +2085,32 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     background: linear-gradient(135deg, rgba(236, 11, 140, 0.16), rgba(0, 200, 215, 0.18));
 }
 
+/* Definisce testo e leggibilità per .loading-text. */
 .loading-text {
     color: var(--ink) !important;
     text-shadow: none !important;
     letter-spacing: 0.18em;
 }
 
+/* Definisce testo e leggibilità per .text-magenta. */
 .text-magenta { color: var(--neon-magenta); }
+/* Definisce testo e leggibilità per .text-cyan. */
 .text-cyan { color: var(--neon-cyan); }
 
+/* Definisce visibilità nascosta per .hidden, [hidden]. */
 .hidden,
 [hidden] {
+    /* Nasconde il componente negli stati selezionati. */
     display: none !important;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura per .app-shell. */
 .app-shell {
     width: min(1760px, calc(100% - 48px));
     margin: 0 auto;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .sezione-pagina. */
 .sezione-pagina {
     width: 100%;
     max-width: none;
@@ -1581,11 +2126,15 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     animation: lgsPageIn 320ms cubic-bezier(.2, .8, .2, 1);
 }
 
+/* Definisce l’animazione lgsPageIn, richiamabile dalla proprietà animation. */
 @keyframes lgsPageIn {
+    /* Fotogramma dell’animazione nella posizione temporale from. */
     from { opacity: 0; transform: translateY(12px); }
+    /* Fotogramma dell’animazione nella posizione temporale to. */
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* Definisce disposizione Grid, posizione e sovrapposizione, dimensioni e adattamento per .navbar. */
 .navbar {
     position: sticky !important;
     top: 16px !important;
@@ -1595,7 +2144,9 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     margin: 16px auto 0;
     padding: 12px 18px !important;
     box-sizing: border-box;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid !important;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: minmax(220px, 1fr) auto minmax(220px, 1fr);
     align-items: center;
     gap: 18px;
@@ -1607,6 +2158,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     -webkit-backdrop-filter: blur(24px) saturate(160%);
 }
 
+/* Definisce testo e leggibilità, interazione con il puntatore per .brand-button, .nav-link, .nav-pill e gli altri */
+/* selettori del gruppo. */
 .brand-button,
 .nav-link,
 .nav-pill,
@@ -1614,14 +2167,18 @@ input[type=range].audio-slider::-webkit-slider-thumb {
 .btn-liquid,
 .home-course-grid button,
 .home-race-list button {
+    /* font: Scorciatoia che imposta più proprietà tipografiche insieme. */
     font: inherit;
     cursor: pointer;
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .brand-button. */
 .brand-button {
+    /* justify-self: Allineamento di questo elemento nella propria cella Grid. */
     justify-self: start;
     min-height: 52px;
     padding: 0 8px !important;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: inline-flex;
     align-items: center;
     gap: 12px;
@@ -1632,6 +2189,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     box-shadow: none !important;
 }
 
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .brand-button:hover. Si applica al passaggio del */
+/* puntatore. */
 .brand-button:hover {
     transform: none !important;
     filter: none;
@@ -1639,9 +2198,11 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     box-shadow: none !important;
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, testo e leggibilità per .brand-mark. */
 .brand-mark {
     width: 48px;
     height: 48px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: inline-grid;
     place-items: center;
     border-radius: 16px 18px 16px 22px;
@@ -1654,6 +2215,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     box-shadow: 0 12px 28px rgba(0, 200, 215, 0.22);
 }
 
+/* Definisce testo e leggibilità per .brand-text. */
 .brand-text {
     color: var(--ink);
     font-size: clamp(24px, 2.1vw, 34px);
@@ -1661,18 +2223,22 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     letter-spacing: -0.06em;
 }
 
+/* Definisce testo e leggibilità per .brand-text span. */
 .brand-text span {
     color: var(--neon-magenta);
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .nav-left. */
 .nav-left {
     width: auto;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex !important;
     align-items: center;
     justify-content: center;
     gap: clamp(20px, 3.4vw, 58px);
 }
 
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento, spaziatura per .nav-link. */
 .nav-link {
     position: relative;
     min-height: 46px;
@@ -1686,6 +2252,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     letter-spacing: -0.01em;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo, effetti e transizioni per .nav-link:hover, */
+/* .nav-link.is-active. Si applica al passaggio del puntatore. */
 .nav-link:hover,
 .nav-link.is-active {
     color: var(--neon-magenta) !important;
@@ -1694,6 +2262,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     box-shadow: none !important;
 }
 
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento, sfondo e aspetto visivo per .nav-link::after. */
+/* Lo pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
 .nav-link::after {
     content: "";
     position: absolute;
@@ -1708,11 +2278,14 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     transition: opacity var(--transition-soft), transform var(--transition-soft);
 }
 
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .nav-link.is-active::after. Lo pseudo-elemento */
+/* aggiunge una parte visiva senza nuovo HTML. */
 .nav-link.is-active::after {
     opacity: 1;
     transform: translateX(-50%) scaleX(1);
 }
 
+/* Definisce posizione e sovrapposizione, spaziatura, testo e leggibilità per .nav-chat-badge. */
 .nav-chat-badge {
     position: absolute;
     top: -6px;
@@ -1726,14 +2299,17 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     font-weight: 900;
 }
 
+/* Definisce disposizione Flexbox, spaziatura per .nav-right. */
 .nav-right {
     justify-self: end;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex !important;
     align-items: center;
     justify-content: flex-end;
     gap: 10px;
 }
 
+/* Definisce dimensioni e adattamento, testo e leggibilità, contenimento e scorrimento per .nav-greeting. */
 .nav-greeting {
     max-width: 180px;
     overflow: hidden;
@@ -1744,9 +2320,11 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     text-overflow: ellipsis;
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .nav-pill. */
 .nav-pill {
     min-height: 48px;
     padding: 0 20px !important;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1757,10 +2335,12 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     box-shadow: 0 12px 26px rgba(18, 34, 68, 0.08) !important;
 }
 
+/* Definisce effetti e transizioni per .nav-pill:hover. Si applica al passaggio del puntatore. */
 .nav-pill:hover {
     transform: translateY(-2px) !important;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .nav-pill-primary. */
 .nav-pill-primary {
     color: #fff !important;
     border-color: transparent !important;
@@ -1768,31 +2348,39 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     box-shadow: 0 16px 34px rgba(236, 11, 140, 0.24) !important;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .nav-pill-light, .nav-pill-soft. */
 .nav-pill-light,
 .nav-pill-soft {
     color: var(--ink) !important;
     background: rgba(255, 255, 255, 0.74) !important;
 }
 
+/* Definisce testo e leggibilità per .nav-pill-soft. */
 .nav-pill-soft {
     color: var(--neon-magenta) !important;
 }
 
+/* Definisce visibilità nascosta per .mobile-nav-toggle, .mobile-nav-backdrop. */
 .mobile-nav-toggle,
 .mobile-nav-backdrop {
+    /* Nasconde il componente negli stati selezionati. */
     display: none;
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per .landing-hero. */
 .landing-hero {
     min-height: 470px;
     padding: clamp(34px, 5vw, 90px);
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
     gap: 32px;
     align-items: center;
     border-radius: var(--radius-xl);
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .eyebrow. */
 .eyebrow {
     width: fit-content;
     margin: 0 0 22px;
@@ -1805,6 +2393,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     font-size: 14px;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .hero-copy h1, .catalog-hero h1, */
+/* .profile-page-heading h1. */
 .hero-copy h1,
 .catalog-hero h1,
 .profile-page-heading h1 {
@@ -1817,6 +2407,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     text-shadow: none;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .hero-subtitle, .catalog-hero p, */
+/* .profile-page-heading p. */
 .hero-subtitle,
 .catalog-hero p,
 .profile-page-heading p {
@@ -1828,16 +2420,20 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     font-weight: 600;
 }
 
+/* Definisce disposizione Flexbox, spaziatura per .hero-actions. */
 .hero-actions {
     margin-top: 30px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .btn-liquid. */
 .btn-liquid {
     min-height: 56px;
     padding: 0 32px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1847,10 +2443,12 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     transition: transform var(--transition-soft), box-shadow var(--transition-soft), filter var(--transition-soft);
 }
 
+/* Definisce effetti e transizioni per .btn-liquid:hover. Si applica al passaggio del puntatore. */
 .btn-liquid:hover {
     transform: translateY(-2px);
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .btn-liquid-primary. */
 .btn-liquid-primary {
     color: #fff;
     border-color: transparent;
@@ -1858,73 +2456,91 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     box-shadow: 0 18px 34px rgba(236, 11, 140, 0.26);
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .btn-liquid-secondary. */
 .btn-liquid-secondary {
     color: #008ea6;
     background: rgba(255, 255, 255, 0.82);
     box-shadow: 0 16px 32px rgba(18, 34, 68, 0.08);
 }
 
+/* Definisce disposizione Grid, posizione e sovrapposizione, dimensioni e adattamento per .hero-visual. */
 .hero-visual {
     position: relative;
     min-height: 420px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
     place-items: center;
 }
 
+/* Definisce disposizione Grid, spaziatura, sfondo e aspetto visivo per .feature-strip. */
 .feature-strip {
     margin-top: 24px;
     padding: 24px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: repeat(5, 1fr);
     gap: 14px;
     border-radius: var(--radius-lg);
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per .feature-strip article. */
 .feature-strip article {
     min-height: 104px;
     padding: 18px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* justify-items: Allineamento dei figli dentro le rispettive celle Grid. */
     justify-items: center;
+    /* align-content: Distribuisce le righe o le tracce quando il contenitore ha spazio libero. */
     align-content: center;
     gap: 6px;
     text-align: center;
     border-right: 1px solid rgba(214, 226, 240, 0.8);
 }
 
+/* Definisce sfondo e aspetto visivo per .feature-strip article:last-child. */
 .feature-strip article:last-child {
     border-right: 0;
 }
 
+/* Definisce testo e leggibilità per .feature-strip span. */
 .feature-strip span {
     color: var(--neon-cyan);
     font-size: 30px;
 }
 
+/* Definisce testo e leggibilità per .feature-strip strong. */
 .feature-strip strong {
     color: var(--ink);
     font-size: 16px;
 }
 
+/* Definisce testo e leggibilità per .feature-strip small. */
 .feature-strip small {
     color: var(--muted);
     font-weight: 600;
     line-height: 1.35;
 }
 
+/* Definisce spaziatura, sfondo e aspetto visivo per .preview-panel. */
 .preview-panel {
     margin-top: 24px;
     padding: 28px;
     border-radius: var(--radius-lg);
 }
 
+/* Definisce disposizione Flexbox, spaziatura per .section-heading. */
 .section-heading {
     margin-bottom: 18px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
 }
 
+/* Definisce spaziatura, testo e leggibilità per .section-heading h2. */
 .section-heading h2 {
     margin: 0;
     color: var(--ink);
@@ -1932,6 +2548,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     letter-spacing: -0.04em;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .link-action. */
 .link-action {
     border: 0;
     color: var(--neon-cyan);
@@ -1939,23 +2556,31 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     font-weight: 900;
 }
 
+/* Definisce spaziatura, testo e leggibilità per .link-action span. */
 .link-action span {
     margin-left: 8px;
     font-size: 22px;
 }
 
+/* Definisce disposizione Grid, spaziatura per .home-course-grid. */
 .home-course-grid {
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px 20px;
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per .home-course-grid button, .home-race-list */
+/* button, .profile-compact-card. */
 .home-course-grid button,
 .home-race-list button,
 .profile-compact-card {
     min-width: 0;
     padding: 18px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 16px;
@@ -1968,36 +2593,50 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     transition: transform var(--transition-soft), box-shadow var(--transition-soft), border-color var(--transition-soft);
 }
 
+/* Definisce tracce e posizione nella griglia per .home-course-grid button. */
 .home-course-grid button {
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: auto minmax(0, 1fr) auto;
+    /* grid-template-areas: Assegna nomi alle aree della griglia per organizzare i componenti. */
     grid-template-areas:
         "icon title arrow"
         "icon copy arrow";
 }
 
+/* Definisce tracce e posizione nella griglia per .home-course-grid button .sport-icon. */
 .home-course-grid button .sport-icon {
+    /* grid-area: Area nominata o posizione dell’elemento nella griglia. */
     grid-area: icon;
 }
 
+/* Definisce tracce e posizione nella griglia, dimensioni e adattamento, contenimento e scorrimento per */
+/* .home-course-grid button strong. */
 .home-course-grid button strong {
     grid-area: title;
     min-width: 0;
     overflow-wrap: normal;
+    /* word-break: Regola dove spezzare parole o sequenze di caratteri. */
     word-break: normal;
+    /* hyphens: Permette la sillabazione in base alla lingua e alle capacità del browser. */
     hyphens: none;
 }
 
+/* Definisce tracce e posizione nella griglia, dimensioni e adattamento per .home-course-grid button small. */
 .home-course-grid button small {
     grid-area: copy;
     min-width: 0;
 }
 
+/* Definisce tracce e posizione nella griglia per .home-course-grid button > span:last-child. */
 .home-course-grid button > span:last-child {
     grid-area: arrow;
+    /* align-self: Modifica l’allineamento di questo singolo elemento rispetto al contenitore. */
     align-self: center;
     justify-self: end;
 }
 
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .home-course-grid button:hover, .home-race-list */
+/* button:hover, .profile-compact-card:hover. Si applica al passaggio del puntatore. */
 .home-course-grid button:hover,
 .home-race-list button:hover,
 .profile-compact-card:hover {
@@ -2006,6 +2645,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     box-shadow: 0 22px 44px rgba(0, 200, 215, 0.12);
 }
 
+/* Definisce testo e leggibilità per .home-course-grid strong, .home-race-list strong, .profile-compact-content */
+/* strong. */
 .home-course-grid strong,
 .home-race-list strong,
 .profile-compact-content strong {
@@ -2016,6 +2657,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     letter-spacing: -0.03em;
 }
 
+/* Definisce spaziatura, testo e leggibilità per .home-course-grid small, .home-race-list small, */
+/* .profile-compact-content small. */
 .home-course-grid small,
 .home-race-list small,
 .profile-compact-content small {
@@ -2026,9 +2669,11 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     line-height: 1.35;
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, testo e leggibilità per .sport-icon. */
 .sport-icon {
     width: 64px;
     height: 64px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: inline-grid;
     place-items: center;
     border-radius: 18px;
@@ -2036,30 +2681,38 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     flex: 0 0 auto;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .sport-icon-cyan. */
 .sport-icon-cyan {
     color: #008ea6;
     background: rgba(0, 200, 215, 0.12);
     box-shadow: 0 14px 28px rgba(0, 200, 215, 0.16);
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .sport-icon-magenta. */
 .sport-icon-magenta {
     color: var(--neon-magenta);
     background: rgba(236, 11, 140, 0.1);
     box-shadow: 0 14px 28px rgba(236, 11, 140, 0.12);
 }
 
+/* Definisce disposizione Grid, spaziatura per .home-race-list. */
 .home-race-list {
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
     gap: 12px;
 }
 
+/* Definisce tracce e posizione nella griglia per .home-race-list button. */
 .home-race-list button {
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: auto minmax(220px, 1fr) minmax(170px, 0.7fr) auto auto;
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, testo e leggibilità per .date-chip. */
 .date-chip {
     width: 58px;
     height: 58px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
     place-items: center;
     border-radius: 14px;
@@ -2068,32 +2721,39 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     font-weight: 900;
 }
 
+/* Definisce testo e leggibilità per .date-chip strong. */
 .date-chip strong {
     color: inherit;
     font-size: 21px;
     line-height: 1;
 }
 
+/* Definisce spaziatura, testo e leggibilità per .date-chip small. */
 .date-chip small {
     margin: 0;
     color: var(--ink);
     font-size: 12px;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .date-chip-cyan. */
 .date-chip-cyan {
     color: var(--neon-cyan);
     background: rgba(0, 200, 215, 0.12);
 }
 
+/* Definisce testo e leggibilità per .home-race-list time. */
 .home-race-list time {
     color: var(--ink);
     font-weight: 900;
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per .catalog-hero. */
 .catalog-hero {
     min-height: 360px;
     padding: clamp(32px, 5vw, 72px);
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: minmax(0, 1fr) 420px;
     align-items: center;
     gap: 28px;
@@ -2101,30 +2761,39 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     overflow: hidden;
 }
 
+/* Definisce testo e leggibilità per .catalog-hero h1. */
 .catalog-hero h1 {
     font-size: clamp(42px, 4.6vw, 72px);
 }
 
+/* Definisce spaziatura per #contenitore-corsi, #contenitore-gare. */
 #contenitore-corsi,
 #contenitore-gare {
     margin-top: 24px;
 }
 
+/* Definisce disposizione Grid, spaziatura per .grid-corsi. */
 .grid-corsi {
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid !important;
     align-items: stretch;
     justify-content: stretch;
     gap: 26px;
 }
 
+/* Definisce tracce e posizione nella griglia per #pagina-dashboard .grid-corsi. */
 #pagina-dashboard .grid-corsi {
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+/* Definisce tracce e posizione nella griglia per #pagina-gare .grid-corsi. */
 #pagina-gare .grid-corsi {
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo, effetti e transizioni per .card. */
 .card {
     width: 100% !important;
     min-width: 0;
@@ -2137,12 +2806,14 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     transform: none;
 }
 
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .card:hover. Si applica al passaggio del puntatore. */
 .card:hover {
     transform: translateY(-5px);
     border-color: rgba(0, 200, 215, 0.36);
     box-shadow: 0 24px 52px rgba(18, 34, 68, 0.12);
 }
 
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo per .liquid-card-media. */
 .liquid-card-media {
     height: 180px;
     background:
@@ -2150,6 +2821,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         #edf7fb;
 }
 
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo, adattamento di immagini e video per */
+/* .liquid-card-media .card-img. */
 .liquid-card-media .card-img {
     width: 100%;
     height: 100%;
@@ -2157,6 +2830,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     border: 0;
 }
 
+/* Definisce posizione e sovrapposizione, testo e leggibilità, sfondo e aspetto visivo per .liquid-duration-badge. */
 .liquid-duration-badge {
     top: 14px;
     right: 14px;
@@ -2166,17 +2840,22 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     font-size: 13px;
 }
 
+/* Definisce spaziatura per .liquid-card-body. */
 .liquid-card-body {
     padding: 20px;
 }
 
+/* Definisce disposizione Flexbox, spaziatura per .liquid-card-title-row. */
 .liquid-card-title-row {
     margin-bottom: 10px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     align-items: center;
     gap: 14px;
 }
 
+/* Definisce dimensioni e adattamento, testo e leggibilità, sfondo e aspetto visivo per .liquid-card-title-row */
+/* .sport-icon. */
 .liquid-card-title-row .sport-icon {
     width: 44px;
     height: 44px;
@@ -2184,6 +2863,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     font-size: 22px;
 }
 
+/* Definisce spaziatura, testo e leggibilità per .card-title. */
 .card-title {
     margin: 0;
     color: var(--ink);
@@ -2192,6 +2872,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     letter-spacing: -0.05em;
 }
 
+/* Definisce spaziatura, testo e leggibilità per .card-subtitle. */
 .card-subtitle {
     margin: 0 0 8px;
     color: var(--muted);
@@ -2199,6 +2880,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     font-weight: 700;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .card-desc. */
 .card-desc {
     min-height: 44px;
     margin: 0 0 18px;
@@ -2208,10 +2890,13 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     line-height: 1.45;
 }
 
+/* Definisce disposizione Grid, spaziatura, sfondo e aspetto visivo per .liquid-info-box. */
 .liquid-info-box {
     margin: 0 0 18px;
     padding: 12px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     border: 1px solid rgba(214, 226, 240, 0.78);
@@ -2219,6 +2904,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     background: rgba(248, 251, 255, 0.78);
 }
 
+/* Definisce spaziatura, testo e leggibilità per .liquid-info-box span, .liquid-info-box strong. */
 .liquid-info-box span,
 .liquid-info-box strong {
     margin: 0;
@@ -2227,23 +2913,28 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     font-weight: 850;
 }
 
+/* Definisce tracce e posizione nella griglia, testo e leggibilità per .liquid-info-box .card-price. */
 .liquid-info-box .card-price {
+    /* grid-column: Colonne occupate dal singolo elemento nella griglia. */
     grid-column: 1 / -1;
     color: var(--neon-cyan);
     text-align: center;
     font-size: 18px;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .card-btn, .btn. */
 .card-btn,
 .btn {
     border-radius: 14px;
     font-weight: 900;
 }
 
+/* Definisce dimensioni e adattamento per .card-btn. */
 .card-btn {
     min-height: 50px;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .card-btn-login, .card-btn-iscriviti. */
 .card-btn-login,
 .card-btn-iscriviti {
     color: #fff;
@@ -2251,24 +2942,28 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     box-shadow: 0 14px 26px rgba(0, 200, 215, 0.22);
 }
 
+/* Definisce sfondo e aspetto visivo per .liquid-race-card .card-btn-login, .liquid-race-card .card-btn-iscriviti. */
 .liquid-race-card .card-btn-login,
 .liquid-race-card .card-btn-iscriviti {
     background: var(--gradient-primary);
     box-shadow: 0 14px 26px rgba(236, 11, 140, 0.2);
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .card-btn-disabled. */
 .card-btn-disabled {
     color: #008e80;
     background: rgba(0, 200, 145, 0.12);
     border: 1px solid rgba(0, 200, 145, 0.25);
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .card-btn-disiscriviti. */
 .card-btn-disiscriviti {
     color: var(--neon-magenta);
     background: rgba(236, 11, 140, 0.08);
     border: 1px solid rgba(236, 11, 140, 0.26);
 }
 
+/* Definisce posizione e sovrapposizione per .race-floating-icon. */
 .race-floating-icon {
     position: absolute;
     right: 18px;
@@ -2276,23 +2971,29 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     z-index: 2;
 }
 
+/* Definisce spaziatura per .profile-page-heading. */
 .profile-page-heading {
     margin: 0 0 24px;
 }
 
+/* Definisce testo e leggibilità per .profile-page-heading h1. */
 .profile-page-heading h1 {
     font-size: clamp(34px, 4vw, 58px);
 }
 
+/* Definisce disposizione Grid, spaziatura, sfondo e aspetto visivo per .profile-panel. */
 .profile-panel {
     margin-bottom: 24px;
     padding: 28px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: 360px 1fr;
     gap: 28px;
     border-radius: var(--radius-lg);
 }
 
+/* Definisce sfondo e aspetto visivo per .profile-avatar-card, .profile-form-card, .profile-list-panel. */
 .profile-avatar-card,
 .profile-form-card,
 .profile-list-panel {
@@ -2302,14 +3003,17 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     box-shadow: var(--card-shadow);
 }
 
+/* Definisce disposizione Grid, spaziatura per .profile-avatar-card. */
 .profile-avatar-card {
     padding: 30px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
     justify-items: center;
     align-content: center;
     gap: 18px;
 }
 
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo per .profile-avatar. */
 .profile-avatar {
     width: 176px;
     height: 176px;
@@ -2320,18 +3024,25 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     box-shadow: 0 18px 40px rgba(18, 34, 68, 0.14);
 }
 
+/* Definisce spaziatura per .profile-form-card. */
 .profile-form-card {
     padding: 28px;
 }
 
+/* Definisce disposizione Grid, spaziatura per .profile-meta-grid. */
 .profile-meta-grid {
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: 1fr auto;
     gap: 16px;
 }
 
+/* Definisce disposizione Flexbox, testo e leggibilità, sfondo e aspetto visivo per .profile-role-badge, */
+/* .role-badge. */
 .profile-role-badge,
 .role-badge {
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: inline-flex;
     align-items: center;
     border-radius: 999px;
@@ -2341,11 +3052,14 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     font-weight: 900;
 }
 
+/* Definisce testo e leggibilità per .field-group label. */
 .field-group label {
     color: var(--ink);
     font-weight: 900;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .field-group input, .field-group textarea, */
+/* .form-input e gli altri selettori del gruppo. */
 .field-group input,
 .field-group textarea,
 .form-input,
@@ -2357,13 +3071,17 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
+/* Definisce disposizione Flexbox, spaziatura per .profile-actions-row. */
 .profile-actions-row {
     margin-top: 20px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .btn-primary, .btn-success, .profile-save-btn e gli */
+/* altri selettori del gruppo. */
 .btn-primary,
 .btn-success,
 .profile-save-btn,
@@ -2374,30 +3092,39 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     box-shadow: 0 14px 28px rgba(236, 11, 140, 0.22) !important;
 }
 
+/* Definisce sfondo e aspetto visivo per .profile-admin-button. */
 .profile-admin-button {
     background: linear-gradient(135deg, rgba(236, 11, 140, 0.96), rgba(0, 200, 215, 0.92)) !important;
 }
 
+/* Definisce spaziatura per .profile-list-panel. */
 .profile-list-panel {
     margin-bottom: 24px;
     padding: 24px;
 }
 
+/* Definisce spaziatura per .profile-section-heading. */
 .profile-section-heading {
     margin-top: 10px;
     padding: 0 4px;
 }
 
+/* Definisce disposizione Grid, spaziatura per .profile-compact-grid. */
 .profile-compact-grid {
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
 }
 
+/* Definisce tracce e posizione nella griglia per .profile-compact-card. */
 .profile-compact-card {
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: auto 1fr auto;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .profile-compact-arrow. */
 .profile-compact-arrow {
     min-height: 42px;
     padding: 0 14px;
@@ -2408,133 +3135,175 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     font-weight: 900;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .modal-content. */
 .modal-content {
     color: var(--ink);
     background: rgba(255, 255, 255, 0.9);
 }
 
+/* Definisce visibilità nascosta per .mobile-sticky-cta. */
 .mobile-sticky-cta {
+    /* Nasconde il componente negli stati selezionati. */
     display: none;
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 1180px). */
 @media screen and (max-width: 1180px) {
+    /* Definisce dimensioni e adattamento per .navbar, .app-shell. */
     .navbar,
     .app-shell {
         width: min(100% - 28px, 1100px);
     }
 
+    /* Definisce tracce e posizione nella griglia per .navbar. */
     .navbar {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: auto 1fr auto;
     }
 
+    /* Definisce spaziatura per .nav-left. */
     .nav-left {
         gap: 22px;
     }
 
+    /* Definisce visibilità nascosta per .nav-greeting. */
     .nav-greeting {
+        /* Nasconde il componente negli stati selezionati. */
         display: none;
     }
 
+    /* Definisce tracce e posizione nella griglia per .landing-hero, .catalog-hero. */
     .landing-hero,
     .catalog-hero {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr;
     }
 
+    /* Definisce dimensioni e adattamento per .hero-visual. */
     .hero-visual {
         min-height: 260px;
     }
 
+    /* Definisce tracce e posizione nella griglia per .feature-strip. */
     .feature-strip {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(3, 1fr);
     }
 
+    /* Definisce sfondo e aspetto visivo per .feature-strip article. */
     .feature-strip article {
         border-right: 0;
     }
 
+    /* Definisce tracce e posizione nella griglia per .home-course-grid, #pagina-dashboard .grid-corsi. */
     .home-course-grid,
     #pagina-dashboard .grid-corsi {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    /* Definisce tracce e posizione nella griglia per #pagina-gare .grid-corsi, .profile-compact-grid. */
     #pagina-gare .grid-corsi,
     .profile-compact-grid {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    /* Definisce tracce e posizione nella griglia per .profile-panel. */
     .profile-panel {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr;
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 767px). */
 @media screen and (max-width: 767px) {
+    /* Definisce dimensioni e adattamento per .app-shell. */
     .app-shell {
         width: min(100% - 28px, 640px);
     }
 
+    /* Definisce tracce e posizione nella griglia, posizione e sovrapposizione, dimensioni e adattamento per .navbar. */
     .navbar {
         top: 10px !important;
         width: min(100% - 28px, 640px);
         min-height: 0;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr auto;
         gap: 8px 12px;
         padding: 12px !important;
         border-radius: 22px;
     }
 
+    /* Definisce testo e leggibilità per .brand-text. */
     .brand-text {
         font-size: 26px;
     }
 
+    /* Definisce dimensioni e adattamento, sfondo e aspetto visivo per .brand-mark. */
     .brand-mark {
         width: 42px;
         height: 42px;
         border-radius: 14px;
     }
 
+    /* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per .nav-left. */
     .nav-left {
         grid-column: 1 / -1;
         width: 100%;
         margin-top: 6px;
         padding-top: 8px;
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid !important;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(4, 1fr);
         gap: 0;
         border-top: 1px solid rgba(214, 226, 240, 0.72);
     }
 
+    /* Definisce dimensioni e adattamento, testo e leggibilità per .nav-link. */
     .nav-link {
         min-height: 42px;
         font-size: 14px;
     }
 
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento per .nav-link::after. Lo pseudo-elemento */
+    /* aggiunge una parte visiva senza nuovo HTML. */
     .nav-link::after {
         bottom: -1px;
         width: 54%;
         height: 4px;
     }
 
+    /* Definisce spaziatura per .nav-right. */
     .nav-right {
         gap: 8px;
     }
 
+    /* Definisce visibilità nascosta per .nav-right .nav-pill, .nav-right .nav-greeting. */
     .nav-right .nav-pill,
     .nav-right .nav-greeting {
+        /* Nasconde il componente negli stati selezionati. */
         display: none !important;
     }
 
+    /* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per #btn-login-nav:not(.hidden), */
+    /* #btn-profilo:not(.hidden). */
     #btn-login-nav:not(.hidden),
     #btn-profilo:not(.hidden) {
         width: 48px;
         min-width: 48px;
         height: 48px;
         padding: 0 !important;
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: inline-flex !important;
         overflow: hidden;
         color: transparent !important;
         border-radius: 16px !important;
     }
 
+    /* Definisce testo e leggibilità, contenuto generato dal CSS per #btn-login-nav:not(.hidden)::before, */
+    /* #btn-profilo:not(.hidden)::before. Lo pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
     #btn-login-nav:not(.hidden)::before,
     #btn-profilo:not(.hidden)::before {
         content: "👤";
@@ -2542,17 +3311,21 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         font-size: 21px;
     }
 
+    /* Definisce testo e leggibilità, sfondo e aspetto visivo per #btn-login-nav:not(.hidden). */
     #btn-login-nav:not(.hidden) {
         color: transparent !important;
         background: var(--gradient-primary) !important;
         border-color: transparent !important;
     }
 
+    /* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .mobile-nav-toggle. */
     .mobile-nav-toggle {
         width: 48px;
         height: 48px;
         padding: 0 !important;
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: inline-flex !important;
+        /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
         flex-direction: column;
         align-items: center;
         justify-content: center;
@@ -2563,6 +3336,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         box-shadow: var(--card-shadow) !important;
     }
 
+    /* Definisce dimensioni e adattamento, sfondo e aspetto visivo per .mobile-nav-toggle span. */
     .mobile-nav-toggle span {
         width: 22px;
         height: 2px;
@@ -2570,12 +3344,15 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         background: var(--ink);
     }
 
+    /* Definisce disposizione Grid, posizione e sovrapposizione, dimensioni e adattamento per body.mobile-nav-open */
+    /* .nav-right. */
     body.mobile-nav-open .nav-right {
         position: absolute;
         top: calc(100% + 8px);
         right: 0;
         width: min(260px, 80vw);
         padding: 12px;
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid !important;
         border: 1px solid rgba(214, 226, 240, 0.86);
         border-radius: 20px;
@@ -2583,30 +3360,40 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         box-shadow: var(--soft-shadow);
     }
 
+    /* Definisce disposizione Flexbox, dimensioni e adattamento, testo e leggibilità per body.mobile-nav-open */
+    /* .nav-right .nav-pill:not(.hidden). */
     body.mobile-nav-open .nav-right .nav-pill:not(.hidden) {
         width: 100%;
         min-height: 48px;
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: flex !important;
         color: var(--ink) !important;
     }
 
+    /* Definisce testo e leggibilità per body.mobile-nav-open .nav-right .nav-pill-primary:not(.hidden). */
     body.mobile-nav-open .nav-right .nav-pill-primary:not(.hidden) {
         color: #fff !important;
     }
 
+    /* Definisce contenuto generato dal CSS per body.mobile-nav-open .nav-right #btn-login-nav::before, */
+    /* body.mobile-nav-open .nav-right #btn-profilo::before. Lo pseudo-elemento aggiunge una parte visiva senza nuovo */
+    /* HTML. */
     body.mobile-nav-open .nav-right #btn-login-nav::before,
     body.mobile-nav-open .nav-right #btn-profilo::before {
         content: none;
     }
 
+    /* Definisce sfondo e aspetto visivo per body.mobile-nav-open .mobile-nav-toggle. */
     body.mobile-nav-open .mobile-nav-toggle {
         background: var(--gradient-primary) !important;
     }
 
+    /* Definisce sfondo e aspetto visivo per body.mobile-nav-open .mobile-nav-toggle span. */
     body.mobile-nav-open .mobile-nav-toggle span {
         background: #fff;
     }
 
+    /* Definisce posizione e sovrapposizione, sfondo e aspetto visivo per .mobile-nav-backdrop. */
     .mobile-nav-backdrop {
         position: fixed;
         inset: 0;
@@ -2617,14 +3404,18 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         -webkit-backdrop-filter: blur(3px);
     }
 
+    /* Configura la rappresentazione per body.mobile-nav-open .mobile-nav-backdrop. */
     body.mobile-nav-open .mobile-nav-backdrop {
         display: block;
     }
 
+    /* Definisce spaziatura per .sezione-pagina. */
     .sezione-pagina {
         padding: 24px 0 42px;
     }
 
+    /* Definisce sfondo e aspetto visivo per .landing-hero, .catalog-hero, .preview-panel e gli altri selettori del */
+    /* gruppo. */
     .landing-hero,
     .catalog-hero,
     .preview-panel,
@@ -2634,84 +3425,110 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         border-radius: 22px;
     }
 
+    /* Definisce spaziatura per .landing-hero, .catalog-hero. */
     .landing-hero,
     .catalog-hero {
         padding: 28px;
     }
 
+    /* Definisce testo e leggibilità per .hero-copy h1, .catalog-hero h1. */
     .hero-copy h1,
     .catalog-hero h1 {
         font-size: clamp(38px, 11vw, 58px);
     }
 
+    /* Definisce visibilità nascosta per .hero-visual. */
     .hero-visual {
+        /* Nasconde il componente negli stati selezionati. */
         display: none;
     }
 
+    /* Definisce disposizione Grid per .hero-actions. */
     .hero-actions {
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr 1fr;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura per .btn-liquid. */
     .btn-liquid {
         min-height: 58px;
         padding: 0 16px;
     }
 
+    /* Definisce tracce e posizione nella griglia, spaziatura per .feature-strip. */
     .feature-strip {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(2, 1fr);
         padding: 16px;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura per .feature-strip article. */
     .feature-strip article {
         min-height: 110px;
         padding: 14px 10px;
     }
 
+    /* Definisce tracce e posizione nella griglia per .home-course-grid, #pagina-dashboard .grid-corsi, #pagina-gare */
+    /* .grid-corsi e gli altri selettori del gruppo. */
     .home-course-grid,
     #pagina-dashboard .grid-corsi,
     #pagina-gare .grid-corsi,
     .profile-compact-grid {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr;
     }
 
+    /* Definisce spaziatura per .home-course-grid button, .home-race-list button, .profile-compact-card. */
     .home-course-grid button,
     .home-race-list button,
     .profile-compact-card {
         padding: 14px;
     }
 
+    /* Definisce tracce e posizione nella griglia per .home-race-list button. */
     .home-race-list button {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: auto 1fr auto;
     }
 
+    /* Definisce visibilità nascosta per .home-race-list time. */
     .home-race-list time {
+        /* Nasconde il componente negli stati selezionati. */
         display: none;
     }
 
+    /* Definisce spaziatura per .grid-corsi. */
     .grid-corsi {
         gap: 18px;
     }
 
+    /* Definisce dimensioni e adattamento per .liquid-card-media. */
     .liquid-card-media {
         height: 150px;
     }
 
+    /* Definisce tracce e posizione nella griglia per .profile-form-grid, .profile-meta-grid. */
     .profile-form-grid,
     .profile-meta-grid {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr;
     }
 
+    /* Definisce spaziatura per .profile-panel, .profile-form-card, .profile-avatar-card. */
     .profile-panel,
     .profile-form-card,
     .profile-avatar-card {
         padding: 20px;
     }
 
+    /* Configura la rappresentazione per .section-heading. */
     .section-heading {
         align-items: flex-start;
     }
 
+    /* Definisce posizione e sovrapposizione, spaziatura per .mobile-sticky-cta. */
     .mobile-sticky-cta {
         position: sticky;
         bottom: 10px;
@@ -2720,33 +3537,44 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         display: block;
     }
 
+    /* Definisce dimensioni e adattamento per .mobile-sticky-cta .btn-liquid. */
     .mobile-sticky-cta .btn-liquid {
         width: 100%;
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (minimo larghezza 768px; massimo larghezza */
+/* 1023px). */
 @media screen and (min-width: 768px) and (max-width: 1023px) {
+    /* Definisce tracce e posizione nella griglia per .home-course-grid, #pagina-dashboard .grid-corsi, #pagina-gare */
+    /* .grid-corsi e gli altri selettori del gruppo. */
     .home-course-grid,
     #pagina-dashboard .grid-corsi,
     #pagina-gare .grid-corsi,
     .profile-compact-grid {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
+/* Definisce l’animazione lgsMobilePageIn, richiamabile dalla proprietà animation. */
 @keyframes lgsMobilePageIn {
+    /* Fotogramma dell’animazione nella posizione temporale from. */
     from {
         opacity: 0;
         transform: translateY(14px);
     }
 
+    /* Fotogramma dell’animazione nella posizione temporale to. */
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 767px). */
 @media screen and (max-width: 767px) {
+    /* Definisce dimensioni e adattamento, contenimento e scorrimento per html, body, .lgs-app. */
     html,
     body,
     .lgs-app {
@@ -2754,13 +3582,17 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         overflow-x: hidden;
     }
 
+    /* Definisce dimensioni e adattamento per .app-shell, .navbar. */
     .app-shell,
     .navbar {
         width: min(100% - 20px, 430px);
     }
 
+    /* Definisce tracce e posizione nella griglia, posizione e sovrapposizione, dimensioni e adattamento per .navbar. */
     .navbar {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: minmax(0, 1fr) auto;
+        /* row-gap: Distanza verticale fra righe del layout. */
         row-gap: 10px;
         border-radius: 24px;
         right: auto !important;
@@ -2773,17 +3605,20 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         transform: none !important;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura per .brand-button. */
     .brand-button {
         min-width: 0;
         gap: 9px;
     }
 
+    /* Definisce dimensioni e adattamento per .brand-mark. */
     .brand-mark {
         width: 40px;
         height: 40px;
         min-width: 40px;
     }
 
+    /* Definisce dimensioni e adattamento, testo e leggibilità, contenimento e scorrimento per .brand-text. */
     .brand-text {
         max-width: 190px;
         overflow: hidden;
@@ -2792,39 +3627,52 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         text-overflow: ellipsis;
     }
 
+    /* Definisce disposizione Grid, contenimento e scorrimento per .navbar .nav-left. */
     .navbar .nav-left {
         overflow-x: auto;
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid !important;
+        /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
         flex-direction: initial !important;
         align-items: center !important;
         justify-content: stretch !important;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(4, minmax(0, 1fr));
         scrollbar-width: none;
+        /* -webkit-overflow-scrolling: Preferenza di scorrimento usata dai browser che riconoscono questa estensione. */
         -webkit-overflow-scrolling: touch;
     }
 
+    /* Definisce disposizione Flexbox, dimensioni e adattamento, contenimento e scorrimento per .navbar .nav-right. */
     .navbar .nav-right {
         width: auto;
         max-height: none;
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: flex !important;
+        /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
         flex-direction: row !important;
         align-items: center !important;
         justify-content: flex-end !important;
         overflow: visible;
     }
 
+    /* Definisce disposizione Grid, dimensioni e adattamento per body.mobile-nav-open .navbar .nav-right. */
     body.mobile-nav-open .navbar .nav-right {
         width: min(294px, calc(100vw - 28px));
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid !important;
+        /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
         flex-direction: column !important;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .nav-link. */
     .nav-link {
         min-width: 0;
         padding: 0 6px !important;
         font-size: clamp(13px, 3.8vw, 15px);
     }
 
+    /* Definisce posizione e sovrapposizione, spaziatura, testo e leggibilità per .nav-chat-badge. */
     .nav-chat-badge {
         top: -3px;
         right: -8px;
@@ -2832,16 +3680,19 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         font-size: 9px;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura, effetti e transizioni per body.mobile-nav-open .nav-right. */
     body.mobile-nav-open .nav-right {
         width: min(294px, calc(100vw - 28px));
         gap: 8px;
         animation: lgsMobilePageIn 260ms ease both;
     }
 
+    /* Definisce effetti e transizioni per .sezione-pagina:not(.hidden). */
     .sezione-pagina:not(.hidden) {
         animation: lgsMobilePageIn 320ms ease both;
     }
 
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento, spaziatura per .landing-hero, .catalog-hero. */
     .landing-hero,
     .catalog-hero {
         position: relative;
@@ -2850,10 +3701,13 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         overflow: hidden;
     }
 
+    /* Definisce tracce e posizione nella griglia per .landing-hero. */
     .landing-hero {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr;
     }
 
+    /* Definisce testo e leggibilità per .hero-copy h1, .catalog-hero h1, .profile-page-heading h1. */
     .hero-copy h1,
     .catalog-hero h1,
     .profile-page-heading h1 {
@@ -2862,6 +3716,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         letter-spacing: -0.07em;
     }
 
+    /* Definisce spaziatura, testo e leggibilità per .hero-subtitle, .catalog-hero p, .profile-page-heading p. */
     .hero-subtitle,
     .catalog-hero p,
     .profile-page-heading p {
@@ -2870,18 +3725,24 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         line-height: 1.55;
     }
 
+    /* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per .hero-visual. */
     .hero-visual {
         min-height: 178px;
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid;
+        /* order: Ordine visivo dell’elemento flex o grid, senza spostarlo nel DOM. */
         order: -1;
         margin-bottom: 4px;
     }
 
+    /* Definisce tracce e posizione nella griglia, spaziatura per .hero-actions. */
     .hero-actions {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr 1fr;
         gap: 12px;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .btn-liquid. */
     .btn-liquid {
         min-height: 54px;
         padding: 0 12px;
@@ -2889,12 +3750,15 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         font-size: 14px;
     }
 
+    /* Definisce tracce e posizione nella griglia, spaziatura per .feature-strip. */
     .feature-strip {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
         padding: 14px;
     }
 
+    /* Definisce dimensioni e adattamento, sfondo e aspetto visivo per .feature-strip article. */
     .feature-strip article {
         min-height: 96px;
         border: 0;
@@ -2902,45 +3766,56 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         background: rgba(255, 255, 255, 0.58);
     }
 
+    /* Definisce tracce e posizione nella griglia per .feature-strip article:last-child. */
     .feature-strip article:last-child {
         grid-column: 1 / -1;
     }
 
+    /* Definisce testo e leggibilità per .feature-strip span. */
     .feature-strip span {
         font-size: 26px;
     }
 
+    /* Definisce testo e leggibilità per .feature-strip strong. */
     .feature-strip strong {
         font-size: 14px;
     }
 
+    /* Definisce testo e leggibilità per .feature-strip small. */
     .feature-strip small {
         font-size: 12px;
     }
 
+    /* Definisce spaziatura per .section-heading. */
     .section-heading {
         margin-bottom: 14px;
         align-items: center;
         gap: 10px;
     }
 
+    /* Definisce testo e leggibilità per .section-heading h2. */
     .section-heading h2 {
         font-size: 22px;
     }
 
+    /* Definisce testo e leggibilità per .link-action. */
     .link-action {
         font-size: 13px;
         white-space: nowrap;
     }
 
+    /* Definisce tracce e posizione nella griglia, spaziatura per .home-course-grid. */
     .home-course-grid {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
     }
 
+    /* Definisce tracce e posizione nella griglia, dimensioni e adattamento, spaziatura per .home-course-grid button. */
     .home-course-grid button {
         min-height: 144px;
         padding: 14px;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: minmax(0, 1fr) auto;
         grid-template-areas:
             "icon icon"
@@ -2950,6 +3825,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         gap: 8px;
     }
 
+    /* Definisce dimensioni e adattamento, testo e leggibilità, sfondo e aspetto visivo per .home-course-grid */
+    /* .sport-icon. */
     .home-course-grid .sport-icon {
         width: 50px;
         height: 50px;
@@ -2957,54 +3834,68 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         font-size: 25px;
     }
 
+    /* Definisce testo e leggibilità per .home-course-grid strong, .profile-compact-content strong. */
     .home-course-grid strong,
     .profile-compact-content strong {
         font-size: 16px;
     }
 
+    /* Definisce dimensioni e adattamento, testo e leggibilità per .home-course-grid small. */
     .home-course-grid small {
         min-height: 34px;
         font-size: 12px;
     }
 
+    /* Configura la rappresentazione per .home-course-grid .arrow. */
     .home-course-grid .arrow {
         align-self: end;
         justify-self: end;
     }
 
+    /* Definisce spaziatura per .home-race-list. */
     .home-race-list {
         gap: 10px;
     }
 
+    /* Definisce tracce e posizione nella griglia, dimensioni e adattamento, spaziatura per .home-race-list button. */
     .home-race-list button {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: auto minmax(0, 1fr) auto;
         gap: 12px;
         min-height: 86px;
     }
 
+    /* Definisce dimensioni e adattamento per .date-chip. */
     .date-chip {
         width: 54px;
         height: 54px;
     }
 
+    /* Definisce tracce e posizione nella griglia, spaziatura per #pagina-dashboard .grid-corsi. */
     #pagina-dashboard .grid-corsi {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
     }
 
+    /* Definisce tracce e posizione nella griglia, spaziatura per #pagina-gare .grid-corsi. */
     #pagina-gare .grid-corsi {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr;
         gap: 14px;
     }
 
+    /* Definisce sfondo e aspetto visivo per .liquid-course-card. */
     .liquid-course-card {
         border-radius: 22px;
     }
 
+    /* Definisce dimensioni e adattamento per .liquid-card-media. */
     .liquid-card-media {
         height: 118px;
     }
 
+    /* Definisce posizione e sovrapposizione, spaziatura, testo e leggibilità per .liquid-duration-badge. */
     .liquid-duration-badge {
         top: 10px;
         right: 10px;
@@ -3012,15 +3903,19 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         font-size: 11px;
     }
 
+    /* Definisce spaziatura per .liquid-card-body. */
     .liquid-card-body {
         padding: 13px;
     }
 
+    /* Definisce spaziatura per .liquid-card-title-row. */
     .liquid-card-title-row {
         margin-bottom: 8px;
         gap: 8px;
     }
 
+    /* Definisce dimensioni e adattamento, testo e leggibilità, sfondo e aspetto visivo per .liquid-card-title-row */
+    /* .sport-icon. */
     .liquid-card-title-row .sport-icon {
         width: 36px;
         height: 36px;
@@ -3028,16 +3923,19 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         font-size: 18px;
     }
 
+    /* Definisce testo e leggibilità per .card-title. */
     .card-title {
         font-size: clamp(16px, 4.6vw, 19px);
         line-height: 1.08;
     }
 
+    /* Definisce spaziatura, testo e leggibilità per .card-subtitle. */
     .card-subtitle {
         margin-bottom: 6px;
         font-size: 12px;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .card-desc. */
     .card-desc {
         min-height: 34px;
         margin-bottom: 12px;
@@ -3045,50 +3943,62 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         overflow: hidden;
         font-size: 12px;
         line-height: 1.35;
+        /* -webkit-line-clamp: Limita il testo al numero di righe previsto nei browser compatibili. */
         -webkit-line-clamp: 2;
+        /* -webkit-box-orient: Direzione del vecchio modello box usato insieme al limite di righe. */
         -webkit-box-orient: vertical;
     }
 
+    /* Definisce tracce e posizione nella griglia, spaziatura per .liquid-info-box. */
     .liquid-info-box {
         margin-bottom: 12px;
         padding: 10px;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr;
         gap: 7px;
     }
 
+    /* Definisce testo e leggibilità per .liquid-info-box span, .liquid-info-box strong. */
     .liquid-info-box span,
     .liquid-info-box strong {
         font-size: 12px;
     }
 
+    /* Definisce testo e leggibilità per .liquid-info-box .card-price. */
     .liquid-info-box .card-price {
         text-align: left;
         font-size: 16px;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .card-btn. */
     .card-btn {
         min-height: 44px;
         padding: 0 10px;
         font-size: 13px;
     }
 
+    /* Definisce dimensioni e adattamento per .liquid-race-card .liquid-card-media. */
     .liquid-race-card .liquid-card-media {
         height: 160px;
     }
 
+    /* Definisce posizione e sovrapposizione per .race-floating-icon. */
     .race-floating-icon {
         right: 14px;
         bottom: -24px;
     }
 
+    /* Definisce spaziatura per .profile-page-heading. */
     .profile-page-heading {
         padding: 0 4px;
     }
 
+    /* Definisce spaziatura per .profile-panel. */
     .profile-panel {
         gap: 18px;
     }
 
+    /* Definisce spaziatura, sfondo e aspetto visivo per .profile-avatar-card, .profile-form-card, .profile-list-panel. */
     .profile-avatar-card,
     .profile-form-card,
     .profile-list-panel {
@@ -3096,18 +4006,24 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         border-radius: 22px;
     }
 
+    /* Definisce dimensioni e adattamento per .profile-avatar. */
     .profile-avatar {
         width: 150px;
         height: 150px;
     }
 
+    /* Definisce tracce e posizione nella griglia, spaziatura per .profile-form-grid, .profile-meta-grid, */
+    /* .profile-compact-grid. */
     .profile-form-grid,
     .profile-meta-grid,
     .profile-compact-grid {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr;
         gap: 12px;
     }
 
+    /* Definisce dimensioni e adattamento, testo e leggibilità per .field-group input, .field-group textarea, */
+    /* .form-input. */
     .field-group input,
     .field-group textarea,
     .form-input {
@@ -3116,6 +4032,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         font-size: 15px;
     }
 
+    /* Definisce dimensioni e adattamento per .profile-actions-row, .profile-actions-row .btn, .profile-save-btn e gli */
+    /* altri selettori del gruppo. */
     .profile-actions-row,
     .profile-actions-row .btn,
     .profile-save-btn,
@@ -3123,87 +4041,110 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         width: 100%;
     }
 
+    /* Definisce dimensioni e adattamento per .profile-compact-card. */
     .profile-compact-card {
         min-height: 82px;
     }
 
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 420px). */
 @media screen and (max-width: 420px) {
+    /* Definisce dimensioni e adattamento per .app-shell, .navbar. */
     .app-shell,
     .navbar {
         width: min(100% - 16px, 420px);
     }
 
+    /* Definisce spaziatura per .navbar. */
     .navbar {
         padding: 10px !important;
     }
 
+    /* Definisce dimensioni e adattamento per .brand-text. */
     .brand-text {
         max-width: 168px;
     }
 
+    /* Definisce spaziatura per .landing-hero, .catalog-hero, .preview-panel. */
     .landing-hero,
     .catalog-hero,
     .preview-panel {
         padding: 20px;
     }
 
+    /* Definisce tracce e posizione nella griglia per .hero-actions. */
     .hero-actions {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr;
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 389px). */
 @media screen and (max-width: 389px) {
+    /* Definisce tracce e posizione nella griglia per .home-course-grid, #pagina-dashboard .grid-corsi. */
     .home-course-grid,
     #pagina-dashboard .grid-corsi {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr;
     }
 
+    /* Definisce tracce e posizione nella griglia, dimensioni e adattamento per .home-course-grid button. */
     .home-course-grid button {
         min-height: 98px;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: auto minmax(0, 1fr) auto;
         grid-template-areas:
             "icon title arrow"
             "icon copy arrow";
     }
 
+    /* Definisce dimensioni e adattamento per .home-course-grid .sport-icon. */
     .home-course-grid .sport-icon {
         width: 50px;
         height: 50px;
     }
 
+    /* Definisce dimensioni e adattamento per .liquid-card-media. */
     .liquid-card-media {
         height: 148px;
     }
 
+    /* Definisce dimensioni e adattamento per .card-desc. */
     .card-desc {
         min-height: 0;
     }
 }
 
+/* Definisce spaziatura per #pagina-dashboard .grid-corsi, #pagina-gare .grid-corsi. */
 #pagina-dashboard .grid-corsi,
 #pagina-gare .grid-corsi {
     gap: 20px;
 }
 
+/* Definisce dimensioni e adattamento per #pagina-dashboard .liquid-card-media. */
 #pagina-dashboard .liquid-card-media {
     height: 158px;
 }
 
+/* Definisce dimensioni e adattamento per #pagina-gare .liquid-card-media. */
 #pagina-gare .liquid-card-media {
     height: 160px;
 }
 
+/* Definisce spaziatura per .liquid-card-body. */
 .liquid-card-body {
     padding: 16px;
 }
 
+/* Definisce spaziatura per .liquid-card-title-row. */
 .liquid-card-title-row {
     margin-bottom: 8px;
     gap: 10px;
 }
 
+/* Definisce dimensioni e adattamento, testo e leggibilità, sfondo e aspetto visivo per .liquid-card-title-row */
+/* .sport-icon. */
 .liquid-card-title-row .sport-icon {
     width: 40px;
     height: 40px;
@@ -3211,15 +4152,18 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     font-size: 20px;
 }
 
+/* Definisce testo e leggibilità per .card-title. */
 .card-title {
     font-size: clamp(18px, 1.15vw, 24px);
 }
 
+/* Definisce spaziatura, testo e leggibilità per .card-subtitle. */
 .card-subtitle {
     margin-bottom: 6px;
     font-size: 13px;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .card-desc. */
 .card-desc {
     min-height: 38px;
     margin-bottom: 14px;
@@ -3231,40 +4175,49 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     -webkit-box-orient: vertical;
 }
 
+/* Definisce spaziatura per .liquid-info-box. */
 .liquid-info-box {
     margin-bottom: 14px;
     padding: 10px;
     gap: 8px;
 }
 
+/* Definisce testo e leggibilità per .liquid-info-box span, .liquid-info-box strong. */
 .liquid-info-box span,
 .liquid-info-box strong {
     font-size: 13px;
 }
 
+/* Definisce dimensioni e adattamento per .card-btn. */
 .card-btn {
     min-height: 46px;
 }
 
+/* Definisce posizione e sovrapposizione per .race-floating-icon. */
 .race-floating-icon {
     right: 16px;
     bottom: -24px;
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 767px). */
 @media screen and (max-width: 767px) {
 
+    /* Definisce dimensioni e adattamento per #pagina-dashboard .liquid-card-media. */
     #pagina-dashboard .liquid-card-media {
         height: 112px;
     }
 
+    /* Definisce dimensioni e adattamento per #pagina-gare .liquid-card-media. */
     #pagina-gare .liquid-card-media {
         height: 150px;
     }
 
+    /* Definisce spaziatura per .liquid-card-body. */
     .liquid-card-body {
         padding: 12px;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .card-desc. */
     .card-desc {
         min-height: 32px;
         margin-bottom: 10px;
@@ -3272,7 +4225,9 @@ input[type=range].audio-slider::-webkit-slider-thumb {
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 389px). */
 @media screen and (max-width: 389px) {
+    /* Definisce dimensioni e adattamento per #pagina-dashboard .liquid-card-media, #pagina-gare .liquid-card-media. */
     #pagina-dashboard .liquid-card-media,
     #pagina-gare .liquid-card-media {
         height: 140px;
@@ -3280,15 +4235,21 @@ input[type=range].audio-slider::-webkit-slider-thumb {
 }
 
 /* Navigazione mobile. */
+/* Definisce visibilità nascosta per .nav-link-area. */
 .nav-link-area {
+    /* Nasconde il componente negli stati selezionati. */
     display: none !important;
 }
 
+/* Definisce visibilità nascosta per .profile-tools-panel. */
 .profile-tools-panel {
+    /* Nasconde il componente negli stati selezionati. */
     display: none;
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 767px). */
 @media screen and (max-width: 767px) {
+    /* Definisce dimensioni e adattamento, contenimento e scorrimento per html, body, .lgs-app. */
     html,
     body,
     .lgs-app {
@@ -3297,10 +4258,12 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         overflow-x: hidden;
     }
 
+    /* Definisce contenimento e scorrimento per body.mobile-nav-open. */
     body.mobile-nav-open {
         overflow: auto;
     }
 
+    /* Definisce disposizione Grid, posizione e sovrapposizione, dimensioni e adattamento per .navbar. */
     .navbar {
         position: sticky !important;
         top: max(6px, env(safe-area-inset-top)) !important;
@@ -3310,7 +4273,9 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         max-height: none !important;
         margin: 6px auto 12px !important;
         padding: 9px 10px 10px !important;
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid !important;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr !important;
         gap: 8px !important;
         overflow: visible !important;
@@ -3321,6 +4286,8 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         transform: none !important;
     }
 
+    /* Definisce sfondo e aspetto visivo, effetti e transizioni, interazione con il puntatore per body.mobile-nav-ready */
+    /* .navbar, body.mobile-nav-open .navbar. */
     body.mobile-nav-ready .navbar,
     body.mobile-nav-open .navbar {
         opacity: 1 !important;
@@ -3329,6 +4296,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         transform: none !important;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura per .brand-button. */
     .brand-button {
         justify-self: center;
         min-height: 34px !important;
@@ -3337,6 +4305,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         gap: 8px;
     }
 
+    /* Definisce dimensioni e adattamento, testo e leggibilità, sfondo e aspetto visivo per .brand-mark. */
     .brand-mark {
         width: 32px !important;
         min-width: 32px !important;
@@ -3345,6 +4314,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         font-size: 11px;
     }
 
+    /* Definisce dimensioni e adattamento, testo e leggibilità per .brand-text. */
     .brand-text {
         max-width: 190px;
         font-size: clamp(22px, 6.2vw, 27px) !important;
@@ -3352,26 +4322,33 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         letter-spacing: -0.055em;
     }
 
+    /* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per .navbar .nav-left. */
     .navbar .nav-left {
         grid-column: 1;
         width: 100%;
         margin: 0;
         padding: 7px 0 0;
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid !important;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
         gap: 6px !important;
         overflow: visible;
         border-top: 1px solid rgba(214, 226, 240, 0.78);
     }
 
+    /* Definisce disposizione Flexbox per .nav-link-area. */
     .nav-link-area {
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: inline-flex !important;
     }
 
+    /* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .nav-link. */
     .nav-link {
         min-width: 0;
         min-height: 38px !important;
         padding: 0 4px !important;
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: inline-flex !important;
         align-items: center;
         justify-content: center;
@@ -3385,11 +4362,14 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         white-space: nowrap;
     }
 
+    /* Definisce testo e leggibilità, sfondo e aspetto visivo per .nav-link.is-active. */
     .nav-link.is-active {
         color: var(--neon-magenta) !important;
         background: linear-gradient(135deg, rgba(236, 11, 140, 0.11), rgba(0, 200, 215, 0.1)) !important;
     }
 
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento per .nav-link::after. Lo pseudo-elemento */
+    /* aggiunge una parte visiva senza nuovo HTML. */
     .nav-link::after {
         left: 50%;
         bottom: 3px !important;
@@ -3397,6 +4377,7 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         height: 3px !important;
     }
 
+    /* Definisce posizione e sovrapposizione, spaziatura, testo e leggibilità per .nav-chat-badge. */
     .nav-chat-badge {
         top: -5px;
         right: -2px;
@@ -3404,23 +4385,29 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         font-size: 8px;
     }
 
+    /* Definisce visibilità nascosta per .navbar .nav-right, .mobile-nav-toggle, .mobile-nav-backdrop e gli altri */
+    /* selettori del gruppo. */
     .navbar .nav-right,
     .mobile-nav-toggle,
     .mobile-nav-backdrop,
     body.mobile-nav-open .nav-right {
+        /* Nasconde il componente negli stati selezionati. */
         display: none !important;
     }
 
+    /* Definisce dimensioni e adattamento per .app-shell. */
     .app-shell {
         width: min(100% - 18px, 430px) !important;
     }
 
+    /* Definisce posizione e sovrapposizione, spaziatura per .modal-overlay. */
     .modal-overlay {
         z-index: 5000;
         padding: 16px 0;
         align-items: center;
     }
 
+    /* Definisce dimensioni e adattamento, sfondo e aspetto visivo, contenimento e scorrimento per .modal-content. */
     .modal-content {
         width: min(100% - 28px, 420px) !important;
         max-height: calc(100dvh - 32px);
@@ -3428,23 +4415,30 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         border-radius: 24px;
     }
 
+    /* Configura la rappresentazione per .profile-tools-panel. */
     .profile-tools-panel {
         display: block;
     }
 
+    /* Definisce spaziatura per .profile-tools-heading. */
     .profile-tools-heading {
         margin-bottom: 12px;
     }
 
+    /* Definisce disposizione Grid, spaziatura per .profile-tools-grid. */
     .profile-tools-grid {
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid;
         gap: 10px;
     }
 
+    /* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per .profile-tool-button. */
     .profile-tool-button {
         min-height: 74px;
         padding: 14px;
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 42px 1fr;
         gap: 3px 12px;
         align-items: center;
@@ -3456,10 +4450,13 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         text-align: left;
     }
 
+    /* Definisce disposizione Grid, dimensioni e adattamento, testo e leggibilità per .profile-tool-button > span. */
     .profile-tool-button > span {
+        /* grid-row: Righe occupate dal singolo elemento nella griglia. */
         grid-row: 1 / span 2;
         width: 42px;
         height: 42px;
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: grid;
         place-items: center;
         border-radius: 14px;
@@ -3469,70 +4466,87 @@ input[type=range].audio-slider::-webkit-slider-thumb {
         font-weight: 900;
     }
 
+    /* Definisce testo e leggibilità per .profile-tool-button strong. */
     .profile-tool-button strong {
         font-size: 16px;
         letter-spacing: -0.03em;
     }
 
+    /* Definisce testo e leggibilità per .profile-tool-button small. */
     .profile-tool-button small {
         color: var(--muted);
         font-size: 12px;
         font-weight: 700;
     }
 
+    /* Definisce sfondo e aspetto visivo per .profile-tool-coach > span. */
     .profile-tool-coach > span {
         background: var(--gradient-cyan);
     }
 
+    /* Definisce sfondo e aspetto visivo per .profile-tool-logout. */
     .profile-tool-logout {
         border-color: rgba(255, 71, 87, 0.28);
     }
 
+    /* Definisce testo e leggibilità, sfondo e aspetto visivo per .profile-tool-logout > span. */
     .profile-tool-logout > span {
         color: #ff4757;
         background: rgba(255, 71, 87, 0.1);
     }
 
+    /* Definisce testo e leggibilità per .profile-tool-logout strong. */
     .profile-tool-logout strong {
         color: #c92a3a;
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 420px). */
 @media screen and (max-width: 420px) {
+    /* Definisce dimensioni e adattamento, spaziatura per .navbar. */
     .navbar {
         width: min(100% - 12px, 420px) !important;
         padding: 8px 8px 9px !important;
         gap: 7px !important;
     }
 
+    /* Definisce dimensioni e adattamento per .brand-mark. */
     .brand-mark {
         width: 30px !important;
         min-width: 30px !important;
         height: 30px !important;
     }
 
+    /* Definisce testo e leggibilità per .brand-text. */
     .brand-text {
         font-size: clamp(21px, 6vw, 25px) !important;
     }
 
+    /* Definisce spaziatura per .navbar .nav-left. */
     .navbar .nav-left {
         gap: 4px !important;
     }
 
+    /* Definisce dimensioni e adattamento, testo e leggibilità, sfondo e aspetto visivo per .nav-link. */
     .nav-link {
         min-height: 36px !important;
         font-size: clamp(10px, 3vw, 12px) !important;
         border-radius: 12px !important;
     }
 
+    /* Definisce dimensioni e adattamento per .app-shell. */
     .app-shell {
         width: min(100% - 14px, 420px) !important;
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (minimo larghezza 769px; minimo altezza 501px; */
+/* minimo larghezza 951px). */
 @media screen and (min-width: 769px) and (min-height: 501px),
        screen and (min-width: 951px) {
+    /* Definisce visibilità nascosta per .navbar #mobile-nav-toggle. */
     .navbar #mobile-nav-toggle {
+        /* Nasconde il componente negli stati selezionati. */
         display: none !important;
     }
 }

@@ -1,51 +1,103 @@
 # yaml-language-server: $schema=https://render.com/schema/render.yaml.json
+# Blueprint dello staging Render: descrive il servizio; i valori sync: false vengono forniti separatamente dalla
+# dashboard.
+# Servizi da creare nel Blueprint o container di supporto nel workflow.
 services:
+  # Tipo di risorsa Render, qui un servizio web.
   - type: web
+    # Nome leggibile del servizio, workflow o passaggio.
     name: letsgosport-staging
+    # Ambiente con cui Render esegue l’applicazione.
     runtime: node
+    # Piano della risorsa descritto dal Blueprint.
     plan: free
+    # Decide se i cambiamenti del repository avviano automaticamente un deploy.
     autoDeployTrigger: 'off'
+    # Comando che prepara le dipendenze per la build.
     buildCommand: npm ci
+    # Comando che avvia il server dell’applicazione.
     startCommand: npm start
+    # Percorso HTTP interrogato per verificare che il servizio sia pronto.
     healthCheckPath: /api/health
+    # Variabili di ambiente del servizio Render.
     envVars:
+      # Nome della variabile di ambiente da configurare.
       - key: NODE_ENV
+        # Valore non riservato dichiarato direttamente nel Blueprint.
         value: production
+      # Nome della variabile di ambiente da configurare.
       - key: NODE_VERSION
+        # Valore non riservato dichiarato direttamente nel Blueprint.
         value: '24.x'
+      # Nome della variabile di ambiente da configurare.
       - key: SESSION_SECRET
+        # Richiede la generazione del valore quando previsto dalla creazione della risorsa.
         generateValue: true
+      # Nome della variabile di ambiente da configurare.
       - key: PUBLIC_ORIGIN
+        # Con false, il valore viene richiesto separatamente alla creazione anziché essere incluso nel file.
         sync: false
+      # Nome della variabile di ambiente da configurare.
       - key: DB_HOST
+        # Con false, il valore viene richiesto separatamente alla creazione anziché essere incluso nel file.
         sync: false
+      # Nome della variabile di ambiente da configurare.
       - key: DB_PORT
+        # Con false, il valore viene richiesto separatamente alla creazione anziché essere incluso nel file.
         sync: false
+      # Nome della variabile di ambiente da configurare.
       - key: DB_NAME
+        # Con false, il valore viene richiesto separatamente alla creazione anziché essere incluso nel file.
         sync: false
+      # Nome della variabile di ambiente da configurare.
       - key: DB_USER
+        # Con false, il valore viene richiesto separatamente alla creazione anziché essere incluso nel file.
         sync: false
+      # Nome della variabile di ambiente da configurare.
       - key: DB_PASSWORD
+        # Con false, il valore viene richiesto separatamente alla creazione anziché essere incluso nel file.
         sync: false
+      # Nome della variabile di ambiente da configurare.
       - key: DB_SSL
+        # Valore non riservato dichiarato direttamente nel Blueprint.
         value: 'true'
+      # Nome della variabile di ambiente da configurare.
       - key: MEDIA_S3_BUCKET
+        # Con false, il valore viene richiesto separatamente alla creazione anziché essere incluso nel file.
         sync: false
+      # Nome della variabile di ambiente da configurare.
       - key: MEDIA_S3_ENDPOINT
+        # Con false, il valore viene richiesto separatamente alla creazione anziché essere incluso nel file.
         sync: false
+      # Nome della variabile di ambiente da configurare.
       - key: MEDIA_STORAGE_LIMIT_BYTES
+        # Valore non riservato dichiarato direttamente nel Blueprint.
         value: '8000000000'
+      # Nome della variabile di ambiente da configurare.
       - key: AWS_REGION
+        # Con false, il valore viene richiesto separatamente alla creazione anziché essere incluso nel file.
         sync: false
+      # Nome della variabile di ambiente da configurare.
       - key: AWS_ACCESS_KEY_ID
+        # Con false, il valore viene richiesto separatamente alla creazione anziché essere incluso nel file.
         sync: false
+      # Nome della variabile di ambiente da configurare.
       - key: AWS_SECRET_ACCESS_KEY
+        # Con false, il valore viene richiesto separatamente alla creazione anziché essere incluso nel file.
         sync: false
+      # Nome della variabile di ambiente da configurare.
       - key: TURN_KEY_ID
+        # Con false, il valore viene richiesto separatamente alla creazione anziché essere incluso nel file.
         sync: false
+      # Nome della variabile di ambiente da configurare.
       - key: TURN_KEY_API_TOKEN
+        # Con false, il valore viene richiesto separatamente alla creazione anziché essere incluso nel file.
         sync: false
+      # Nome della variabile di ambiente da configurare.
       - key: TURN_ALLOWED_EMAILS
+        # Con false, il valore viene richiesto separatamente alla creazione anziché essere incluso nel file.
         sync: false
+      # Nome della variabile di ambiente da configurare.
       - key: TURN_ENABLED
+        # Valore non riservato dichiarato direttamente nel Blueprint.
         value: 'true'

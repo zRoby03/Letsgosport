@@ -1,2 +1,4 @@
+# Definisce come Git tratta i file di testo durante il salvataggio e il checkout.
 # Auto detect text files and perform LF normalization
+# Riconosce automaticamente i file di testo e applica la normalizzazione delle terminazioni di riga di Git.
 * text=auto

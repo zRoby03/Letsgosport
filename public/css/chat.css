@@ -1,87 +1,137 @@
+/* Layout della chat: stanze, messaggi, allegati, compositore e modalità mobile. */
+/* Un selettore .nome cerca una classe, #nome un id; spazi e > descrivono le relazioni fra gli elementi HTML. */
+/* Le proprietà --nome sono variabili CSS; var(--nome) ne legge il valore secondo la cascata e l’eredità. */
+/* !important dà priorità alla dichiarazione rispetto a quelle normali; fra regole equivalenti contano specificità */
+/* e ordine. */
 /* Layout della chat per desktop, tablet e mobile. */
+/* Definisce contenimento e scorrimento per body.chat-page-active. */
 body.chat-page-active {
+    /* overflow-x: Gestisce lo scorrimento o il ritaglio sul solo asse orizzontale. */
     overflow-x: hidden;
 }
 
+/* Definisce dimensioni e adattamento per body.chat-page-active, body.chat-page-active .lgs-app, */
+/* body.chat-page-active .app-shell. */
 body.chat-page-active,
 body.chat-page-active .lgs-app,
 body.chat-page-active .app-shell {
+    /* max-width: Limite superiore alla larghezza del riquadro. */
     max-width: 100vw;
 }
 
+/* Definisce contenimento e scorrimento per body.chat-drawer-open. */
 body.chat-drawer-open {
+    /* overflow: Controlla contenuti fuori dal riquadro: auto permette lo scorrimento, hidden li ritaglia. */
     overflow: hidden;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per #pagina-chat. */
 #pagina-chat {
+    animation: none;
+    /* width: Larghezza del riquadro; percentuali e unità relative la legano al contenitore o al viewport. */
     width: 100% !important;
     max-width: none !important;
+    /* height: Altezza del riquadro; le unità dvh seguono il viewport dinamico del dispositivo. */
     height: calc(100dvh - 132px) !important;
+    /* min-height: Altezza minima consentita; zero permette di limitare il riquadro e usare lo scorrimento interno. */
     min-height: 640px;
+    /* margin: Spazio esterno tra questo riquadro e quelli vicini. */
     margin: 0 !important;
+    /* padding: Spazio interno fra bordo e contenuto del riquadro. */
     padding: 24px 0 42px !important;
+    /* border: Spessore, stile e colore del bordo del riquadro. */
     border: 0 !important;
+    /* background: Sfondo del riquadro, composto da colori, immagini o gradienti. */
     background: transparent !important;
+    /* box-shadow: Ombra esterna o interna usata per distinguere piani e componenti. */
     box-shadow: none !important;
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, sfondo e aspetto visivo per #pagina-chat .chat-container. */
 #pagina-chat .chat-container {
     width: 100%;
     max-width: 100%;
     height: 100%;
     min-height: 0 !important;
+    /* display: Sceglie il modello di impaginazione: flex e grid organizzano i figli, none nasconde il riquadro. */
     display: grid !important;
+    /* grid-template-columns: Definisce le colonne della griglia; fr divide lo spazio disponibile e minmax ne */
+    /* stabilisce i limiti. */
     grid-template-columns: minmax(310px, 360px) minmax(0, 1fr) !important;
     border: 1px solid rgba(214, 226, 240, 0.9) !important;
+    /* border-radius: Arrotonda gli angoli; valori grandi permettono forme circolari o a capsula. */
     border-radius: 28px !important;
     background: rgba(255, 255, 255, 0.72) !important;
     box-shadow: 0 24px 58px rgba(18, 34, 68, 0.15) !important;
     overflow: hidden !important;
+    /* backdrop-filter: Applica l’effetto ai contenuti visibili dietro questo riquadro. */
     backdrop-filter: blur(22px) saturate(155%);
+    /* -webkit-backdrop-filter: Variante del filtro dello sfondo usata dai browser che richiedono il prefisso. */
     -webkit-backdrop-filter: blur(22px) saturate(155%);
 }
 
+/* Definisce visibilità nascosta per .chat-sidebar-backdrop. */
 .chat-sidebar-backdrop {
+    /* Nasconde il componente negli stati selezionati. */
     display: none !important;
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per #pagina-chat .chat-sidebar. */
 #pagina-chat .chat-sidebar {
     width: auto !important;
+    /* min-width: Larghezza minima consentita; zero permette ai figli flex o grid di restringersi. */
     min-width: 0 !important;
     height: 100% !important;
     min-height: 0 !important;
     padding: 22px !important;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex !important;
+    /* flex-direction: Direzione lungo cui Flexbox dispone i figli. */
     flex-direction: column;
+    /* border-right: Imposta l’aspetto del bordo o dell’angolo indicato. */
     border-right: 1px solid rgba(214, 226, 240, 0.92) !important;
     background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(246, 252, 255, 0.58)) !important;
     overflow: hidden !important;
 }
 
+/* Definisce spaziatura, testo e leggibilità per #pagina-chat .chat-sidebar-title. */
 #pagina-chat .chat-sidebar-title {
     margin: 0 0 14px !important;
+    /* color: Colore del testo e delle icone che usano currentColor. */
     color: var(--ink);
+    /* font-size: Dimensione del testo; clamp permette di limitarne l’adattamento allo spazio. */
     font-size: 24px;
+    /* line-height: Altezza delle righe di testo. */
     line-height: 1.15;
+    /* letter-spacing: Distanza aggiuntiva tra i caratteri. */
     letter-spacing: 0 !important;
 }
 
+/* Definisce disposizione Grid, spaziatura per #pagina-chat .chat-sidebar-actions. */
 #pagina-chat .chat-sidebar-actions {
     padding: 0 !important;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid !important;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: 1fr;
+    /* gap: Distanza fra figli flex o celle grid, senza aggiungere margini esterni. */
     gap: 10px !important;
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per #pagina-chat .chat-sidebar-primary, */
+/* #pagina-chat .chat-status-btn, #pagina-chat .chat-notification-btn. */
 #pagina-chat .chat-sidebar-primary,
 #pagina-chat .chat-status-btn,
 #pagina-chat .chat-notification-btn {
     width: 100%;
     min-height: 46px;
     padding: 0 14px !important;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: inline-flex;
+    /* align-items: Allinea i figli lungo l’asse trasversale del contenitore flex o grid. */
     align-items: center;
+    /* justify-content: Distribuisce i figli lungo l’asse principale del layout. */
     justify-content: center;
     gap: 8px;
     border: 1px solid rgba(214, 226, 240, 0.9) !important;
@@ -89,34 +139,48 @@ body.chat-drawer-open {
     color: var(--ink) !important;
     background: rgba(255, 255, 255, 0.76) !important;
     box-shadow: 0 10px 22px rgba(18, 34, 68, 0.08) !important;
+    /* font-weight: Peso del carattere: valori maggiori rendono il testo più marcato. */
     font-weight: 900;
+    /* text-align: Allineamento del testo all’interno del riquadro. */
     text-align: center;
+    /* white-space: Regola conservazione degli spazi e possibilità di andare a capo. */
     white-space: nowrap;
 }
 
+/* Definisce visibilità nascosta per #pagina-chat .chat-status-btn:not(.is-visible), #pagina-chat */
+/* .chat-notification-btn:not(.is-visible). */
 #pagina-chat .chat-status-btn:not(.is-visible),
 #pagina-chat .chat-notification-btn:not(.is-visible) {
+    /* Nasconde il componente negli stati selezionati. */
     display: none !important;
 }
 
+/* Definisce disposizione Flexbox per #pagina-chat .chat-status-btn.is-visible, #pagina-chat */
+/* .chat-notification-btn.is-visible. */
 #pagina-chat .chat-status-btn.is-visible,
 #pagina-chat .chat-notification-btn.is-visible {
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: inline-flex !important;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per #pagina-chat .chat-sidebar-primary. */
 #pagina-chat .chat-sidebar-primary {
     color: #fff !important;
+    /* border-color: Colore dei bordi già definiti. */
     border-color: transparent !important;
     background: var(--gradient-primary) !important;
     box-shadow: 0 16px 30px rgba(236, 11, 140, 0.22) !important;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per #pagina-chat .chat-status-btn.is-online. */
 #pagina-chat .chat-status-btn.is-online {
     color: #147a4a !important;
     border-color: rgba(46, 213, 115, 0.28) !important;
     background: rgba(46, 213, 115, 0.11) !important;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per #pagina-chat .chat-status-btn.is-dnd, #pagina-chat */
+/* .chat-notification-btn.is-disabled. */
 #pagina-chat .chat-status-btn.is-dnd,
 #pagina-chat .chat-notification-btn.is-disabled {
     color: #b52a3b !important;
@@ -124,58 +188,78 @@ body.chat-drawer-open {
     background: rgba(255, 71, 87, 0.09) !important;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per #pagina-chat .chat-notification-btn.is-enabled. */
 #pagina-chat .chat-notification-btn.is-enabled {
     color: #008ea6 !important;
     border-color: rgba(0, 200, 215, 0.26) !important;
     background: rgba(0, 200, 215, 0.1) !important;
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per #pagina-chat .chat-room-list. */
 #pagina-chat .chat-room-list {
+    /* flex: Definisce crescita, riduzione e dimensione iniziale di un elemento Flexbox. */
     flex: 1 1 auto;
     min-height: 0;
     margin: 16px -8px 0 0 !important;
     padding: 2px 8px 2px 0 !important;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid !important;
+    /* align-content: Distribuisce le righe o le tracce quando il contenitore ha spazio libero. */
     align-content: start;
     gap: 10px !important;
+    /* overflow-y: Gestisce lo scorrimento o il ritaglio sul solo asse verticale. */
     overflow-y: auto !important;
+    /* scrollbar-gutter: Riserva spazio per la barra, riducendo i salti del layout. */
     scrollbar-gutter: stable;
 }
 
+/* Definisce dimensioni e adattamento per #pagina-chat .chat-room-list::-webkit-scrollbar, #pagina-chat */
+/* #contenitore-messaggi::-webkit-scrollbar. */
 #pagina-chat .chat-room-list::-webkit-scrollbar,
 #pagina-chat #contenitore-messaggi::-webkit-scrollbar {
     width: 8px;
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-chat .chat-room-list::-webkit-scrollbar-thumb, #pagina-chat */
+/* #contenitore-messaggi::-webkit-scrollbar-thumb. */
 #pagina-chat .chat-room-list::-webkit-scrollbar-thumb,
 #pagina-chat #contenitore-messaggi::-webkit-scrollbar-thumb {
     border-radius: 999px;
     background: rgba(137, 154, 178, 0.34);
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per #pagina-chat .stanza-item. */
 #pagina-chat .stanza-item {
+    /* box-sizing: Con border-box, bordi e padding sono compresi nella larghezza e altezza dichiarate. */
     box-sizing: border-box;
     width: 100% !important;
     min-height: 76px !important;
     padding: 12px !important;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid !important;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: 48px minmax(0, 1fr) 62px !important;
     align-items: center !important;
     gap: 12px !important;
     border: 1px solid rgba(214, 226, 240, 0.86) !important;
+    /* border-left: Imposta l’aspetto del bordo o dell’angolo indicato. */
     border-left: 1px solid rgba(214, 226, 240, 0.86) !important;
     border-radius: 20px !important;
     background: rgba(255, 255, 255, 0.78) !important;
     box-shadow: 0 12px 28px rgba(18, 34, 68, 0.08) !important;
+    /* cursor: Forma del cursore, usata per comunicare clic, attesa o indisponibilità. */
     cursor: pointer;
+    /* transform: Trasforma visivamente il riquadro, per esempio spostandolo, ruotandolo o specchiandolo. */
     transform: none !important;
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-chat .stanza-item:hover. Si applica al passaggio del puntatore. */
 #pagina-chat .stanza-item:hover {
     border-color: rgba(0, 200, 215, 0.36) !important;
     background: rgba(255, 255, 255, 0.94) !important;
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-chat .stanza-item.attiva. */
 #pagina-chat .stanza-item.attiva {
     border-color: rgba(236, 11, 140, 0.28) !important;
     background:
@@ -186,6 +270,8 @@ body.chat-drawer-open {
         0 16px 32px rgba(0, 200, 215, 0.12) !important;
 }
 
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo, contenimento e scorrimento per #pagina-chat */
+/* .room-avatar. */
 #pagina-chat .room-avatar {
     width: 48px !important;
     min-width: 48px !important;
@@ -196,14 +282,20 @@ body.chat-drawer-open {
     overflow: hidden;
 }
 
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo, adattamento di immagini e video per #pagina-chat */
+/* .room-avatar-image, #pagina-chat .room-avatar-image.is-square. */
 #pagina-chat .room-avatar-image,
 #pagina-chat .room-avatar-image.is-square {
     width: 100%;
     height: 100%;
     border-radius: inherit !important;
+    /* object-fit: Controlla l’adattamento di immagini e video: contain conserva il contenuto intero, cover può */
+    /* ritagliarlo. */
     object-fit: cover;
 }
 
+/* Definisce dimensioni e adattamento per #pagina-chat .room-details, #pagina-chat .room-main-row, #pagina-chat */
+/* .room-preview e gli altri selettori del gruppo. */
 #pagina-chat .room-details,
 #pagina-chat .room-main-row,
 #pagina-chat .room-preview,
@@ -211,36 +303,51 @@ body.chat-drawer-open {
     min-width: 0;
 }
 
+/* Definisce disposizione Flexbox, spaziatura per #pagina-chat .room-main-row. */
 #pagina-chat .room-main-row {
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 7px;
 }
 
+/* Definisce testo e leggibilità, contenimento e scorrimento per #pagina-chat .room-name. */
 #pagina-chat .room-name {
+    min-width: 0;
+    max-width: 100%;
     color: var(--ink) !important;
     font-size: 15px;
     font-weight: 900 !important;
     line-height: 1.2;
     overflow: hidden;
+    /* text-overflow: Aspetto del testo che supera lo spazio disponibile, per esempio i puntini di ellipsis. */
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
+/* Definisce testo e leggibilità, contenimento e scorrimento per #pagina-chat .room-preview, #pagina-chat */
+/* .room-participants. */
 #pagina-chat .room-preview,
 #pagina-chat .room-participants {
+    display: block;
+    max-width: 100%;
+    line-height: 1.4;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
+/* Definisce spaziatura, testo e leggibilità per #pagina-chat .room-preview. */
 #pagina-chat .room-preview {
+    /* margin-top: Margine esterno applicato al lato indicato. */
     margin-top: 4px !important;
     color: rgba(67, 84, 116, 0.72) !important;
     font-size: 12px;
     font-weight: 750 !important;
 }
 
+/* Definisce spaziatura, testo e leggibilità per #pagina-chat .room-participants. */
 #pagina-chat .room-participants {
     margin-top: 4px !important;
     color: rgba(67, 84, 116, 0.58) !important;
@@ -248,22 +355,28 @@ body.chat-drawer-open {
     font-weight: 800;
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per #pagina-chat .room-meta. */
 #pagina-chat .room-meta {
     width: 62px !important;
     min-width: 62px !important;
     max-width: 62px !important;
+    /* align-self: Modifica l’allineamento di questo singolo elemento rispetto al contenitore. */
     align-self: stretch;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid !important;
     align-content: start;
+    /* justify-items: Allineamento dei figli dentro le rispettive celle Grid. */
     justify-items: end;
     gap: 7px !important;
     overflow: visible;
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per #pagina-chat .room-time. */
 #pagina-chat .room-time {
     min-width: 42px;
     max-width: 62px;
     padding: 5px 7px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -274,15 +387,19 @@ body.chat-drawer-open {
     box-shadow: 0 8px 18px rgba(18, 34, 68, 0.07);
     font-size: 10px;
     font-weight: 900;
+    /* font-variant-numeric: Con tabular-nums le cifre occupano la stessa larghezza, utile per timer e contatori. */
     font-variant-numeric: tabular-nums;
     line-height: 1;
     white-space: nowrap;
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, testo e leggibilità per #pagina-chat .room-unread-badge. */
 #pagina-chat .room-unread-badge {
     min-width: 24px;
     height: 24px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: inline-grid;
+    /* place-items: Imposta insieme l’allineamento dei figli sui due assi. */
     place-items: center;
     border-radius: 999px;
     color: #fff;
@@ -291,15 +408,20 @@ body.chat-drawer-open {
     font-size: 11px;
 }
 
+/* Definisce visibilità nascosta per #pagina-chat .room-unread-badge[hidden]. */
 #pagina-chat .room-unread-badge[hidden] {
+    /* Nasconde il componente negli stati selezionati. */
     display: none !important;
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, sfondo e aspetto visivo per #pagina-chat .chat-main. */
 #pagina-chat .chat-main {
     min-width: 0;
     max-width: 100%;
     min-height: 0;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex !important;
+    /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
     flex-direction: column;
     background:
         radial-gradient(circle at 70% 10%, rgba(0, 200, 215, 0.07), transparent 24vw),
@@ -307,30 +429,47 @@ body.chat-drawer-open {
     overflow: hidden;
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per #pagina-chat .chat-header. */
 #pagina-chat .chat-header {
+    flex: 0 0 auto;
     min-height: 78px;
     padding: 16px 20px !important;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto auto auto !important;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
+    grid-template-columns: minmax(0, 1fr) auto auto !important;
+    grid-template-rows: auto auto;
     align-items: center;
     gap: 10px;
+    /* border-bottom: Imposta l’aspetto del bordo o dell’angolo indicato. */
     border-bottom: 1px solid rgba(214, 226, 240, 0.9) !important;
     background: rgba(255, 255, 255, 0.78) !important;
 }
 
+/* Definisce visibilità nascosta per #btn-chat-sidebar-toggle. */
 #btn-chat-sidebar-toggle {
+    /* Nasconde il componente negli stati selezionati. */
     display: none !important;
 }
 
+/* Definisce visibilità nascosta per #btn-avvia-chiamata. */
 #btn-avvia-chiamata {
+    grid-column: 3;
+    grid-row: 1 / 3;
+    /* Nasconde il componente negli stati selezionati. */
     display: none;
 }
 
+/* Definisce disposizione Flexbox per body.chat-private-active #btn-avvia-chiamata. */
 body.chat-private-active #btn-avvia-chiamata {
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: inline-flex;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per #pagina-chat #titolo-chat-attiva. */
 #pagina-chat #titolo-chat-attiva {
+    grid-column: 1;
+    grid-row: 1;
     min-width: 0;
     margin: 0;
     color: var(--ink) !important;
@@ -342,13 +481,22 @@ body.chat-private-active #btn-avvia-chiamata {
     white-space: nowrap;
 }
 
+/* Definisce dimensioni e adattamento per #pagina-chat .chat-member-count, #pagina-chat .chat-connection-status. */
 #pagina-chat .chat-member-count,
 #pagina-chat .chat-connection-status {
     min-width: max-content;
     white-space: nowrap;
 }
 
+/* Definisce spaziatura, testo e leggibilità, sfondo e aspetto visivo per #pagina-chat .chat-member-count. */
 #pagina-chat .chat-member-count {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
     padding: 7px 10px;
     border: 1px solid rgba(214, 226, 240, 0.9);
     border-radius: 999px;
@@ -358,6 +506,7 @@ body.chat-private-active #btn-avvia-chiamata {
     font-weight: 900;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per #pagina-chat #contenitore-messaggi. */
 #pagina-chat #contenitore-messaggi {
     flex: 1 1 auto;
     width: 100%;
@@ -369,28 +518,34 @@ body.chat-private-active #btn-avvia-chiamata {
     overflow-x: hidden !important;
     background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(245, 250, 255, 0.58)) !important;
+    /* scroll-behavior: Sceglie lo scorrimento immediato o animato. */
     scroll-behavior: smooth;
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per #pagina-chat .msg-row. */
 #pagina-chat .msg-row {
     width: 100%;
     max-width: 100%;
     min-width: 0;
     box-sizing: border-box;
     margin: 0 0 12px !important;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     align-items: flex-end;
     gap: 9px;
 }
 
+/* Configura la rappresentazione per #pagina-chat .msg-row.mio. */
 #pagina-chat .msg-row.mio {
     justify-content: flex-end;
 }
 
+/* Configura la rappresentazione per #pagina-chat .msg-row.altro. */
 #pagina-chat .msg-row.altro {
     justify-content: flex-start;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per #pagina-chat .msg-avatar. */
 #pagina-chat .msg-avatar {
     width: 36px !important;
     min-width: 36px;
@@ -400,6 +555,7 @@ body.chat-private-active #btn-avvia-chiamata {
     box-shadow: 0 8px 18px rgba(18, 34, 68, 0.1);
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per #pagina-chat .msg-bubble. */
 #pagina-chat .msg-bubble {
     max-width: min(72%, 760px) !important;
     min-width: 0;
@@ -410,34 +566,48 @@ body.chat-private-active #btn-avvia-chiamata {
     box-shadow: 0 12px 28px rgba(18, 34, 68, 0.08);
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-chat .msg-bubble.mio. */
 #pagina-chat .msg-bubble.mio {
+    /* border-bottom-right-radius: Imposta l’aspetto del bordo o dell’angolo indicato. */
     border-bottom-right-radius: 7px !important;
     background:
         linear-gradient(135deg, rgba(236, 11, 140, 0.13), rgba(0, 200, 215, 0.17)),
         rgba(255, 255, 255, 0.82) !important;
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-chat .msg-bubble.altro. */
 #pagina-chat .msg-bubble.altro {
+    /* border-bottom-left-radius: Imposta l’aspetto del bordo o dell’angolo indicato. */
     border-bottom-left-radius: 7px !important;
     background: rgba(255, 255, 255, 0.92) !important;
 }
 
+/* Definisce spaziatura, testo e leggibilità per #pagina-chat .msg-mittente. */
 #pagina-chat .msg-mittente {
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+    /* margin-bottom: Margine esterno applicato al lato indicato. */
     margin-bottom: 5px;
     color: var(--neon-magenta);
     font-size: 12px;
     font-weight: 900;
 }
 
+/* Definisce testo e leggibilità, contenimento e scorrimento per #pagina-chat .msg-testo. */
 #pagina-chat .msg-testo {
     color: var(--ink) !important;
     font-size: 15px !important;
     line-height: 1.48;
+    /* overflow-wrap: Permette di spezzare parole troppo lunghe per il contenitore. */
     overflow-wrap: anywhere;
 }
 
+/* Definisce disposizione Flexbox, spaziatura, testo e leggibilità per #pagina-chat .msg-info. */
 #pagina-chat .msg-info {
+    flex-wrap: wrap;
+    line-height: 1.4;
     margin-top: 7px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -447,11 +617,13 @@ body.chat-private-active #btn-avvia-chiamata {
     font-variant-numeric: tabular-nums;
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per #pagina-chat .msg-delete-btn. */
 #pagina-chat .msg-delete-btn {
     width: 26px;
     min-width: 26px;
     height: 26px;
     padding: 5px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: inline-grid;
     place-items: center;
     flex: 0 0 26px;
@@ -460,47 +632,60 @@ body.chat-private-active #btn-avvia-chiamata {
     color: inherit;
     background: transparent;
     cursor: pointer;
+    /* transition: Interpola nel tempo i cambiamenti delle proprietà indicate. */
     transition: background-color 0.18s ease, transform 0.18s ease;
 }
 
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per #pagina-chat .msg-delete-btn:hover, #pagina-chat */
+/* .msg-delete-btn:focus-visible. Si applica al passaggio del puntatore. Evidenzia il controllo raggiunto con la */
+/* tastiera o il focus. */
 #pagina-chat .msg-delete-btn:hover,
 #pagina-chat .msg-delete-btn:focus-visible {
     background: rgba(220, 38, 38, 0.12);
     transform: translateY(-1px);
 }
 
+/* Definisce dimensioni e adattamento, adattamento di immagini e video per #pagina-chat .msg-cestino. */
 #pagina-chat .msg-cestino {
     width: 16px !important;
     max-width: 16px !important;
     height: 16px !important;
+    /* max-height: Limite superiore all’altezza prima di applicare le regole di overflow. */
     max-height: 16px !important;
     display: block;
     object-fit: contain;
 }
 
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo per #pagina-chat .msg-img-allegata. */
 #pagina-chat .msg-img-allegata {
     max-width: 100%;
     max-height: 280px;
     border-radius: 16px;
 }
 
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo per #pagina-chat .msg-file-box. */
 #pagina-chat .msg-file-box {
     max-width: min(360px, 100%);
     border: 1px solid rgba(214, 226, 240, 0.82);
     background: rgba(255, 255, 255, 0.72);
 }
 
+/* Definisce testo e leggibilità per #pagina-chat .msg-file-icon. */
 #pagina-chat .msg-file-icon {
     font-size: 32px;
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento per #pagina-chat .msg-file-details. */
 #pagina-chat .msg-file-details {
     min-width: 0;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
+    /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
     flex-direction: column;
     align-items: flex-start;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per #pagina-chat .msg-file-name. */
 #pagina-chat .msg-file-name {
     width: 100%;
     margin-bottom: 5px;
@@ -512,6 +697,7 @@ body.chat-private-active #btn-avvia-chiamata {
     white-space: nowrap;
 }
 
+/* Definisce spaziatura, testo e leggibilità, sfondo e aspetto visivo per #pagina-chat .msg-file-btn. */
 #pagina-chat .msg-file-btn {
     padding: 6px 12px;
     color: #fff;
@@ -521,28 +707,37 @@ body.chat-private-active #btn-avvia-chiamata {
     box-shadow: 0 8px 18px rgba(236, 11, 140, 0.18);
     font-size: 11px;
     font-weight: 900;
+    /* text-decoration: Decorazioni del testo, come la sottolineatura dei collegamenti. */
     text-decoration: none;
     transition: filter 0.18s ease, transform 0.18s ease;
 }
 
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per #pagina-chat .msg-file-btn:hover. Si applica al */
+/* passaggio del puntatore. */
 #pagina-chat .msg-file-btn:hover {
+    /* filter: Applica un effetto al contenuto disegnato, come luminosità o scala di grigi. */
     filter: brightness(1.08);
     transform: translateY(-1px);
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per #pagina-chat .audio-player. */
 #pagina-chat .audio-player {
     min-width: min(270px, 100%);
     padding: 10px 5px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     align-items: center;
     gap: 14px;
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per #pagina-chat .audio-player-toggle. */
 #pagina-chat .audio-player-toggle {
     width: 48px;
     height: 40px;
     padding: 0;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
+    /* flex-shrink: Quanto l’elemento Flexbox può restringersi quando manca spazio. */
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
@@ -552,10 +747,14 @@ body.chat-private-active #btn-avvia-chiamata {
     transition: transform 0.18s ease;
 }
 
+/* Definisce effetti e transizioni per #pagina-chat .audio-player-toggle:hover. Si applica al passaggio del */
+/* puntatore. */
 #pagina-chat .audio-player-toggle:hover {
     transform: scale(1.05);
 }
 
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo, adattamento di immagini e video per #pagina-chat */
+/* .audio-player-toggle-icon. */
 #pagina-chat .audio-player-toggle-icon {
     width: 90%;
     height: 90%;
@@ -563,23 +762,32 @@ body.chat-private-active #btn-avvia-chiamata {
     filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.15));
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per #pagina-chat .audio-player-timeline. */
 #pagina-chat .audio-player-timeline {
     min-width: 0;
+    /* padding-top: Spaziatura interna applicata al lato indicato. */
     padding-top: 2px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     flex: 1;
+    /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
     flex-direction: column;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, interazione con il puntatore per #pagina-chat */
+/* .audio-player-progress. */
 #pagina-chat .audio-player-progress {
     width: 100%;
     margin: 0;
+    /* accent-color: Colore dei controlli nativi compatibili, come checkbox e radio. */
     accent-color: var(--neon-magenta);
     cursor: pointer;
 }
 
+/* Definisce disposizione Flexbox, spaziatura, testo e leggibilità per #pagina-chat .audio-player-times. */
 #pagina-chat .audio-player-times {
     margin-top: 6px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     justify-content: space-between;
     color: var(--muted);
@@ -587,42 +795,96 @@ body.chat-private-active #btn-avvia-chiamata {
     font-weight: 800;
 }
 
+/* Definisce testo e leggibilità per #pagina-chat .audio-player-times .is-error. */
 #pagina-chat .audio-player-times .is-error {
     color: #dc3545;
 }
 
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo, adattamento di immagini e video per #pagina-chat */
+/* .audio-player-icon. */
 #pagina-chat .audio-player-icon {
     width: 26px;
     height: 26px;
     flex-shrink: 0;
     object-fit: contain;
+    /* opacity: Trasparenza del riquadro e dei suoi contenuti, senza rimuoverlo dal layout. */
     opacity: 0.85;
     filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.1));
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per #pagina-chat .chat-composer. */
 #pagina-chat .chat-composer {
+    flex: 0 0 auto;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
     min-height: 82px;
     padding: 14px 18px !important;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid !important;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
     grid-template-columns: 52px minmax(0, 1fr) 52px 52px !important;
     align-items: center;
     gap: 10px !important;
+    /* border-top: Imposta l’aspetto del bordo o dell’angolo indicato. */
     border-top: 1px solid rgba(214, 226, 240, 0.9) !important;
     background: rgba(255, 255, 255, 0.86) !important;
 }
 
+/* Definisce tracce e posizione nella griglia, dimensioni e adattamento, spaziatura per #pagina-chat */
+/* .chat-typing-indicator. */
 #pagina-chat .chat-typing-indicator {
+    /* grid-column: Colonne occupate dal singolo elemento nella griglia. */
     grid-column: 1 / -1;
-    min-height: 18px;
-    margin: -4px 0 -4px;
+    min-height: 0;
+    margin: 0;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
     color: var(--muted);
     font-size: 12px;
     font-weight: 800;
 }
 
+#pagina-chat .chat-typing-indicator:empty,
+#pagina-chat .chat-composer.has-voice-status .chat-typing-indicator,
+#pagina-chat .voice-recording-status[hidden],
+#pagina-chat .voice-recording-status button[hidden] {
+    display: none !important;
+}
+
+/* Feedback del vocale: stato, durata e annullamento occupano una riga propria. */
+#pagina-chat .voice-recording-status {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 10px 12px;
+    border: 1px solid #edbecb;
+    border-radius: 14px;
+    background: #fff3f6;
+    color: #842d49;
+    line-height: 1.4;
+}
+
+.voice-recording-copy { display: grid; flex: 1; min-width: 0; gap: 2px; }
+.voice-recording-copy strong { font-size: 13px; font-weight: 700; }
+.voice-recording-copy > span { font-size: 11px; overflow-wrap: anywhere; }
+.voice-recording-time { flex: 0 0 auto; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.voice-recording-indicator { display: flex; align-items: center; gap: 3px; height: 24px; flex: 0 0 23px; }
+.voice-recording-indicator i { width: 3px; height: 8px; border-radius: 3px; background: #cf365c; }
+.voice-recording-status[data-state="recording"] .voice-recording-indicator i { animation: voiceRecordingPulse .8s ease-in-out infinite alternate; }
+.voice-recording-indicator i:nth-child(2), .voice-recording-indicator i:nth-child(4) { height: 17px; animation-delay: -.3s; }
+.voice-recording-indicator i:nth-child(3) { height: 23px; animation-delay: -.6s; }
+#pagina-chat #btn-annulla-vocale { flex: 0 0 auto; padding: 8px; border: 0; border-radius: 8px; background: transparent; color: inherit; font: 600 12px/1.2 system-ui, sans-serif; cursor: pointer; }
+#pagina-chat #btn-annulla-vocale:hover { background: #f8dce5; }
+#pagina-chat #btn-registra-vocale { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+#pagina-chat #btn-registra-vocale.is-recording { outline: 3px solid #cf365c !important; outline-offset: 3px; background: #ffe0e9 !important; }
+
+@keyframes voiceRecordingPulse { to { transform: scaleY(.35); opacity: .55; } }
+@media (prefers-reduced-motion: reduce) { .voice-recording-indicator i { animation: none !important; } }
+
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per #pagina-chat #input-messaggio. */
 #pagina-chat #input-messaggio {
     width: 100%;
     min-width: 0;
@@ -632,16 +894,20 @@ body.chat-private-active #btn-avvia-chiamata {
     border-radius: 18px !important;
     color: var(--ink) !important;
     background: rgba(255, 255, 255, 0.92) !important;
-    font-size: 16px;
+    font-size: 16px !important;
     font-weight: 750;
+    /* outline: Bordo di evidenziazione che non occupa spazio nel layout, usato anche per il focus. */
     outline: none;
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-chat #input-messaggio:focus. Evidenzia il controllo raggiunto con */
+/* la tastiera o il focus. */
 #pagina-chat #input-messaggio:focus {
     border-color: rgba(0, 200, 215, 0.62) !important;
     box-shadow: 0 0 0 4px rgba(0, 200, 215, 0.12) !important;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per #pagina-chat .chat-action-btn. */
 #pagina-chat .chat-action-btn {
     width: 52px !important;
     min-width: 52px !important;
@@ -653,12 +919,15 @@ body.chat-private-active #btn-avvia-chiamata {
     box-shadow: 0 10px 22px rgba(18, 34, 68, 0.08) !important;
 }
 
+/* Definisce dimensioni e adattamento, adattamento di immagini e video per #pagina-chat .chat-action-btn img. */
 #pagina-chat .chat-action-btn img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-chat .chat-send-btn, #pagina-chat */
+/* .chat-send-btn.is-ready:not(:disabled). */
 #pagina-chat .chat-send-btn,
 #pagina-chat .chat-send-btn.is-ready:not(:disabled) {
     border-color: transparent !important;
@@ -666,6 +935,7 @@ body.chat-private-active #btn-avvia-chiamata {
     box-shadow: 0 14px 28px rgba(236, 11, 140, 0.24) !important;
 }
 
+/* Definisce spaziatura, testo e leggibilità, sfondo e aspetto visivo per #pagina-chat .chat-list-state. */
 #pagina-chat .chat-list-state {
     margin: 0;
     padding: 18px;
@@ -677,40 +947,54 @@ body.chat-private-active #btn-avvia-chiamata {
     text-align: center;
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (minimo larghezza 768px; massimo larghezza */
+/* 1100px). */
 @media screen and (min-width: 768px) and (max-width: 1100px) {
+    /* Definisce dimensioni e adattamento, spaziatura per #pagina-chat. */
     #pagina-chat {
         height: calc(100dvh - 118px) !important;
         padding-top: 12px !important;
     }
 
+    /* Definisce tracce e posizione nella griglia, sfondo e aspetto visivo per #pagina-chat .chat-container. */
     #pagina-chat .chat-container {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: minmax(276px, 34%) minmax(0, 1fr) !important;
         border-radius: 24px !important;
     }
 
+    /* Definisce spaziatura per #pagina-chat .chat-sidebar. */
     #pagina-chat .chat-sidebar {
         padding: 16px !important;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura per #pagina-chat .chat-header. */
     #pagina-chat .chat-header {
         min-height: 70px;
         padding: 14px 16px !important;
     }
 
+    /* Definisce visibilità nascosta per #pagina-chat .chat-member-count. */
     #pagina-chat .chat-member-count {
+        /* Nasconde il componente negli stati selezionati. */
         display: none;
     }
 
+    /* Definisce dimensioni e adattamento per #pagina-chat .msg-bubble. */
     #pagina-chat .msg-bubble {
         max-width: min(78%, 620px) !important;
     }
 
+    /* Definisce tracce e posizione nella griglia, dimensioni e adattamento, spaziatura per #pagina-chat */
+    /* .chat-composer. */
     #pagina-chat .chat-composer {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 48px minmax(0, 1fr) 48px 48px !important;
         min-height: 76px;
         padding: 12px 14px !important;
     }
 
+    /* Definisce dimensioni e adattamento per #pagina-chat .chat-action-btn. */
     #pagina-chat .chat-action-btn {
         width: 48px !important;
         min-width: 48px !important;
@@ -718,27 +1002,38 @@ body.chat-private-active #btn-avvia-chiamata {
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 768px; massimo larghezza */
+/* 950px; massimo altezza 500px). Riguarda l’orientamento orizzontale. */
 @media screen and (max-width: 768px), screen and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+    /* Definisce contenimento e scorrimento per body.chat-page-active. */
     body.chat-page-active {
+        height: var(--app-height, 100dvh);
+        min-height: 0;
         overflow: hidden;
     }
 
+    /* Definisce dimensioni e adattamento, contenimento e scorrimento per body.chat-page-active .app-shell. */
     body.chat-page-active .app-shell {
         width: 100% !important;
         max-width: 100% !important;
         overflow-x: hidden !important;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura, contenimento e scorrimento per #pagina-chat. */
     #pagina-chat {
         width: 100% !important;
         max-width: 100% !important;
-        height: calc(var(--app-height, 100dvh) - 84px) !important;
+        height: var(--chat-available-height, calc(var(--app-height, 100dvh) - 132px)) !important;
         min-height: 0 !important;
         padding: 0 !important;
         overflow: hidden !important;
     }
 
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento, sfondo e aspetto visivo per #pagina-chat */
+    /* .chat-container. */
     #pagina-chat .chat-container {
+        /* position: Sceglie il riferimento di posizionamento; absolute usa un antenato posizionato, fixed il viewport */
+        /* salvo contenitori speciali. */
         position: relative;
         width: 100% !important;
         max-width: 100% !important;
@@ -751,9 +1046,12 @@ body.chat-private-active #btn-avvia-chiamata {
         box-shadow: none !important;
     }
 
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento per #pagina-chat .chat-sidebar, #pagina-chat */
+    /* .chat-main. */
     #pagina-chat .chat-sidebar,
     #pagina-chat .chat-main {
         position: absolute !important;
+        /* inset: Imposta insieme le distanze dai quattro lati del contenitore di riferimento. */
         inset: 0 !important;
         width: 100% !important;
         height: 100% !important;
@@ -761,48 +1059,67 @@ body.chat-private-active #btn-avvia-chiamata {
         min-height: 0 !important;
     }
 
+    /* Definisce posizione e sovrapposizione, spaziatura, sfondo e aspetto visivo per #pagina-chat .chat-sidebar. */
     #pagina-chat .chat-sidebar {
+        /* z-index: Ordine di sovrapposizione nel contesto di impilamento corrente. */
         z-index: 2;
         padding: 16px !important;
         border: 0 !important;
         background: rgba(247, 252, 255, 0.96) !important;
     }
 
+    /* Definisce posizione e sovrapposizione, contenimento e scorrimento per #pagina-chat .chat-main. */
     #pagina-chat .chat-main {
         z-index: 1;
         overflow: hidden !important;
     }
 
+    /* Definisce disposizione Flexbox, sfondo e aspetto visivo per #pagina-chat .chat-container.is-mobile-list */
+    /* .chat-sidebar, body.chat-page-active #pagina-chat .chat-container:not(.is-mobile-conversation) .chat-s…. */
     #pagina-chat .chat-container.is-mobile-list .chat-sidebar,
     body.chat-page-active #pagina-chat .chat-container:not(.is-mobile-conversation) .chat-sidebar {
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: flex !important;
         opacity: 1 !important;
+        /* visibility: Mostra o nasconde il componente mantenendone lo spazio nel layout. */
         visibility: visible !important;
     }
 
+    /* Definisce visibilità nascosta per #pagina-chat .chat-container.is-mobile-list .chat-main, body.chat-page-active */
+    /* #pagina-chat .chat-container:not(.is-mobile-conversation) .chat-main. */
     #pagina-chat .chat-container.is-mobile-list .chat-main,
     body.chat-page-active #pagina-chat .chat-container:not(.is-mobile-conversation) .chat-main {
+        /* Nasconde il componente negli stati selezionati. */
         display: none !important;
     }
 
+    /* Definisce visibilità nascosta per #pagina-chat .chat-container.is-mobile-conversation .chat-sidebar. */
     #pagina-chat .chat-container.is-mobile-conversation .chat-sidebar {
+        /* Nasconde il componente negli stati selezionati. */
         display: none !important;
     }
 
+    /* Definisce disposizione Flexbox per #pagina-chat .chat-container.is-mobile-conversation .chat-main. */
     #pagina-chat .chat-container.is-mobile-conversation .chat-main {
+        /* Flexbox dispone e allinea i figli di questo componente. */
         display: flex !important;
     }
 
+    /* Definisce spaziatura, testo e leggibilità per #pagina-chat .chat-sidebar-title. */
     #pagina-chat .chat-sidebar-title {
         margin-bottom: 12px !important;
         font-size: 22px;
     }
 
+    /* Definisce tracce e posizione nella griglia, spaziatura per #pagina-chat .chat-sidebar-actions. */
     #pagina-chat .chat-sidebar-actions {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 1fr;
         gap: 8px !important;
     }
 
+    /* Definisce dimensioni e adattamento, testo e leggibilità, sfondo e aspetto visivo per #pagina-chat */
+    /* .chat-sidebar-primary, #pagina-chat .chat-status-btn, #pagina-chat .chat-notification-btn. */
     #pagina-chat .chat-sidebar-primary,
     #pagina-chat .chat-status-btn,
     #pagina-chat .chat-notification-btn {
@@ -811,47 +1128,61 @@ body.chat-private-active #btn-avvia-chiamata {
         font-size: 13px;
     }
 
+    /* Definisce spaziatura per #pagina-chat .chat-room-list. */
     #pagina-chat .chat-room-list {
         margin-top: 12px !important;
+        /* padding-right: Spaziatura interna applicata al lato indicato. */
         padding-right: 4px !important;
         gap: 9px !important;
     }
 
+    /* Definisce tracce e posizione nella griglia, dimensioni e adattamento, spaziatura per #pagina-chat .stanza-item. */
     #pagina-chat .stanza-item {
         min-height: 76px !important;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 46px minmax(0, 1fr) 58px !important;
         gap: 10px !important;
         padding: 11px !important;
         border-radius: 18px !important;
     }
 
+    /* Definisce dimensioni e adattamento per #pagina-chat .room-avatar. */
     #pagina-chat .room-avatar {
         width: 46px !important;
         min-width: 46px !important;
         height: 46px !important;
     }
 
+    /* Definisce dimensioni e adattamento per #pagina-chat .room-meta. */
     #pagina-chat .room-meta {
         width: 58px !important;
         min-width: 58px !important;
         max-width: 58px !important;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura per #pagina-chat .room-time. */
     #pagina-chat .room-time {
         max-width: 58px;
         padding: 5px 6px;
     }
 
+    /* Definisce tracce e posizione nella griglia, dimensioni e adattamento, spaziatura per #pagina-chat .chat-header. */
     #pagina-chat .chat-header {
         min-height: 58px;
         padding: 8px 10px !important;
-        grid-template-columns: 42px minmax(0, 1fr) auto 42px !important;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
+        grid-template-columns: 42px minmax(0, 1fr) 42px !important;
+        grid-template-rows: auto;
         gap: 8px;
     }
 
+    /* Definisce disposizione Grid, dimensioni e adattamento, sfondo e aspetto visivo per #btn-chat-sidebar-toggle. */
     #btn-chat-sidebar-toggle {
+        grid-column: 1;
+        grid-row: 1;
         width: 42px !important;
         height: 42px !important;
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: inline-grid !important;
         place-items: center;
         border: 1px solid rgba(214, 226, 240, 0.9) !important;
@@ -860,11 +1191,16 @@ body.chat-private-active #btn-avvia-chiamata {
         box-shadow: 0 8px 18px rgba(18, 34, 68, 0.08) !important;
     }
 
+    /* Definisce visibilità nascosta per #btn-chat-sidebar-toggle span. */
     #btn-chat-sidebar-toggle span {
+        /* Nasconde il componente negli stati selezionati. */
         display: none !important;
     }
 
+    /* Definisce testo e leggibilità, contenuto generato dal CSS per #btn-chat-sidebar-toggle::before. Lo */
+    /* pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
     #btn-chat-sidebar-toggle::before {
+        /* content: Contenuto generato dal CSS per uno pseudo-elemento. */
         content: "<";
         color: var(--ink);
         font-size: 24px;
@@ -872,28 +1208,38 @@ body.chat-private-active #btn-avvia-chiamata {
         line-height: 1;
     }
 
+    /* Definisce testo e leggibilità per #pagina-chat #titolo-chat-attiva. */
     #pagina-chat #titolo-chat-attiva {
+        grid-column: 2;
         font-size: 16px;
     }
 
+    /* Definisce visibilità nascosta per #pagina-chat .chat-member-count, #pagina-chat .chat-connection-status. */
     #pagina-chat .chat-member-count,
     #pagina-chat .chat-connection-status {
+        /* Nasconde il componente negli stati selezionati. */
         display: none !important;
     }
 
+    /* Definisce tracce e posizione nella griglia per #pagina-chat #btn-avvia-chiamata. */
     #pagina-chat #btn-avvia-chiamata {
-        grid-column: 4;
+        grid-column: 3;
+        grid-row: 1;
     }
 
+    /* Definisce disposizione Grid per body.chat-private-active #pagina-chat #btn-avvia-chiamata. */
     body.chat-private-active #pagina-chat #btn-avvia-chiamata {
+        /* Grid organizza i figli nelle righe e colonne definite. */
         display: inline-grid !important;
     }
 
+    /* Definisce spaziatura, contenimento e scorrimento per #pagina-chat #contenitore-messaggi. */
     #pagina-chat #contenitore-messaggi {
         padding: 14px 10px 10px !important;
         overflow-x: hidden !important;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura per #pagina-chat .msg-row. */
     #pagina-chat .msg-row {
         width: 100%;
         max-width: 100%;
@@ -901,35 +1247,43 @@ body.chat-private-active #btn-avvia-chiamata {
         margin-bottom: 10px !important;
     }
 
+    /* Definisce dimensioni e adattamento per #pagina-chat .msg-avatar. */
     #pagina-chat .msg-avatar {
         width: 29px !important;
         min-width: 29px;
         height: 29px !important;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per #pagina-chat .msg-bubble. */
     #pagina-chat .msg-bubble {
         max-width: min(78%, calc(100vw - 86px)) !important;
         padding: 10px 12px !important;
         border-radius: 18px !important;
     }
 
+    /* Definisce dimensioni e adattamento per #pagina-chat .msg-row.mio .msg-bubble. */
     #pagina-chat .msg-row.mio .msg-bubble {
         max-width: min(76%, calc(100vw - 74px)) !important;
     }
 
+    /* Definisce testo e leggibilità per #pagina-chat .msg-testo. */
     #pagina-chat .msg-testo {
         font-size: 14px !important;
         line-height: 1.44;
     }
 
+    /* Definisce testo e leggibilità per #pagina-chat .msg-info. */
     #pagina-chat .msg-info {
         font-size: 10px;
     }
 
+    /* Definisce dimensioni e adattamento per #pagina-chat .msg-img-allegata. */
     #pagina-chat .msg-img-allegata {
         max-height: 220px;
     }
 
+    /* Definisce tracce e posizione nella griglia, dimensioni e adattamento, spaziatura per #pagina-chat */
+    /* .chat-composer. */
     #pagina-chat .chat-composer {
         width: 100% !important;
         max-width: 100vw !important;
@@ -938,15 +1292,18 @@ body.chat-private-active #btn-avvia-chiamata {
             9px max(10px, env(safe-area-inset-right))
             max(9px, env(safe-area-inset-bottom))
             max(10px, env(safe-area-inset-left)) !important;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 42px minmax(0, 1fr) 42px 42px !important;
         gap: 7px !important;
     }
 
+    /* Definisce dimensioni e adattamento, testo e leggibilità per #pagina-chat .chat-typing-indicator. */
     #pagina-chat .chat-typing-indicator {
         min-height: 14px;
         font-size: 11px;
     }
 
+    /* Definisce dimensioni e adattamento, sfondo e aspetto visivo per #pagina-chat .chat-action-btn. */
     #pagina-chat .chat-action-btn {
         width: 42px !important;
         min-width: 42px !important;
@@ -954,6 +1311,7 @@ body.chat-private-active #btn-avvia-chiamata {
         border-radius: 14px !important;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per #pagina-chat #input-messaggio. */
     #pagina-chat #input-messaggio {
         height: 42px;
         padding: 0 12px !important;
@@ -961,17 +1319,23 @@ body.chat-private-active #btn-avvia-chiamata {
         border-radius: 14px !important;
     }
 
+    /* Definisce posizione e sovrapposizione per body.chat-page-active .mobile-nav-toggle. */
     body.chat-page-active .mobile-nav-toggle {
+        /* bottom: Distanza dal lato inferiore nel posizionamento del riquadro. */
         bottom: calc(max(18px, env(safe-area-inset-bottom)) + 68px);
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 380px). */
 @media screen and (max-width: 380px) {
+    /* Definisce tracce e posizione nella griglia, spaziatura per #pagina-chat .chat-composer. */
     #pagina-chat .chat-composer {
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
         grid-template-columns: 38px minmax(0, 1fr) 38px 38px !important;
         gap: 6px !important;
     }
 
+    /* Definisce dimensioni e adattamento per #pagina-chat .chat-action-btn, #btn-chat-sidebar-toggle. */
     #pagina-chat .chat-action-btn,
     #btn-chat-sidebar-toggle {
         width: 38px !important;
@@ -979,23 +1343,29 @@ body.chat-private-active #btn-avvia-chiamata {
         height: 38px !important;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura per #pagina-chat #input-messaggio. */
     #pagina-chat #input-messaggio {
         height: 38px;
         padding: 0 10px !important;
     }
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-chat .room-avatar-general. */
 #pagina-chat .room-avatar-general {
     border-color: transparent;
     background: transparent;
 }
 
+/* Definisce testo e leggibilità per #pagina-chat .room-avatar-emoji. */
 #pagina-chat .room-avatar-emoji {
     line-height: 1;
 }
 
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento, sfondo e aspetto visivo per #pagina-chat */
+/* .pallino-stato-chat. */
 #pagina-chat .pallino-stato-chat {
     position: absolute;
+    /* right: Distanza dal lato destro nel posizionamento del riquadro. */
     right: -2px;
     bottom: -2px;
     width: 12px;
@@ -1005,14 +1375,17 @@ body.chat-private-active #btn-avvia-chiamata {
     background: #a4b0be;
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-chat .pallino-stato-chat.online. */
 #pagina-chat .pallino-stato-chat.online {
     background: #2ed573;
 }
 
+/* Definisce effetti e transizioni per #chat-member-count. */
 #chat-member-count {
     transition: opacity 0.18s ease;
 }
 
+/* Definisce spaziatura, testo e leggibilità, sfondo e aspetto visivo per #lista-stanze-chat .chat-list-state. */
 #lista-stanze-chat .chat-list-state {
     margin: 8px 0;
     padding: 14px;
@@ -1024,19 +1397,25 @@ body.chat-private-active #btn-avvia-chiamata {
     text-align: center;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per #lista-stanze-chat .chat-list-state.is-error. */
 #lista-stanze-chat .chat-list-state.is-error {
     color: #b52a3b;
     border-color: rgba(255, 71, 87, 0.26);
     background: rgba(255, 71, 87, 0.08);
 }
 
+/* Definisce posizione e sovrapposizione per #pagina-chat .chat-main. */
 #pagina-chat .chat-main {
     position: relative;
 }
 
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per #pagina-chat .chat-connection-status. */
 #pagina-chat .chat-connection-status {
+    grid-column: 2;
+    grid-row: 1 / 3;
     min-width: max-content;
     padding: 7px 10px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1050,35 +1429,46 @@ body.chat-private-active #btn-avvia-chiamata {
     line-height: 1;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per #pagina-chat */
+/* .chat-connection-status::before. Lo pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
 #pagina-chat .chat-connection-status::before {
     content: "";
     width: 8px;
     height: 8px;
+    /* margin-right: Margine esterno applicato al lato indicato. */
     margin-right: 6px;
     border-radius: 999px;
     background: #aab6c8;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per #pagina-chat .chat-connection-status.is-online. */
 #pagina-chat .chat-connection-status.is-online {
     color: #147a4a;
     border-color: rgba(46, 213, 115, 0.28);
     background: rgba(46, 213, 115, 0.1);
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-chat .chat-connection-status.is-online::before. Lo pseudo-elemento */
+/* aggiunge una parte visiva senza nuovo HTML. */
 #pagina-chat .chat-connection-status.is-online::before {
     background: #2ed573;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per #pagina-chat .chat-connection-status.is-connecting. */
 #pagina-chat .chat-connection-status.is-connecting {
     color: #8a6a00;
     border-color: rgba(245, 184, 0, 0.28);
     background: rgba(245, 184, 0, 0.1);
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-chat .chat-connection-status.is-connecting::before. Lo */
+/* pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
 #pagina-chat .chat-connection-status.is-connecting::before {
     background: #f5b800;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per #pagina-chat .chat-connection-status.is-offline, */
+/* #pagina-chat .chat-connection-status.is-error. */
 #pagina-chat .chat-connection-status.is-offline,
 #pagina-chat .chat-connection-status.is-error {
     color: #b52a3b;
@@ -1086,21 +1476,28 @@ body.chat-private-active #btn-avvia-chiamata {
     background: rgba(255, 71, 87, 0.1);
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-chat .chat-connection-status.is-offline::before, #pagina-chat */
+/* .chat-connection-status.is-error::before. Lo pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
 #pagina-chat .chat-connection-status.is-offline::before,
 #pagina-chat .chat-connection-status.is-error::before {
     background: #ff4757;
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-chat .chat-composer.is-disabled. */
 #pagina-chat .chat-composer.is-disabled {
     opacity: 0.78;
 }
 
+/* Definisce testo e leggibilità, sfondo e aspetto visivo, interazione con il puntatore per #pagina-chat */
+/* #input-messaggio:disabled. */
 #pagina-chat #input-messaggio:disabled {
     color: var(--muted);
     background: rgba(245, 248, 252, 0.92);
     cursor: not-allowed;
 }
 
+/* Definisce sfondo e aspetto visivo, effetti e transizioni, interazione con il puntatore per #pagina-chat */
+/* .chat-action-btn:disabled, #pagina-chat .chat-action-btn:disabled:hover. Si applica al passaggio del puntatore. */
 #pagina-chat .chat-action-btn:disabled,
 #pagina-chat .chat-action-btn:disabled:hover {
     opacity: 0.48;
@@ -1109,49 +1506,65 @@ body.chat-private-active #btn-avvia-chiamata {
     transform: none !important;
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-chat .chat-send-btn.is-ready:not(:disabled). */
 #pagina-chat .chat-send-btn.is-ready:not(:disabled) {
     box-shadow: 0 14px 28px rgba(236, 11, 140, 0.24);
 }
 
+/* Definisce posizione e sovrapposizione, interazione con il puntatore per #pagina-chat */
+/* .chat-action-btn.is-uploading. */
 #pagina-chat .chat-action-btn.is-uploading {
     position: relative;
+    /* pointer-events: Stabilisce se il componente può ricevere eventi del puntatore. */
     pointer-events: none;
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-chat .chat-action-btn.is-uploading img. */
 #pagina-chat .chat-action-btn.is-uploading img {
     opacity: 0.34;
 }
 
+/* Definisce posizione e sovrapposizione, sfondo e aspetto visivo, effetti e transizioni per #pagina-chat */
+/* .chat-action-btn.is-uploading::after. Lo pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
 #pagina-chat .chat-action-btn.is-uploading::after {
     content: "";
     position: absolute;
     inset: 13px;
     border: 3px solid rgba(255, 255, 255, 0.72);
+    /* border-top-color: Imposta l’aspetto del bordo o dell’angolo indicato. */
     border-top-color: var(--neon-magenta);
     border-radius: 999px;
+    /* animation: Collega al componente una sequenza @keyframes e ne stabilisce durata e ripetizioni. */
     animation: chatUploadSpin 0.75s linear infinite;
 }
 
+/* Definisce l’animazione chatUploadSpin, richiamabile dalla proprietà animation. */
 @keyframes chatUploadSpin {
+    /* Fotogramma dell’animazione nella posizione temporale to. */
     to {
         transform: rotate(360deg);
     }
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per #pagina-chat .chat-empty-state. */
 #pagina-chat .chat-empty-state {
     min-height: min(420px, 100%);
     padding: 34px 18px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: grid;
+    /* place-content: Imposta insieme la distribuzione delle tracce sui due assi. */
     place-content: center;
     justify-items: center;
     color: var(--muted);
     text-align: center;
 }
 
+/* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per #pagina-chat .chat-empty-icon. */
 #pagina-chat .chat-empty-icon {
     width: 54px;
     height: 54px;
     margin-bottom: 14px;
+    /* Grid organizza i figli nelle righe e colonne definite. */
     display: inline-grid;
     place-items: center;
     border-radius: 18px;
@@ -1162,12 +1575,14 @@ body.chat-private-active #btn-avvia-chiamata {
     font-weight: 1000;
 }
 
+/* Definisce testo e leggibilità per #pagina-chat .chat-empty-title. */
 #pagina-chat .chat-empty-title {
     color: var(--ink);
     font-size: 20px;
     line-height: 1.2;
 }
 
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per #pagina-chat .chat-empty-copy. */
 #pagina-chat .chat-empty-copy {
     max-width: 360px;
     margin: 8px 0 0;
@@ -1175,6 +1590,8 @@ body.chat-private-active #btn-avvia-chiamata {
     line-height: 1.45;
 }
 
+/* Definisce disposizione Flexbox, posizione e sovrapposizione, dimensioni e adattamento per #pagina-chat */
+/* .chat-scroll-bottom. */
 #pagina-chat .chat-scroll-bottom {
     position: sticky;
     bottom: 12px;
@@ -1183,6 +1600,7 @@ body.chat-private-active #btn-avvia-chiamata {
     max-width: min(100%, 280px);
     margin: 12px auto 0;
     padding: 10px 15px;
+    /* Flexbox dispone e allinea i figli di questo componente. */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1191,64 +1609,84 @@ body.chat-private-active #btn-avvia-chiamata {
     color: var(--ink);
     background: rgba(255, 255, 255, 0.92);
     box-shadow: 0 14px 32px rgba(18, 34, 68, 0.16);
+    /* font: Scorciatoia che imposta più proprietà tipografiche insieme. */
     font: inherit;
     font-size: 13px;
     font-weight: 900;
     cursor: pointer;
 }
 
+/* Definisce visibilità nascosta per #pagina-chat .chat-scroll-bottom[hidden]. */
 #pagina-chat .chat-scroll-bottom[hidden] {
+    /* Nasconde il componente negli stati selezionati. */
     display: none !important;
 }
 
+/* Definisce testo e leggibilità per #pagina-chat .room-preview.is-fresh, #pagina-chat .room-time.is-fresh. */
 #pagina-chat .room-preview.is-fresh,
 #pagina-chat .room-time.is-fresh {
     color: var(--neon-magenta);
 }
 
+/* Definisce sfondo e aspetto visivo per #pagina-chat .room-time.is-fresh. */
 #pagina-chat .room-time.is-fresh {
     border-color: rgba(236, 11, 140, 0.24);
     background: rgba(236, 11, 140, 0.08);
 }
 
+/* Definisce effetti e transizioni per #pagina-chat .msg-row. */
 #pagina-chat .msg-row {
     animation: chatMessageIn 0.18s ease-out;
 }
 
+/* Definisce l’animazione chatMessageIn, richiamabile dalla proprietà animation. */
 @keyframes chatMessageIn {
+    /* Fotogramma dell’animazione nella posizione temporale from. */
     from {
         opacity: 0;
         transform: translateY(6px);
     }
 
+    /* Fotogramma dell’animazione nella posizione temporale to. */
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (minimo larghezza 768px). */
 @media screen and (min-width: 768px) {
+    /* Definisce tracce e posizione nella griglia per #pagina-chat .chat-header. */
     #pagina-chat .chat-header {
-        grid-template-columns: minmax(0, 1fr) auto auto auto;
+        /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
+        grid-template-columns: minmax(0, 1fr) auto auto;
     }
 }
 
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 768px; massimo larghezza */
+/* 950px; massimo altezza 500px). Riguarda l’orientamento orizzontale. */
 @media screen and (max-width: 768px), screen and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+    /* Definisce visibilità nascosta per #pagina-chat .chat-connection-status. */
     #pagina-chat .chat-connection-status {
+        /* Nasconde il componente negli stati selezionati. */
         display: none !important;
     }
 
+    /* Definisce dimensioni e adattamento, spaziatura per #pagina-chat .chat-empty-state. */
     #pagina-chat .chat-empty-state {
         min-height: min(360px, 100%);
         padding: 28px 14px;
     }
 
+    /* Definisce posizione e sovrapposizione, testo e leggibilità per #pagina-chat .chat-scroll-bottom. */
     #pagina-chat .chat-scroll-bottom {
         bottom: 10px;
         font-size: 12px;
     }
 }
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .room-open. */
 .room-open {
+    display: block;
     min-width: 0;
     padding: 0;
     border: 0;
@@ -1256,13 +1694,18 @@ body.chat-private-active #btn-avvia-chiamata {
     color: inherit;
     font: inherit;
     text-align: left;
+    line-height: 1.4;
     cursor: pointer;
 }
 
+/* Configura la rappresentazione per .room-open:focus-visible. Evidenzia il controllo raggiunto con la tastiera o */
+/* il focus. */
 .room-open:focus-visible {
     outline: 2px solid #7e1a6a;
+    /* outline-offset: Distanza fra l’evidenziazione e il bordo del componente. */
     outline-offset: 2px;
 }
+/* Definisce spaziatura, testo e leggibilità, sfondo e aspetto visivo per .chat-load-history. */
 .chat-load-history {
     align-self: center;
     margin: 4px auto 12px;
@@ -1273,4 +1716,26 @@ body.chat-private-active #btn-avvia-chiamata {
     background: #fff;
     font: inherit;
     cursor: pointer;
+}
+
+/* In orizzontale la navigazione usa una sola riga, lasciando spazio ai messaggi. */
+@media screen and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+    body.chat-page-active .navbar {
+        top: max(6px, env(safe-area-inset-top)) !important;
+        width: calc(100% - 20px) !important;
+        min-height: 52px !important;
+        margin: 6px auto 10px !important;
+        padding: 6px 10px !important;
+        grid-template-columns: auto minmax(0, 1fr) auto !important;
+        gap: 10px !important;
+    }
+    body.chat-page-active .navbar .brand-button { grid-column: 1; grid-row: 1; min-height: 36px !important; height: 36px !important; padding: 0 !important; }
+    body.chat-page-active .navbar .brand-text,
+    body.chat-page-active .navbar .nav-greeting,
+    body.chat-page-active .navbar #mobile-nav-toggle { display: none !important; }
+    body.chat-page-active .navbar .brand-mark { width: 32px !important; min-width: 32px !important; height: 32px !important; }
+    body.chat-page-active .navbar .nav-left { grid-column: 2; grid-row: 1; display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; justify-content: center; margin: 0 !important; padding: 0 !important; border: 0; gap: 4px !important; }
+    body.chat-page-active .navbar .nav-left .nav-link { flex: 1; width: auto !important; min-width: 0 !important; min-height: 36px !important; height: 36px !important; padding: 0 5px !important; font-size: 12px !important; }
+    body.chat-page-active .navbar .nav-right { grid-column: 3; grid-row: 1; display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; width: auto; min-height: 0; gap: 4px !important; }
+    body.chat-page-active .navbar .nav-right .nav-pill { min-height: 36px !important; height: 36px !important; padding: 0 8px !important; font-size: 12px !important; }
 }

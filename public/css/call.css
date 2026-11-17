@@ -1,662 +1,742 @@
-@keyframes incoming-call-ring {
-    0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.44); }
-    70% { box-shadow: 0 0 0 18px rgba(0, 229, 255, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
-}
-
-@keyframes vc-control-pulse {
-    50% { opacity: 0.48; }
-}
-
-body.call-active {
-    overflow: hidden;
-}
-
-.incoming-call-modal {
-    z-index: 9999999;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    box-sizing: border-box;
-    background:
-        radial-gradient(circle at 22% 18%, rgba(0, 229, 255, 0.22), transparent 34%),
-        radial-gradient(circle at 78% 72%, rgba(255, 0, 127, 0.24), transparent 36%),
-        rgba(7, 9, 16, 0.86);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-}
-
-.incoming-call-modal.active {
-    display: flex;
-}
-
-.incoming-call-content {
-    width: min(420px, 100%);
-    padding: 34px 30px 30px !important;
-    color: #fff;
-    text-align: center;
-    background: rgba(15, 19, 32, 0.92) !important;
-    border: 1px solid rgba(255, 255, 255, 0.16) !important;
-    border-radius: 28px !important;
-    box-shadow: 0 28px 76px rgba(0, 0, 0, 0.38);
-}
-
-.incoming-call-avatar {
-    width: 104px;
-    height: 104px;
-    margin-bottom: 18px;
-    border: 3px solid rgba(0, 229, 255, 0.78);
-    border-radius: 50%;
-    object-fit: cover;
-    animation: incoming-call-ring 1.45s infinite;
-}
-
-.incoming-call-name {
-    margin: 0;
-    font-size: clamp(24px, 5vw, 32px);
-    line-height: 1.12;
-}
-
-.incoming-call-message {
-    margin: 10px 0 26px;
-    color: rgba(255, 255, 255, 0.72);
-    font-size: 15px;
-    line-height: 1.45;
-}
-
-.incoming-call-actions {
-    display: flex !important;
-    justify-content: center;
-    gap: 16px !important;
-    width: 100%;
-}
-
-.incoming-call-action {
-    width: 68px;
-    height: 68px;
-    padding: 0;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 22px;
-    background: rgba(255, 255, 255, 0.08);
-    cursor: pointer;
-    transition: transform 0.18s ease, filter 0.18s ease, border-color 0.18s ease;
-}
-
-.incoming-call-action:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.08);
-    border-color: rgba(255, 255, 255, 0.32);
-}
-
-.incoming-call-action:focus-visible {
-    outline: 3px solid rgba(0, 229, 255, 0.58);
-    outline-offset: 3px;
-}
-
-.incoming-call-action img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-}
-
-#modale-videochiamata {
-    position: fixed;
-    inset: 0;
-    z-index: 999999;
-    width: 100vw;
-    height: var(--app-height, 100dvh) !important;
-    min-height: 100dvh;
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
-    color: #fff;
-    background:
-        radial-gradient(circle at 16% 12%, rgba(0, 229, 255, 0.2), transparent 32%),
-        radial-gradient(circle at 82% 78%, rgba(255, 0, 127, 0.2), transparent 38%),
-        linear-gradient(135deg, #070912, #11162a 48%, #070912) !important;
-}
-
-.vc-layout-wrapper {
-    width: 100%;
-    max-width: 1680px;
-    height: 100%;
-    min-height: 0;
-    margin: 0 auto;
-    padding: 24px 24px 118px !important;
-    box-sizing: border-box;
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) clamp(220px, 22vw, 320px);
-    gap: 18px;
-    overflow: hidden;
-}
-
-#vc-main-focus {
-    min-width: 0;
-    min-height: 0;
-    display: flex !important;
-    align-items: stretch;
-    justify-content: stretch;
-}
-
-#vc-main-focus:empty {
-    display: none !important;
-}
-
-#vc-main-focus:empty + #vc-sidebar {
-    grid-column: 1 / -1;
-    display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    align-content: center;
-}
-
-#vc-sidebar {
-    min-width: 0;
-    min-height: 0;
-    padding: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 14px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-}
-
-#vc-sidebar::-webkit-scrollbar {
-    width: 6px;
-}
-
-#vc-sidebar::-webkit-scrollbar-thumb {
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.28);
-}
-
-.vc-card {
-    position: relative;
-    width: 100%;
-    max-width: none;
-    aspect-ratio: 16 / 9;
-    min-height: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    cursor: pointer;
-    color: #fff;
-    background: rgba(7, 9, 16, 0.72) !important;
-    border: 1px solid rgba(255, 255, 255, 0.18) !important;
-    border-radius: 20px !important;
-    box-shadow: 0 22px 60px rgba(0, 0, 0, 0.28) !important;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.vc-card:not(.hidden):hover {
-    transform: translateY(-2px);
-    border-color: rgba(0, 229, 255, 0.42) !important;
-}
-
-.vc-card.hidden {
-    display: none !important;
-}
-
-#vc-main-focus .vc-card {
-    width: 100%;
-    height: 100%;
-    aspect-ratio: auto;
-    cursor: default;
-    border-radius: 24px !important;
-    border-color: rgba(0, 229, 255, 0.36) !important;
-}
-
-#vc-main-focus .vc-card:hover {
-    transform: none;
-}
-
-.vc-card video {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-    background: #05070d;
-    transition: opacity 0.2s ease;
-}
-
-.vc-card.is-screen-sharing video {
-    object-fit: contain;
-    background: #06070d;
-}
-
-.vc-card.vc-video-off video {
-    opacity: 0;
-}
-
-.vc-avatar {
-    position: absolute;
-    z-index: 1;
-    width: 112px;
-    height: 112px;
-    overflow: hidden;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(0, 229, 255, 0.62);
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.36);
-}
-
-.vc-avatar img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-}
-
-.vc-camera-status {
-    position: absolute;
-    z-index: 3;
-    top: calc(50% + 72px);
-    left: 50%;
-    max-width: calc(100% - 28px);
-    transform: translateX(-50%);
-    color: rgba(255, 255, 255, 0.78);
-    font-size: 13px;
-    font-weight: 700;
-    line-height: 1.2;
-    text-align: center;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-}
-
-.vc-card.vc-video-off .vc-camera-status {
-    opacity: 1;
-}
-
-.vc-remote-status {
-    position: absolute;
-    z-index: 3;
-    top: 8px;
-    left: 8px;
-    right: 8px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    pointer-events: none;
-}
-
-.vc-remote-status > * {
-    padding: 4px 7px;
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-radius: 8px;
-    background: rgba(4, 7, 13, 0.85);
-    color: #fff;
-    font: 700 11px/1.2 system-ui, sans-serif;
-}
-
-.vc-remote-status button {
-    cursor: pointer;
-    pointer-events: auto;
-}
-
-.vc-name-tag {
-    position: absolute;
-    left: 14px;
-    bottom: 14px;
-    z-index: 3;
-    max-width: calc(100% - 28px);
-    box-sizing: border-box;
-    padding: 7px 12px;
-    overflow: hidden;
-    color: #fff;
-    font-size: 13px;
-    font-weight: 800;
-    line-height: 1.1;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 999px;
-    background: rgba(4, 7, 13, 0.62);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-}
-
-.vc-control-bar {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0 !important;
-    z-index: 10;
-    min-height: 104px;
-    padding: 18px 18px max(20px, env(safe-area-inset-bottom)) !important;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(transparent, rgba(3, 5, 10, 0.9)) !important;
-}
-
-.vc-camera-device {
-    max-width: min(280px, calc(100vw - 24px));
-    padding: 5px 8px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 8px;
-    color: #fff;
-    background: #121622;
-    font: inherit;
-}
-
-.vc-control-group {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px !important;
-    max-width: calc(100vw - 24px);
-    padding: 9px;
-    border: 1px solid rgba(255, 255, 255, 0.16) !important;
-    border-radius: 24px !important;
-    background: rgba(18, 22, 34, 0.82) !important;
-    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.32) !important;
-    backdrop-filter: blur(18px) saturate(140%);
-    -webkit-backdrop-filter: blur(18px) saturate(140%);
-}
-
-.vc-btn {
-    flex: 0 0 58px;
-    width: 58px !important;
-    height: 58px !important;
-    min-width: 58px;
-    min-height: 58px;
-    padding: 0 !important;
-    margin: 0 !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    cursor: pointer;
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.18) !important;
-    border-radius: 18px !important;
-    background: rgba(255, 255, 255, 0.09) !important;
-    box-shadow: none !important;
-    touch-action: manipulation;
-    transition: transform 0.18s ease, filter 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
-}
-
-.vc-btn img {
-    width: 100% !important;
-    height: 100% !important;
-    display: block !important;
-    object-fit: cover;
-}
-
-.vc-btn:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.08);
-    border-color: rgba(255, 255, 255, 0.34) !important;
-}
-
-.vc-btn:focus-visible {
-    outline: 3px solid rgba(0, 229, 255, 0.64);
-    outline-offset: 3px;
-}
-
-.vc-btn.is-active[aria-pressed="true"] {
-    border-color: rgba(0, 229, 255, 0.7) !important;
-    box-shadow: 0 0 18px rgba(0, 229, 255, 0.26) !important;
-}
-
-.vc-btn.spento,
-.vc-btn[aria-pressed="false"] {
-    opacity: 0.72;
-    filter: grayscale(0.8) saturate(0.4) brightness(0.68);
-    background: rgba(7, 10, 18, 0.58) !important;
-}
-
-.vc-btn.is-unavailable,
-.vc-btn:disabled {
-    opacity: 0.34;
-    cursor: not-allowed;
-    filter: grayscale(1) brightness(0.55);
-}
-
-.vc-btn.is-pending {
-    cursor: progress;
-    animation: vc-control-pulse 1s ease-in-out infinite;
-}
-
-#btn-end-call {
-    flex-basis: 66px;
-    width: 66px !important;
-    height: 66px !important;
-    min-width: 66px;
-    min-height: 66px;
-    margin-left: 6px !important;
-    border-radius: 50% !important;
-    border-color: rgba(255, 0, 127, 0.58) !important;
-    background: rgba(255, 0, 127, 0.18) !important;
-    filter: none;
-    box-shadow: 0 0 20px rgba(255, 0, 127, 0.28) !important;
-}
-
+/* Interfaccia delle chiamate: riquadri video, controlli, preferenze dei dispositivi e layout responsive. */
+/* Un selettore .nome cerca una classe, #nome un id; spazi e > descrivono le relazioni fra gli elementi HTML. */
+/* Le proprietà --nome sono variabili CSS; var(--nome) ne legge il valore secondo la cascata e l’eredità. */
+/* !important dà priorità alla dichiarazione rispetto a quelle normali; fra regole equivalenti contano specificità */
+/* e ordine. */
+/* Definisce contenimento e scorrimento per body.call-active. */
+/* overflow: Controlla contenuti fuori dal riquadro: auto permette lo scorrimento, hidden li ritaglia. */
+body.call-active { overflow: hidden; }
+/* Definisce visibilità nascosta per body.call-active .mobile-nav-toggle, body.call-active .mobile-nav-backdrop. */
+/* display: Sceglie il modello di impaginazione: flex e grid organizzano i figli, none nasconde il riquadro. */
 body.call-active .mobile-nav-toggle,
-body.call-active .mobile-nav-backdrop {
-    display: none !important;
-    pointer-events: none !important;
+body.call-active .mobile-nav-backdrop { display: none !important; }
+
+/* Definisce visibilità nascosta, posizione e sovrapposizione, dimensioni e adattamento per #modale-videochiamata. */
+#modale-videochiamata {
+    /* --vc-bg: Sfondo principale della schermata della chiamata. */
+    --vc-bg: #16151c;
+    /* --vc-border: Colore condiviso dei bordi della schermata della chiamata. */
+    --vc-border: rgba(255, 255, 255, .09);
+    /* --vc-muted: Colore dei testi secondari durante la chiamata. */
+    --vc-muted: #aaa7b6;
+    /* position: Sceglie il riferimento di posizionamento; absolute usa un antenato posizionato, fixed il viewport */
+    /* salvo contenitori speciali. */
+    /* inset: Imposta insieme le distanze dai quattro lati del contenitore di riferimento. */
+    /* z-index: Ordine di sovrapposizione nel contesto di impilamento corrente. */
+    position: fixed; inset: 0; z-index: 999999;
+    /* Nasconde il componente negli stati selezionati. */
+    /* flex-direction: Direzione lungo cui Flexbox dispone i figli. */
+    display: none; flex-direction: column;
+    /* width: Larghezza del riquadro; percentuali e unità relative la legano al contenitore o al viewport. */
+    /* height: Altezza del riquadro; le unità dvh seguono il viewport dinamico del dispositivo. */
+    /* min-height: Altezza minima consentita; zero permette di limitare il riquadro e usare lo scorrimento interno. */
+    width: 100%; height: var(--app-height, 100dvh); min-height: 0;
+    /* isolation: Con isolate crea un contesto di sovrapposizione separato per questo componente. */
+    overflow: hidden; isolation: isolate;
+    /* background: Sfondo del riquadro, composto da colori, immagini o gradienti. */
+    /* color: Colore del testo e delle icone che usano currentColor. */
+    /* color-scheme: Indica se i controlli nativi devono seguire un tema chiaro o scuro. */
+    background: var(--vc-bg); color: #f7f5fa; color-scheme: dark;
+    /* font-family: Famiglia del carattere e alternative disponibili sul dispositivo. */
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    /* text-align: Allineamento del testo all’interno del riquadro. */
+    text-align: left;
+}
+/* Configura la rappresentazione per #modale-videochiamata *, .incoming-call-modal *. */
+/* box-sizing: Con border-box, bordi e padding sono compresi nella larghezza e altezza dichiarate. */
+#modale-videochiamata *, .incoming-call-modal * { box-sizing: border-box; }
+/* Definisce visibilità nascosta per #modale-videochiamata [hidden]. */
+/* Nasconde il componente negli stati selezionati. */
+#modale-videochiamata [hidden] { display: none !important; }
+
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .vc-header. */
+.vc-header {
+    /* Flexbox dispone e allinea i figli di questo componente. */
+    /* flex: Definisce crescita, riduzione e dimensione iniziale di un elemento Flexbox. */
+    /* align-items: Allinea i figli lungo l’asse trasversale del contenitore flex o grid. */
+    /* justify-content: Distribuisce i figli lungo l’asse principale del layout. */
+    display: flex; flex: 0 0 auto; align-items: center; justify-content: space-between;
+    /* gap: Distanza fra figli flex o celle grid, senza aggiungere margini esterni. */
+    gap: 24px; min-height: 88px;
+    /* padding: Spazio interno fra bordo e contenuto del riquadro. */
+    padding: max(18px, env(safe-area-inset-top)) 32px 18px;
+    /* border-bottom: Imposta l’aspetto del bordo o dell’angolo indicato. */
+    border-bottom: 1px solid var(--vc-border);
+}
+/* Definisce disposizione Flexbox, dimensioni e adattamento per .vc-heading, .vc-header-actions, .vc-view-actions e */
+/* gli altri selettori del gruppo. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+/* min-width: Larghezza minima consentita; zero permette ai figli flex o grid di restringersi. */
+.vc-heading, .vc-header-actions, .vc-view-actions, .vc-session-status { display: flex; align-items: center; min-width: 0; }
+/* Definisce spaziatura per .vc-heading. */
+.vc-heading { gap: 14px; }
+/* Definisce dimensioni e adattamento per .vc-heading-copy. */
+.vc-heading-copy { min-width: 0; }
+/* Definisce disposizione Flexbox, dimensioni e adattamento, testo e leggibilità per .vc-brand-mark. */
+.vc-brand-mark {
+    /* Flexbox dispone e allinea i figli di questo componente. */
+    display: flex; flex: 0 0 42px; align-items: center; justify-content: center;
+    /* border: Spessore, stile e colore del bordo del riquadro. */
+    /* border-radius: Arrotonda gli angoli; valori grandi permettono forme circolari o a capsula. */
+    height: 42px; border: 1px solid rgba(234,180,214,.2); border-radius: 12px;
+    /* font-size: Dimensione del testo; clamp permette di limitarne l’adattamento allo spazio. */
+    /* font-weight: Peso del carattere: valori maggiori rendono il testo più marcato. */
+    /* letter-spacing: Distanza aggiuntiva tra i caratteri. */
+    background: #30202c; color: #f5e9f1; font-size: 12px; font-weight: 800; letter-spacing: -1px;
+}
+/* Definisce testo e leggibilità per .vc-brand-mark span. */
+.vc-brand-mark span { color: #e9a0ce; }
+/* Definisce spaziatura, testo e leggibilità per .vc-eyebrow. */
+/* margin: Spazio esterno tra questo riquadro e quelli vicini. */
+/* line-height: Altezza delle righe di testo. */
+.vc-eyebrow { margin: 0 0 5px; color: #aaa5b5; font-size: 9px; font-weight: 600; letter-spacing: 1.6px; line-height: 1.4; }
+/* Definisce spaziatura, testo e leggibilità per .vc-eyebrow > span. */
+.vc-eyebrow > span { padding: 0 5px; color: #655f71; }
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per #vc-call-title. */
+#vc-call-title {
+    /* max-width: Limite superiore alla larghezza del riquadro. */
+    max-width: 45vw; margin: 0; overflow: hidden; color: #f7f5fa;
+    /* text-overflow: Aspetto del testo che supera lo spazio disponibile, per esempio i puntini di ellipsis. */
+    /* white-space: Regola conservazione degli spazi e possibilità di andare a capo. */
+    font-size: 17px; font-weight: 600; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap;
+}
+/* Definisce spaziatura per .vc-header-actions. */
+.vc-header-actions { gap: 24px; }
+/* Definisce spaziatura, testo e leggibilità per .vc-session-status. */
+.vc-session-status { gap: 14px; font-size: 12px; white-space: nowrap; }
+/* Definisce disposizione Flexbox, spaziatura, testo e leggibilità per .vc-connection-status. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+.vc-connection-status { display: inline-flex; align-items: center; gap: 7px; color: #c0b9ca; }
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo, contenuto generato dal CSS per */
+/* .vc-connection-status::before. Lo pseudo-elemento aggiunge una parte visiva senza nuovo HTML. */
+/* content: Contenuto generato dal CSS per uno pseudo-elemento. */
+.vc-connection-status::before { width: 6px; height: 6px; flex: 0 0 6px; border-radius: 50%; background: #cdb17b; content: ""; }
+/* Definisce sfondo e aspetto visivo per [data-state="connected"] .vc-connection-status::before. Lo pseudo-elemento */
+/* aggiunge una parte visiva senza nuovo HTML. Il selettore richiede gli attributi e i valori indicati. */
+[data-state="connected"] .vc-connection-status::before { background: #82c7ad; }
+/* Definisce sfondo e aspetto visivo per [data-state="failed"] .vc-connection-status::before. Lo pseudo-elemento */
+/* aggiunge una parte visiva senza nuovo HTML. Il selettore richiede gli attributi e i valori indicati. */
+[data-state="failed"] .vc-connection-status::before { background: #e690a3; }
+/* Definisce spaziatura, testo e leggibilità, sfondo e aspetto visivo per .vc-duration. */
+/* padding-left: Spaziatura interna applicata al lato indicato. */
+/* border-left: Imposta l’aspetto del bordo o dell’angolo indicato. */
+/* font-variant-numeric: Con tabular-nums le cifre occupano la stessa larghezza, utile per timer e contatori. */
+.vc-duration { padding-left: 14px; border-left: 1px solid var(--vc-border); color: #c8c3d0; font-variant-numeric: tabular-nums; }
+/* Definisce spaziatura per .vc-view-actions. */
+.vc-view-actions { gap: 8px; }
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .vc-utility-button. */
+.vc-utility-button {
+    /* Flexbox dispone e allinea i figli di questo componente. */
+    display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; gap: 8px;
+    min-width: 40px; min-height: 40px; margin: 0; padding: 9px 12px;
+    border: 1px solid var(--vc-border, rgba(255,255,255,.12)); border-radius: 9px;
+    /* box-shadow: Ombra esterna o interna usata per distinguere piani e componenti. */
+    background: #24212d; box-shadow: none; color: #d5cfdf;
+    /* font: Scorciatoia che imposta più proprietà tipografiche insieme. */
+    /* cursor: Forma del cursore, usata per comunicare clic, attesa o indisponibilità. */
+    /* touch-action: Indica al browser quali gesti touch gestire direttamente. */
+    font: 500 12px/1.2 system-ui, sans-serif; cursor: pointer; touch-action: manipulation;
+    /* transition: Interpola nel tempo i cambiamenti delle proprietà indicate. */
+    transition: background .15s ease, border-color .15s ease;
+}
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .vc-utility-button:hover. Si applica al passaggio */
+/* del puntatore. */
+/* border-color: Colore dei bordi già definiti. */
+/* transform: Trasforma visivamente il riquadro, per esempio spostandolo, ruotandolo o specchiandolo. */
+.vc-utility-button:hover { background: #302b3b; border-color: #655069; transform: none; }
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .vc-utility-button[aria-pressed="true"], */
+/* .vc-utility-button[aria-expanded="true"]. Il selettore richiede gli attributi e i valori indicati. */
+.vc-utility-button[aria-pressed="true"], .vc-utility-button[aria-expanded="true"] { background: #352735; border-color: #88617e; color: #f5dbee; }
+/* Definisce dimensioni e adattamento per .vc-utility-button svg. */
+.vc-utility-button svg { width: 17px; height: 17px; }
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .vc-icon-button. */
+.vc-icon-button { width: 40px; padding: 9px; font-size: 24px; }
+/* Definisce sfondo e aspetto visivo, interazione con il puntatore per .vc-utility-button:disabled. */
+/* opacity: Trasparenza del riquadro e dei suoi contenuti, senza rimuoverlo dal layout. */
+.vc-utility-button:disabled { opacity: .45; cursor: not-allowed; }
+/* Definisce sfondo e aspetto visivo per #modale-videochiamata button:focus-visible, #modale-videochiamata */
+/* select:focus-visible, .incoming-call-modal button:focus-visible. Evidenzia il controllo raggiunto con la */
+/* tastiera o il focus. */
+#modale-videochiamata button:focus-visible,
+#modale-videochiamata select:focus-visible,
+.incoming-call-modal button:focus-visible {
+    /* outline: Bordo di evidenziazione che non occupa spazio nel layout, usato anche per il focus. */
+    outline: 2px solid #e8b4d6 !important;
+    /* outline-offset: Distanza fra l’evidenziazione e il bordo del componente. */
+    outline-offset: 4px !important;
+    box-shadow: none !important;
 }
 
-@media screen and (max-width: 767px),
-       screen and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
-    .incoming-call-modal {
-        align-items: flex-end;
-        padding: 12px;
-    }
-
-    .incoming-call-content {
-        width: 100% !important;
-        max-width: none !important;
-        padding: 28px 20px max(24px, env(safe-area-inset-bottom)) !important;
-        border-radius: 26px !important;
-    }
-
-    .incoming-call-actions {
-        display: flex !important;
-        grid-template-columns: none !important;
-        flex-direction: row;
-        gap: 14px !important;
-    }
-
-    .incoming-call-action {
-        width: 64px;
-        height: 64px;
-        flex: 0 0 64px;
-    }
-
-    #modale-videochiamata {
-        height: var(--app-height, 100dvh) !important;
-        min-height: 100dvh;
-    }
-
-    .vc-layout-wrapper {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        max-width: none;
-        padding: 0 !important;
-        display: block !important;
-    }
-
-    #vc-main-focus {
-        position: absolute;
-        inset: 0 0 92px;
-        width: 100%;
-        height: auto;
-        display: flex !important;
-    }
-
-    #vc-main-focus .vc-card {
-        border: 0 !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-    }
-
-    #vc-sidebar {
-        position: absolute;
-        top: max(10px, env(safe-area-inset-top));
-        right: 10px;
-        z-index: 5;
-        width: min(116px, 29vw);
-        max-height: calc(100% - 116px);
-        gap: 8px;
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-
-    #vc-sidebar .vc-card {
-        flex: 0 0 auto;
-        width: 100%;
-        aspect-ratio: 4 / 3;
-        border-radius: 14px !important;
-        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.36) !important;
-    }
-
-    .vc-avatar {
-        width: 72px;
-        height: 72px;
-    }
-
-    #vc-sidebar .vc-avatar {
-        width: 40px;
-        height: 40px;
-    }
-
-    .vc-camera-status {
-        top: calc(50% + 48px);
-        font-size: 11px;
-    }
-
-    #vc-sidebar .vc-camera-status {
-        display: none;
-    }
-
-    .vc-name-tag {
-        left: 9px;
-        bottom: 9px;
-        max-width: calc(100% - 18px);
-        padding: 5px 8px;
-        font-size: 11px;
-    }
-
-    #vc-sidebar .vc-name-tag {
-        left: 5px;
-        bottom: 5px;
-        padding: 3px 6px;
-        font-size: 9px;
-    }
-
-    .vc-control-bar {
-        min-height: 92px;
-        padding: 8px 8px max(8px, env(safe-area-inset-bottom)) !important;
-    }
-
-    .vc-control-group {
-        gap: 6px !important;
-        padding: 7px;
-        max-width: calc(100vw - 16px);
-        overflow-x: auto;
-        overflow-y: hidden;
-        scrollbar-width: none;
-    }
-
-    .vc-control-group::-webkit-scrollbar {
-        display: none;
-    }
-
-    .vc-btn {
-        flex-basis: 48px;
-        width: 48px !important;
-        height: 48px !important;
-        min-width: 48px;
-        min-height: 48px;
-        border-radius: 16px !important;
-    }
-
-    #btn-end-call {
-        flex-basis: 54px;
-        width: 54px !important;
-        height: 54px !important;
-        min-width: 54px;
-        min-height: 54px;
-        margin-left: 3px !important;
-    }
-
-    #btn-share-screen.is-unavailable {
-        display: none !important;
-    }
+/* Definisce disposizione Grid, dimensioni e adattamento, spaziatura per .vc-layout-wrapper. */
+.vc-layout-wrapper {
+    /* Grid organizza i figli nelle righe e colonne definite. */
+    display: grid; flex: 1 1 auto;
+    /* grid-template-columns: Definisce le colonne della griglia; fr divide lo spazio disponibile e minmax ne */
+    /* stabilisce i limiti. */
+    grid-template-columns: minmax(0, 1fr) clamp(190px, 21vw, 280px); gap: 16px;
+    min-height: 0; width: 100%; max-width: 1920px; margin: 0 auto; padding: 24px 32px;
 }
-
-@media screen and (max-width: 380px) {
-    .vc-btn {
-        flex-basis: 44px;
-        width: 44px !important;
-        height: 44px !important;
-        min-width: 44px;
-        min-height: 44px;
-    }
-
-    #btn-end-call {
-        flex-basis: 50px;
-        width: 50px !important;
-        height: 50px !important;
-        min-width: 50px;
-        min-height: 50px;
-    }
+/* Definisce disposizione Flexbox, dimensioni e adattamento per #vc-main-focus. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+#vc-main-focus { display: flex; min-width: 0; min-height: 0; }
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per #vc-sidebar. */
+#vc-sidebar {
+    /* Flexbox dispone e allinea i figli di questo componente. */
+    /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
+    display: flex; flex-direction: column; gap: 14px; min-width: 0; min-height: 0; overflow: auto;
+    /* scrollbar-width: Dimensione della barra di scorrimento nei browser compatibili. */
+    /* scrollbar-color: Colori del cursore e della traccia della barra di scorrimento. */
+    scrollbar-width: thin; scrollbar-color: #514a5e transparent;
 }
+/* Definisce disposizione Flexbox, posizione e sovrapposizione, dimensioni e adattamento per .vc-card. */
+.vc-card {
+    /* Flexbox dispone e allinea i figli di questo componente. */
+    position: relative; display: flex; flex: 0 0 auto; align-items: center; justify-content: center;
+    /* aspect-ratio: Conserva il rapporto tra larghezza e altezza del riquadro. */
+    width: 100%; min-width: 0; min-height: 0; aspect-ratio: 4 / 3; overflow: hidden;
+    border: 1px solid var(--vc-border); border-radius: 14px; background: #24212c; color: #f5f1f8;
+}
+/* Definisce visibilità nascosta per .vc-card.hidden. */
+/* Nasconde il componente negli stati selezionati. */
+.vc-card.hidden { display: none !important; }
+/* Definisce dimensioni e adattamento per #vc-main-focus .vc-card. */
+#vc-main-focus .vc-card { height: 100%; aspect-ratio: auto; }
+/* Definisce sfondo e aspetto visivo per .vc-card.vc-video-off. */
+.vc-card.vc-video-off { background: radial-gradient(ellipse at 50% 42%, #343040 0, #24212e 65%); }
+/* Definisce sfondo e aspetto visivo per #card-locale.vc-video-off. */
+#card-locale.vc-video-off { background: #292531; }
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento, sfondo e aspetto visivo per .vc-card video. */
+/* object-fit: Controlla l’adattamento di immagini e video: contain conserva il contenuto intero, cover può */
+/* ritagliarlo. */
+.vc-card video { position: absolute; inset: 0; z-index: 1; display: block; width: 100%; height: 100%; min-width: 0; min-height: 0; background: #101015; object-fit: contain; pointer-events: none; user-select: none; -webkit-user-select: none; }
+/* Definisce effetti e transizioni per #video-locale. */
+#video-locale { transform: scaleX(-1); }
+/* Definisce sfondo e aspetto visivo per .vc-card.vc-video-off video. */
+.vc-card.vc-video-off video { opacity: 0; }
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento, sfondo e aspetto visivo per .vc-avatar. */
+.vc-avatar {
+    /* --vc-avatar-size: Dimensione dell’avatar, ridefinita nelle anteprime e nei layout compatti. */
+    --vc-avatar-size: 112px;
+    /* top: Distanza dal lato superiore nel posizionamento del riquadro. */
+    /* left: Distanza dal lato sinistro nel posizionamento del riquadro. */
+    position: absolute; top: 50%; left: 50%; width: var(--vc-avatar-size); height: var(--vc-avatar-size);
+    overflow: hidden; transform: translate(-50%, -72%);
+    border: 4px solid rgba(255,255,255,.07); border-radius: 50%; background: #44384c;
+}
+/* Definisce dimensioni e adattamento, adattamento di immagini e video per .vc-avatar img. */
+.vc-avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento, testo e leggibilità per .vc-camera-status. */
+.vc-camera-status {
+    position: absolute; top: calc(50% + 47px); left: 50%; z-index: 2;
+    max-width: calc(100% - 32px); transform: translateX(-50%);
+    color: #bcb5c9; font-size: 13px; line-height: 1.5; text-align: center; opacity: 0;
+}
+/* Definisce sfondo e aspetto visivo per .vc-video-off .vc-camera-status. */
+.vc-video-off .vc-camera-status { opacity: 1; }
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento, spaziatura per .vc-name-tag. */
+.vc-name-tag {
+    /* bottom: Distanza dal lato inferiore nel posizionamento del riquadro. */
+    position: absolute; z-index: 3; bottom: 16px; left: 16px;
+    max-width: calc(100% - 32px); overflow: hidden; padding: 6px 10px;
+    border: 1px solid rgba(255,255,255,.06); border-radius: 7px; background: rgba(20,18,26,.78);
+    color: #f2edf7; font-size: 12px; font-weight: 500; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap;
+}
+/* Definisce disposizione Flexbox, posizione e sovrapposizione, dimensioni e adattamento per .vc-pin-button. */
+.vc-pin-button {
+    /* right: Distanza dal lato destro nel posizionamento del riquadro. */
+    position: absolute; top: 12px; right: 12px; z-index: 4;
+    /* Flexbox dispone e allinea i figli di questo componente. */
+    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; margin: 0; padding: 8px;
+    border: 1px solid rgba(255,255,255,.12); border-radius: 8px;
+    background: rgba(25,22,32,.8); box-shadow: none; color: #e4d9eb; cursor: pointer;
+}
+/* Definisce dimensioni e adattamento per .vc-pin-button svg. */
+.vc-pin-button svg { width: 17px; height: 17px; }
+/* Definisce sfondo e aspetto visivo per .vc-pin-button:hover. Si applica al passaggio del puntatore. */
+.vc-pin-button:hover { background: #473447; }
+/* Definisce visibilità nascosta per #vc-main-focus .vc-pin-button. */
+/* Nasconde il componente negli stati selezionati. */
+#vc-main-focus .vc-pin-button { display: none; }
+/* Definisce disposizione Flexbox, posizione e sovrapposizione, spaziatura per .vc-remote-status, .vc-local-status. */
+.vc-remote-status, .vc-local-status {
+    position: absolute; top: 14px; left: 14px; right: 54px; z-index: 3;
+    /* Flexbox dispone e allinea i figli di questo componente. */
+    /* flex-wrap: Permette ai figli Flexbox di distribuirsi su più righe o colonne. */
+    /* pointer-events: Stabilisce se il componente può ricevere eventi del puntatore. */
+    display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px; pointer-events: none;
+}
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .vc-remote-status > *, .vc-local-status */
+/* > *. */
+.vc-remote-status > *, .vc-local-status > * {
+    /* Flexbox dispone e allinea i figli di questo componente. */
+    display: inline-flex; align-items: center; gap: 5px; min-height: 27px; margin: 0; padding: 5px 8px;
+    border: 1px solid rgba(255,255,255,.1); border-radius: 7px;
+    background: rgba(30,23,34,.9); color: #edcadf; font: 500 11px/1.2 system-ui, sans-serif;
+}
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo per .vc-remote-status img, .vc-local-status img. */
+/* filter: Applica un effetto al contenuto disegnato, come luminosità o scala di grigi. */
+.vc-remote-status img, .vc-local-status img { width: 16px; height: 16px; filter: brightness(0) invert(1); opacity: .85; }
+/* Definisce testo e leggibilità, interazione con il puntatore per .vc-remote-status button. */
+.vc-remote-status button { color: #fff; pointer-events: auto; cursor: pointer; }
+/* Configura la rappresentazione per #vc-sidebar .vc-avatar. */
+/* --vc-avatar-size: Dimensione dell’avatar, ridefinita nelle anteprime e nei layout compatti. */
+#vc-sidebar .vc-avatar { --vc-avatar-size: 58px; }
+/* Definisce posizione e sovrapposizione, testo e leggibilità per #vc-sidebar .vc-camera-status. */
+#vc-sidebar .vc-camera-status { top: calc(50% + 23px); font-size: 11px; }
+/* Definisce posizione e sovrapposizione, testo e leggibilità per #vc-sidebar .vc-name-tag. */
+#vc-sidebar .vc-name-tag { bottom: 10px; left: 10px; font-size: 11px; }
+/* Definisce posizione e sovrapposizione per #vc-sidebar .vc-remote-status. */
+#vc-sidebar .vc-remote-status { top: 8px; left: 8px; }
+/* Definisce spaziatura, testo e leggibilità per #vc-sidebar .vc-remote-status > *. */
+#vc-sidebar .vc-remote-status > * { padding: 4px 6px; font-size: 10px; }
 
-@media screen and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
-    #vc-main-focus {
-        inset: 6px 124px 66px 6px;
-    }
+/* Definisce tracce e posizione nella griglia per #modale-videochiamata[data-layout="grid"] .vc-layout-wrapper. Il */
+/* selettore richiede gli attributi e i valori indicati. */
+/* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
+/* grid-auto-rows: Dimensione delle righe create automaticamente da Grid. */
+#modale-videochiamata[data-layout="grid"] .vc-layout-wrapper { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); align-items: stretch; }
+/* Configura la rappresentazione per [data-layout="grid"] #vc-main-focus, [data-layout="grid"] #vc-sidebar. Il */
+/* selettore richiede gli attributi e i valori indicati. */
+[data-layout="grid"] #vc-main-focus, [data-layout="grid"] #vc-sidebar { display: contents; }
+/* Definisce dimensioni e adattamento per [data-layout="grid"] .vc-layout-wrapper .vc-card. Il selettore richiede */
+/* gli attributi e i valori indicati. */
+[data-layout="grid"] .vc-layout-wrapper .vc-card { height: 100%; aspect-ratio: auto; }
+/* Configura la rappresentazione per [data-layout="grid"] #card-remota. Il selettore richiede gli attributi e i */
+/* valori indicati. */
+/* order: Ordine visivo dell’elemento flex o grid, senza spostarlo nel DOM. */
+[data-layout="grid"] #card-remota { order: 0; }
+/* Configura la rappresentazione per [data-layout="grid"] #card-locale. Il selettore richiede gli attributi e i */
+/* valori indicati. */
+[data-layout="grid"] #card-locale { order: 1; }
+/* Definisce tracce e posizione nella griglia per [data-layout="grid"] #card-screen. Il selettore richiede gli */
+/* attributi e i valori indicati. */
+/* grid-column: Colonne occupate dal singolo elemento nella griglia. */
+[data-layout="grid"] #card-screen { grid-column: 1 / -1; order: -1; }
+/* Configura la rappresentazione per [data-layout="grid"] #vc-sidebar .vc-avatar. Il selettore richiede gli */
+/* attributi e i valori indicati. */
+/* --vc-avatar-size: Dimensione dell’avatar, ridefinita nelle anteprime e nei layout compatti. */
+[data-layout="grid"] #vc-sidebar .vc-avatar { --vc-avatar-size: 112px; }
+/* Definisce posizione e sovrapposizione, testo e leggibilità per [data-layout="grid"] #vc-sidebar */
+/* .vc-camera-status. Il selettore richiede gli attributi e i valori indicati. */
+[data-layout="grid"] #vc-sidebar .vc-camera-status { top: calc(50% + 47px); font-size: 13px; }
+/* Definisce disposizione Flexbox per [data-layout="grid"] .vc-pin-button. Il selettore richiede gli attributi e i */
+/* valori indicati. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+[data-layout="grid"] .vc-pin-button { display: flex !important; }
 
-    #vc-main-focus .vc-card {
-        border: 1px solid rgba(0, 229, 255, 0.28) !important;
-        border-radius: 16px !important;
-    }
+/* Definisce disposizione Grid, posizione e sovrapposizione, dimensioni e adattamento per .vc-control-bar. */
+.vc-control-bar {
+    /* Grid organizza i figli nelle righe e colonne definite. */
+    position: relative; display: grid; flex: 0 0 auto;
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 20px;
+    min-height: 116px; padding: 17px 32px max(18px, env(safe-area-inset-bottom));
+    /* border-top: Imposta l’aspetto del bordo o dell’angolo indicato. */
+    border-top: 1px solid var(--vc-border); background: #1b1922;
+}
+/* Definisce disposizione Flexbox, spaziatura per .vc-control-group. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+.vc-control-group { display: flex; align-items: center; justify-content: center; gap: 16px; }
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .vc-control. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+/* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
+.vc-control { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 68px; }
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .vc-btn. */
+.vc-btn {
+    /* Flexbox dispone e allinea i figli di questo componente. */
+    display: flex; flex: 0 0 auto; align-items: center; justify-content: center;
+    width: 52px; height: 48px; min-width: 0; min-height: 0; margin: 0; padding: 11px 13px;
+    border: 1px solid #f1d4e8; border-radius: 12px; background: #fff3fa; box-shadow: none; color: #862566;
+    cursor: pointer; touch-action: manipulation; transition: background .15s ease, transform .15s ease, border-color .15s ease;
+}
+/* Definisce dimensioni e adattamento, adattamento di immagini e video per .vc-btn img. */
+.vc-btn img { display: block; width: 26px; height: 26px; object-fit: contain; }
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .vc-btn:hover. Si applica al passaggio del */
+/* puntatore. */
+.vc-btn:hover { transform: translateY(-2px); background: #fff; border-color: #eab4d6; box-shadow: none; }
+/* Definisce sfondo e aspetto visivo per .vc-btn.spento, .vc-btn[aria-pressed="false"]. Il selettore richiede gli */
+/* attributi e i valori indicati. */
+.vc-btn.spento, .vc-btn[aria-pressed="false"] { background: #dcd8e2; border-color: #dcd8e2; }
+/* Definisce sfondo e aspetto visivo per .vc-btn.spento img. */
+.vc-btn.spento img { filter: grayscale(1) brightness(.65); }
+/* Definisce sfondo e aspetto visivo per .vc-btn.is-active[aria-pressed="true"]. Il selettore richiede gli */
+/* attributi e i valori indicati. */
+.vc-btn.is-active[aria-pressed="true"] { border-color: #eab4d6; }
+/* Definisce sfondo e aspetto visivo, effetti e transizioni, interazione con il puntatore per .vc-btn:disabled. */
+.vc-btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+/* Definisce interazione con il puntatore per .vc-btn.is-pending. */
+.vc-btn.is-pending { cursor: progress; }
+/* Definisce effetti e transizioni per .vc-btn.is-pending img. */
+/* animation: Collega al componente una sequenza @keyframes e ne stabilisce durata e ripetizioni. */
+.vc-btn.is-pending img { animation: vc-pending 1.2s ease-in-out infinite; }
+/* Definisce testo e leggibilità per .vc-control-label. */
+.vc-control-label { color: #bcb6c8; font-size: 10px; font-weight: 500; line-height: 1.2; white-space: nowrap; }
+/* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per .vc-control-end. */
+/* margin-left: Margine esterno applicato al lato indicato. */
+.vc-control-end { margin-left: 8px; padding-left: 12px; border-left: 1px solid var(--vc-border); width: 80px; }
+/* Definisce sfondo e aspetto visivo per #btn-end-call. */
+#btn-end-call { background: #f9dce4; border-color: #f9dce4; }
+/* Definisce sfondo e aspetto visivo per #btn-end-call:hover. Si applica al passaggio del puntatore. */
+#btn-end-call:hover { background: #ffbdcf; border-color: #ffbdcf; }
+/* Definisce testo e leggibilità per .vc-control-end .vc-control-label. */
+.vc-control-end .vc-control-label { color: #e9b9c7; }
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .vc-connection-detail. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+.vc-connection-detail { display: flex; align-items: center; gap: 11px; min-width: 0; }
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .vc-connection-detail > div. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+/* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
+.vc-connection-detail > div { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+/* Definisce testo e leggibilità per #vc-network-path. */
+#vc-network-path { color: #d0c9da; font-size: 12px; }
+/* Definisce testo e leggibilità per #vc-network-latency. */
+#vc-network-latency { color: var(--vc-muted); font-size: 10px; }
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .vc-signal-icon. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+.vc-signal-icon { display: inline-flex; align-items: flex-end; gap: 3px; width: 23px; height: 19px; }
+/* Definisce dimensioni e adattamento, sfondo e aspetto visivo per .vc-signal-icon i. */
+.vc-signal-icon i { width: 3px; border-radius: 1px; background: #82768e; }
+/* Definisce dimensioni e adattamento per .vc-signal-icon i:nth-child(1). */
+.vc-signal-icon i:nth-child(1) { height: 5px; }
+/* Definisce dimensioni e adattamento per .vc-signal-icon i:nth-child(2). */
+.vc-signal-icon i:nth-child(2) { height: 9px; }
+/* Definisce dimensioni e adattamento per .vc-signal-icon i:nth-child(3). */
+.vc-signal-icon i:nth-child(3) { height: 13px; }
+/* Definisce dimensioni e adattamento per .vc-signal-icon i:nth-child(4). */
+.vc-signal-icon i:nth-child(4) { height: 17px; }
+/* Definisce sfondo e aspetto visivo per [data-state="connected"] .vc-signal-icon i. Il selettore richiede gli */
+/* attributi e i valori indicati. */
+[data-state="connected"] .vc-signal-icon i { background: #91bba9; }
+/* Definisce sfondo e aspetto visivo per [data-state="failed"] .vc-signal-icon i. Il selettore richiede gli */
+/* attributi e i valori indicati. */
+[data-state="failed"] .vc-signal-icon i { background: #c78a9e; }
+/* Configura la rappresentazione per .vc-settings-button. */
+/* justify-self: Allineamento di questo elemento nella propria cella Grid. */
+.vc-settings-button { justify-self: end; }
+/* Definisce posizione e sovrapposizione, dimensioni e adattamento, spaziatura per .vc-device-panel. */
+.vc-device-panel {
+    position: absolute; right: 24px; bottom: calc(125px + env(safe-area-inset-bottom)); z-index: 20;
+    /* max-height: Limite superiore all’altezza prima di applicare le regole di overflow. */
+    width: min(360px, calc(100% - 32px)); max-height: calc(100% - 220px);
+    /* overflow-y: Gestisce lo scorrimento o il ritaglio sul solo asse verticale. */
+    /* overscroll-behavior: Controlla la propagazione dello scorrimento oltre i bordi del contenitore. */
+    padding: 22px; overflow-y: auto; overscroll-behavior: contain;
+    border: 1px solid #4c4055; border-radius: 16px; background: #28232f; box-shadow: 0 16px 48px rgba(0,0,0,.32);
+}
+/* Definisce disposizione Flexbox, spaziatura per .vc-panel-heading. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+/* margin-bottom: Margine esterno applicato al lato indicato. */
+.vc-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; }
+/* Definisce spaziatura, testo e leggibilità per .vc-panel-heading h3. */
+.vc-panel-heading h3 { margin: 0; color: #f6f0fa; font-size: 18px; font-weight: 600; }
+/* Definisce disposizione Flexbox, spaziatura, testo e leggibilità per .vc-device-field. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+/* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
+.vc-device-field { display: flex; flex-direction: column; gap: 8px; margin: 0 0 18px; color: #e3dce9; font-size: 12px; font-weight: 500; }
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per #modale-videochiamata .vc-device-field */
+/* select. */
+#modale-videochiamata .vc-device-field select {
+    width: 100%; min-width: 0; height: 40px; margin: 0; padding: 8px 10px;
+    border: 1px solid #514659 !important; border-radius: 8px; background: #1f1b26 !important;
+    color: #f2eaf6 !important; box-shadow: none; font: 400 12px/1.3 system-ui, sans-serif;
+}
+/* Definisce sfondo e aspetto visivo per #modale-videochiamata .vc-device-field select:focus. Evidenzia il */
+/* controllo raggiunto con la tastiera o il focus. */
+#modale-videochiamata .vc-device-field select:focus { border-color: #c293b6 !important; }
+/* Definisce testo e leggibilità, sfondo e aspetto visivo per .vc-device-field option. */
+.vc-device-field option { background: #1f1b26; color: #f2eaf6; }
+/* Definisce sfondo e aspetto visivo per .vc-device-field select:disabled. */
+.vc-device-field select:disabled { opacity: .5; }
+/* Definisce spaziatura, testo e leggibilità per .vc-field-hint. */
+.vc-field-hint { margin: 0; color: #b7adbf; font-size: 11px; font-weight: 400; line-height: 1.55; }
+/* Definisce disposizione Flexbox, spaziatura, sfondo e aspetto visivo per .vc-profile-note. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+.vc-profile-note { display: flex; align-items: center; gap: 12px; margin: 6px 0 16px; padding: 12px; border-radius: 9px; background: #342a3a; }
+/* Definisce testo e leggibilità per .vc-profile-note > span. */
+.vc-profile-note > span { color: #d9a9ce; font-size: 22px; }
+/* Definisce disposizione Flexbox, spaziatura per .vc-profile-note > div. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+/* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
+.vc-profile-note > div { display: flex; flex-direction: column; gap: 4px; }
+/* Definisce testo e leggibilità per .vc-profile-note strong. */
+.vc-profile-note strong { font-size: 11px; font-weight: 500; color: #ead3e4; }
+/* Definisce testo e leggibilità per .vc-profile-note div > span. */
+.vc-profile-note div > span { color: #b7a9be; font-size: 11px; }
 
-    #vc-sidebar {
-        top: 6px;
-        right: 6px;
-        width: 110px;
-        max-height: calc(100% - 12px);
-        gap: 6px;
-    }
+/* Definisce visibilità nascosta, posizione e sovrapposizione, spaziatura per .incoming-call-modal. */
+.incoming-call-modal {
+    /* Nasconde il componente negli stati selezionati. */
+    position: fixed; inset: 0; z-index: 9999999; display: none; align-items: center; justify-content: center;
+    /* backdrop-filter: Applica l’effetto ai contenuti visibili dietro questo riquadro. */
+    padding: 24px; background: rgba(15,13,21,.78); backdrop-filter: blur(10px);
+}
+/* Definisce disposizione Flexbox per .incoming-call-modal.active. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+.incoming-call-modal.active { display: flex; }
+/* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .incoming-call-modal */
+/* .incoming-call-content. */
+.incoming-call-modal .incoming-call-content {
+    width: min(390px, 100%); max-height: calc(100dvh - 40px); margin: 0; padding: 30px 28px 28px; overflow-y: auto;
+    border: 1px solid #483849; border-radius: 22px; background: #26202c;
+    box-shadow: 0 24px 80px rgba(0,0,0,.3); color: #f5edf8; text-align: center;
+}
+/* Definisce spaziatura, testo e leggibilità per .incoming-call-eyebrow. */
+.incoming-call-eyebrow { display: block; margin-bottom: 28px; color: #bdadbf; font-size: 9px; font-weight: 600; letter-spacing: 2px; }
+/* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per .incoming-call-avatar. */
+.incoming-call-avatar { display: block; width: 88px; height: 88px; margin: 0 auto 20px; border: 4px solid #443047; border-radius: 50%; object-fit: cover; }
+/* Definisce spaziatura, testo e leggibilità per .incoming-call-name. */
+.incoming-call-name { margin: 0 0 9px; color: #f5edf8; font-size: 24px; font-weight: 600; line-height: 1.2; }
+/* Definisce spaziatura, testo e leggibilità per .incoming-call-message. */
+.incoming-call-message { margin: 0; color: #e0bdd4; font-size: 14px; }
+/* Definisce spaziatura, testo e leggibilità per .incoming-call-hint. */
+.incoming-call-hint { margin: 10px 0 28px; color: #b7a9be; font-size: 12px; line-height: 1.5; }
+/* Definisce disposizione Flexbox, spaziatura per .incoming-call-actions. */
+/* Flexbox dispone e allinea i figli di questo componente. */
+.incoming-call-actions { display: flex; justify-content: center; gap: 24px; }
+/* Definisce disposizione Flexbox, dimensioni e adattamento, spaziatura per .incoming-call-action. */
+.incoming-call-action {
+    /* Flexbox dispone e allinea i figli di questo componente. */
+    /* Adatta l’orientamento dei figli Flexbox al layout di questo blocco. */
+    display: flex; flex-direction: column; align-items: center; gap: 9px;
+    width: 82px; margin: 0; padding: 0; border: 0; background: transparent; box-shadow: none; cursor: pointer;
+}
+/* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per .incoming-call-action img. */
+.incoming-call-action img { display: block; width: 56px; height: 52px; padding: 13px; border-radius: 15px; background: #f5e3ef; object-fit: contain; }
+/* Definisce sfondo e aspetto visivo per #btn-rifiuta-chiamata img. */
+#btn-rifiuta-chiamata img { background: #f5dbe2; }
+/* Definisce testo e leggibilità per .incoming-call-action span. */
+.incoming-call-action span { color: #d0bdcf; font: 500 11px/1.3 system-ui, sans-serif; }
+/* Definisce sfondo e aspetto visivo, effetti e transizioni per .incoming-call-action:hover. Si applica al */
+/* passaggio del puntatore. */
+.incoming-call-action:hover { transform: none; filter: brightness(1.1); background: transparent; box-shadow: none; }
+/* Definisce l’animazione vc-pending, richiamabile dalla proprietà animation. */
+/* Fotogramma dell’animazione nella posizione temporale 50%. */
+@keyframes vc-pending { 50% { opacity: .35; } }
 
-    .vc-control-bar {
-        right: auto;
-        width: calc(100% - 124px);
-        min-height: 64px;
-        padding: 4px 6px max(4px, env(safe-area-inset-bottom)) !important;
-    }
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 1050px). */
+@media (max-width: 1050px) {
+    /* Definisce spaziatura per .vc-header. */
+    /* padding-right: Spaziatura interna applicata al lato indicato. */
+    .vc-header { padding-right: 22px; padding-left: 22px; }
+    /* Definisce tracce e posizione nella griglia, spaziatura per .vc-layout-wrapper. */
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
+    .vc-layout-wrapper { padding: 20px 22px; grid-template-columns: minmax(0,1fr) 190px; }
+    /* Definisce spaziatura per .vc-control-bar. */
+    .vc-control-bar { padding-right: 22px; padding-left: 22px; gap: 12px; }
+    /* Definisce spaziatura per .vc-control-group. */
+    .vc-control-group { gap: 8px; }
+    /* Definisce spaziatura per .vc-connection-detail. */
+    .vc-connection-detail { gap: 8px; }
+    /* Definisce visibilità nascosta per .vc-settings-button span. */
+    /* Nasconde il componente negli stati selezionati. */
+    .vc-settings-button span { display: none; }
+    /* Definisce spaziatura per .vc-header-actions. */
+    .vc-header-actions { gap: 16px; }
+}
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 767px). */
+@media (max-width: 767px) {
+    /* Definisce dimensioni e adattamento, spaziatura per .vc-header. */
+    .vc-header { flex-wrap: wrap; gap: 12px; min-height: 0; padding: max(16px,env(safe-area-inset-top)) 18px 14px; }
+    /* Definisce spaziatura per .vc-heading. */
+    .vc-heading { gap: 10px; flex: 1 1 auto; }
+    /* Definisce dimensioni e adattamento, testo e leggibilità, sfondo e aspetto visivo per .vc-brand-mark. */
+    /* flex-basis: Dimensione iniziale dell’elemento prima della distribuzione dello spazio Flexbox. */
+    .vc-brand-mark { width: 34px; height: 34px; flex-basis: 34px; border-radius: 10px; font-size: 10px; }
+    /* Definisce testo e leggibilità per .vc-eyebrow. */
+    .vc-eyebrow { font-size: 8px; letter-spacing: 1.2px; }
+    /* Definisce dimensioni e adattamento, testo e leggibilità per #vc-call-title. */
+    #vc-call-title { max-width: calc(100vw - 105px); font-size: 15px; }
+    /* Definisce dimensioni e adattamento, spaziatura per .vc-header-actions. */
+    .vc-header-actions { width: 100%; justify-content: space-between; gap: 12px; }
+    /* Definisce testo e leggibilità per .vc-session-status. */
+    .vc-session-status { font-size: 11px; }
+    /* Definisce dimensioni e adattamento, spaziatura, testo e leggibilità per .vc-utility-button. */
+    .vc-utility-button { min-height: 36px; min-width: 36px; padding: 8px 10px; font-size: 11px; }
+    /* Definisce dimensioni e adattamento, spaziatura per .vc-icon-button. */
+    .vc-icon-button { width: 36px; padding: 8px; }
+    /* Definisce tracce e posizione nella griglia, posizione e sovrapposizione, spaziatura per .vc-layout-wrapper. */
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
+    .vc-layout-wrapper { position: relative; grid-template-columns: minmax(0,1fr); gap: 0; padding: 12px; }
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento, spaziatura per #vc-sidebar. */
+    /* overflow-x: Gestisce lo scorrimento o il ritaglio sul solo asse orizzontale. */
+    #vc-sidebar { position: absolute; top: 22px; right: 22px; z-index: 5; width: clamp(88px,25vw,124px); max-height: calc(100% - 44px); gap: 8px; overflow-x: hidden; }
+    /* Definisce dimensioni e adattamento, sfondo e aspetto visivo per #vc-sidebar .vc-card. */
+    #vc-sidebar .vc-card { aspect-ratio: 4 / 3; border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,.15); }
 
-    .vc-control-group {
-        padding: 4px 6px;
-        border-radius: 18px !important;
-    }
-
-    .vc-btn {
-        flex-basis: 42px;
-        width: 42px !important;
-        height: 42px !important;
-        min-width: 42px;
-        min-height: 42px;
-        border-radius: 13px !important;
-    }
-
-    #btn-end-call {
-        flex-basis: 48px;
-        width: 48px !important;
-        height: 48px !important;
-        min-width: 48px;
-        min-height: 48px;
-    }
+    #vc-main-focus .vc-card { border-radius: 12px; }
+    /* Definisce sfondo e aspetto visivo per #vc-sidebar .vc-avatar. */
+    /* --vc-avatar-size: Dimensione dell’avatar, ridefinita nelle anteprime e nei layout compatti. */
+    /* border-width: Spessore dei bordi già definiti. */
+    #vc-sidebar .vc-avatar { --vc-avatar-size: 38px; border-width: 2px; }
+    /* Definisce visibilità nascosta per #vc-sidebar .vc-camera-status. */
+    /* Nasconde il componente negli stati selezionati. */
+    #vc-sidebar .vc-camera-status { display: none; }
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento, spaziatura per #vc-sidebar .vc-name-tag. */
+    #vc-sidebar .vc-name-tag { bottom: 7px; left: 7px; max-width: calc(100% - 14px); padding: 4px 6px; font-size: 10px; }
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento, spaziatura per #vc-sidebar .vc-pin-button. */
+    #vc-sidebar .vc-pin-button { top: 6px; right: 6px; width: 28px; height: 28px; padding: 6px; }
+    /* Definisce posizione e sovrapposizione per #vc-sidebar .vc-local-status. */
+    #vc-sidebar .vc-local-status { top: 7px; left: 7px; right: 40px; }
+    /* Definisce dimensioni e adattamento, spaziatura per #vc-sidebar .vc-local-status > *. */
+    #vc-sidebar .vc-local-status > * { min-height: 23px; padding: 3px; }
+    /* Definisce posizione e sovrapposizione per #vc-sidebar .vc-remote-status. */
+    #vc-sidebar .vc-remote-status { top: 40px; left: 6px; right: 6px; }
+    /* Definisce testo e leggibilità per #vc-sidebar .vc-remote-status > *. */
+    #vc-sidebar .vc-remote-status > * { font-size: 9px; }
+    /* Definisce tracce e posizione nella griglia, dimensioni e adattamento, spaziatura per .vc-control-bar. */
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
+    .vc-control-bar { grid-template-columns: minmax(0,1fr) auto; gap: 13px; min-height: 0; padding: 12px 16px max(15px,env(safe-area-inset-bottom)); }
+    /* Definisce tracce e posizione nella griglia, dimensioni e adattamento, spaziatura per .vc-control-group. */
+    /* grid-row: Righe occupate dal singolo elemento nella griglia. */
+    .vc-control-group { grid-column: 1 / -1; grid-row: 1; width: 100%; gap: 7px; }
+    /* Definisce dimensioni e adattamento, spaziatura per .vc-control. */
+    .vc-control { width: 58px; gap: 7px; }
+    /* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per .vc-btn. */
+    .vc-btn { width: 47px; height: 44px; padding: 10px; border-radius: 11px; }
+    /* Definisce dimensioni e adattamento per .vc-btn img. */
+    .vc-btn img { width: 24px; height: 24px; }
+    /* Definisce testo e leggibilità per .vc-control-label. */
+    .vc-control-label { font-size: 9px; }
+    /* Definisce dimensioni e adattamento, spaziatura per .vc-control-end. */
+    .vc-control-end { width: 64px; margin-left: 2px; padding-left: 7px; }
+    /* Definisce tracce e posizione nella griglia, spaziatura per .vc-connection-detail. */
+    .vc-connection-detail { grid-row: 2; gap: 8px; }
+    /* Definisce spaziatura, effetti e transizioni per .vc-signal-icon. */
+    /* transform-origin: Punto rispetto al quale vengono applicate le trasformazioni. */
+    /* margin-right: Margine esterno applicato al lato indicato. */
+    .vc-signal-icon { transform: scale(.8); transform-origin: left center; margin-right: -4px; }
+    /* Definisce testo e leggibilità per #vc-network-path. */
+    #vc-network-path { font-size: 10px; }
+    /* Definisce testo e leggibilità per #vc-network-latency. */
+    #vc-network-latency { font-size: 9px; }
+    /* Definisce tracce e posizione nella griglia per .vc-settings-button. */
+    .vc-settings-button { grid-row: 2; }
+    /* Configura la rappresentazione per .vc-settings-button span. */
+    .vc-settings-button span { display: inline; }
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento, spaziatura per .vc-device-panel. */
+    .vc-device-panel { right: 12px; bottom: calc(152px + env(safe-area-inset-bottom)); width: calc(100% - 24px); max-height: calc(100% - 180px); padding: 18px; }
+    /* Definisce spaziatura per .vc-panel-heading. */
+    .vc-panel-heading { margin-bottom: 18px; }
+    /* Definisce spaziatura per .vc-device-field. */
+    .vc-device-field { margin-bottom: 14px; }
+    /* Definisce tracce e posizione nella griglia, spaziatura per #modale-videochiamata[data-layout="grid"] */
+    /* .vc-layout-wrapper. Il selettore richiede gli attributi e i valori indicati. */
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
+    /* grid-template-rows: Definisce le righe della griglia e le rispettive altezze. */
+    #modale-videochiamata[data-layout="grid"] .vc-layout-wrapper { grid-template-columns: minmax(0,1fr); grid-template-rows: repeat(2,minmax(0,1fr)); gap: 10px; }
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento per [data-layout="grid"] #vc-sidebar. Il */
+    /* selettore richiede gli attributi e i valori indicati. */
+    [data-layout="grid"] #vc-sidebar { position: static; width: auto; max-height: none; }
+    /* Definisce sfondo e aspetto visivo per [data-layout="grid"] .vc-layout-wrapper .vc-card. Il selettore richiede */
+    /* gli attributi e i valori indicati. */
+    [data-layout="grid"] .vc-layout-wrapper .vc-card { border-radius: 12px; }
+    /* Configura la rappresentazione per [data-layout="grid"] .vc-layout-wrapper .vc-avatar. Il selettore richiede gli */
+    /* attributi e i valori indicati. */
+    /* --vc-avatar-size: Dimensione dell’avatar, ridefinita nelle anteprime e nei layout compatti. */
+    [data-layout="grid"] .vc-layout-wrapper .vc-avatar { --vc-avatar-size: 64px !important; }
+    /* Definisce posizione e sovrapposizione, testo e leggibilità per [data-layout="grid"] .vc-layout-wrapper */
+    /* .vc-camera-status. Il selettore richiede gli attributi e i valori indicati. */
+    [data-layout="grid"] .vc-layout-wrapper .vc-camera-status { display: block !important; top: calc(50% + 27px) !important; font-size: 11px !important; }
+    /* Definisce tracce e posizione nella griglia per [data-layout="grid"] #card-screen. Il selettore richiede gli */
+    /* attributi e i valori indicati. */
+    [data-layout="grid"] #card-screen { grid-column: auto; }
+    /* Definisce tracce e posizione nella griglia per [data-layout="grid"]:has(#card-screen:not(.hidden)) */
+    /* .vc-layout-wrapper. Il selettore richiede gli attributi e i valori indicati. :has adatta il contenitore alla */
+    /* presenza dei figli indicati. */
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
+    [data-layout="grid"]:has(#card-screen:not(.hidden)) .vc-layout-wrapper { grid-template-rows: repeat(3,minmax(0,1fr)); }
+    /* Definisce spaziatura per .incoming-call-modal. */
+    .incoming-call-modal { padding: 18px; }
+}
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo larghezza 370px). */
+@media (max-width: 370px) {
+    /* Definisce spaziatura per .vc-control-group. */
+    .vc-control-group { gap: 3px; }
+    /* Definisce dimensioni e adattamento per .vc-control. */
+    .vc-control { width: 53px; }
+    /* Definisce dimensioni e adattamento per .vc-control-end. */
+    .vc-control-end { width: 59px; }
+    /* Definisce spaziatura per .vc-control-bar. */
+    .vc-control-bar { padding-right: 10px; padding-left: 10px; }
+}
+/* Media query: applica le regole soltanto nelle condizioni indicate (massimo altezza 520px). Riguarda */
+/* l’orientamento orizzontale. */
+@media (max-height: 520px) and (orientation: landscape) {
+    /* Definisce dimensioni e adattamento, spaziatura per .vc-header. */
+    .vc-header { flex-wrap: nowrap; min-height: 58px; padding: 10px 18px; }
+    /* Configura la rappresentazione per .vc-heading. */
+    .vc-heading { flex: 1 1 auto; }
+    /* Definisce dimensioni e adattamento per .vc-header-actions. */
+    .vc-header-actions { width: auto; }
+    /* Definisce visibilità nascosta per .vc-brand-mark, .vc-eyebrow. */
+    /* Nasconde il componente negli stati selezionati. */
+    .vc-brand-mark, .vc-eyebrow { display: none; }
+    /* Definisce dimensioni e adattamento, testo e leggibilità per #vc-call-title. */
+    #vc-call-title { max-width: 35vw; font-size: 14px; }
+    /* Definisce testo e leggibilità per .vc-session-status. */
+    .vc-session-status { font-size: 10px; }
+    /* Definisce visibilità nascosta per .vc-view-actions .vc-utility-button span. */
+    /* Nasconde il componente negli stati selezionati. */
+    .vc-view-actions .vc-utility-button span { display: none; }
+    /* Definisce tracce e posizione nella griglia, spaziatura per .vc-layout-wrapper. */
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
+    .vc-layout-wrapper { padding: 10px 18px; grid-template-columns: minmax(0,1fr) 135px; gap: 12px; }
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento per #vc-sidebar. */
+    #vc-sidebar { position: static; width: auto; max-height: none; }
+    /* Definisce dimensioni e adattamento per #vc-sidebar .vc-card. */
+    #vc-sidebar .vc-card { aspect-ratio: 4 / 3; }
+    /* Configura la rappresentazione per #vc-sidebar .vc-avatar. */
+    /* --vc-avatar-size: Dimensione dell’avatar, ridefinita nelle anteprime e nei layout compatti. */
+    #vc-sidebar .vc-avatar { --vc-avatar-size: 36px; }
+    /* Definisce visibilità nascosta per #vc-sidebar .vc-camera-status. */
+    /* Nasconde il componente negli stati selezionati. */
+    #vc-sidebar .vc-camera-status { display: none; }
+    /* Definisce posizione e sovrapposizione, testo e leggibilità per .vc-camera-status. */
+    .vc-camera-status { top: calc(50% + 29px); font-size: 11px; }
+    /* Configura la rappresentazione per .vc-avatar. */
+    /* --vc-avatar-size: Dimensione dell’avatar, ridefinita nelle anteprime e nei layout compatti. */
+    .vc-avatar { --vc-avatar-size: 64px; }
+    /* Definisce tracce e posizione nella griglia, dimensioni e adattamento, spaziatura per .vc-control-bar. */
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
+    .vc-control-bar { grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); min-height: 72px; padding: 8px 18px max(8px,env(safe-area-inset-bottom)); }
+    /* Definisce tracce e posizione nella griglia, spaziatura per .vc-control-group. */
+    .vc-control-group { grid-column: 2; grid-row: 1; gap: 5px; }
+    /* Definisce dimensioni e adattamento, spaziatura per .vc-control. */
+    .vc-control { width: 54px; gap: 4px; }
+    /* Definisce dimensioni e adattamento, spaziatura, sfondo e aspetto visivo per .vc-btn. */
+    .vc-btn { width: 43px; height: 38px; padding: 8px; border-radius: 9px; }
+    /* Definisce dimensioni e adattamento per .vc-control-end. */
+    .vc-control-end { width: 62px; }
+    /* Definisce testo e leggibilità per .vc-control-label. */
+    .vc-control-label { font-size: 8px; }
+    /* Definisce tracce e posizione nella griglia per .vc-connection-detail, .vc-settings-button. */
+    .vc-connection-detail, .vc-settings-button { grid-row: 1; }
+    /* Definisce tracce e posizione nella griglia per .vc-settings-button. */
+    .vc-settings-button { grid-column: 3; }
+    /* Definisce visibilità nascosta per .vc-settings-button span, #vc-network-latency. */
+    /* Nasconde il componente negli stati selezionati. */
+    .vc-settings-button span, #vc-network-latency { display: none; }
+    /* Definisce testo e leggibilità per #vc-network-path. */
+    #vc-network-path { font-size: 9px; }
+    /* Definisce tracce e posizione nella griglia per #modale-videochiamata[data-layout="grid"] .vc-layout-wrapper. Il */
+    /* selettore richiede gli attributi e i valori indicati. */
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
+    #modale-videochiamata[data-layout="grid"] .vc-layout-wrapper { grid-template-columns: repeat(2,minmax(0,1fr)); grid-template-rows: minmax(0,1fr); }
+    /* Definisce tracce e posizione nella griglia per [data-layout="grid"]:has(#card-screen:not(.hidden)) */
+    /* .vc-layout-wrapper. Il selettore richiede gli attributi e i valori indicati. :has adatta il contenitore alla */
+    /* presenza dei figli indicati. */
+    /* Ridefinisce le tracce Grid per il layout di questo componente o breakpoint. */
+    [data-layout="grid"]:has(#card-screen:not(.hidden)) .vc-layout-wrapper { grid-template-columns: repeat(3,minmax(0,1fr)); grid-template-rows: minmax(0,1fr); }
+    /* Definisce tracce e posizione nella griglia per [data-layout="grid"] #card-screen. Il selettore richiede gli */
+    /* attributi e i valori indicati. */
+    [data-layout="grid"] #card-screen { grid-column: auto; }
+    /* Definisce posizione e sovrapposizione, dimensioni e adattamento per .vc-device-panel. */
+    .vc-device-panel { bottom: 80px; max-height: calc(100% - 100px); }
+}
+/* Media query: applica le regole soltanto nelle condizioni indicate. Rispetta la preferenza dell’utente sulle */
+/* animazioni. */
+@media (prefers-reduced-motion: reduce) {
+    /* Definisce effetti e transizioni per #modale-videochiamata *, .incoming-call-modal *. */
+    #modale-videochiamata *, .incoming-call-modal * { animation: none !important; transition: none !important; }
 }

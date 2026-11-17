@@ -1,31 +1,60 @@
+# Indica a Git quali file non tracciati escludere: non cancella i file già presenti sul disco.
+# Esclude le dipendenze installate, ricostruibili dal manifest e dal lockfile.
 node_modules/
+# Esclude il file locale con le impostazioni e le credenziali reali.
 .env
+# Esclude i dati runtime e gli upload locali generati durante l’esecuzione.
 .data/
 
+# Esclude i log generati dagli strumenti o dall’applicazione.
 npm-debug.log*
+# Esclude i log generati dagli strumenti o dall’applicazione.
 yarn-debug.log*
+# Esclude i log generati dagli strumenti o dall’applicazione.
 yarn-error.log*
 
+# Esclude gli upload dinamici o gli asset non autorizzati esplicitamente dalle eccezioni successive.
 public/uploads/*
+# Eccezione: permette di tracciare l’asset indicato nonostante le esclusioni più generali.
 !public/uploads/buttons/
+# Eccezione: permette di tracciare l’asset indicato nonostante le esclusioni più generali.
 !public/uploads/catalog/
+# Eccezione: permette di tracciare l’asset indicato nonostante le esclusioni più generali.
 !public/uploads/defaults/
+# Eccezione: permette di tracciare l’asset indicato nonostante le esclusioni più generali.
 !public/uploads/sliders/
+# Esclude gli upload dinamici o gli asset non autorizzati esplicitamente dalle eccezioni successive.
 public/uploads/buttons/*
+# Esclude gli upload dinamici o gli asset non autorizzati esplicitamente dalle eccezioni successive.
 public/uploads/catalog/*
+# Esclude gli upload dinamici o gli asset non autorizzati esplicitamente dalle eccezioni successive.
 public/uploads/defaults/*
+# Esclude gli upload dinamici o gli asset non autorizzati esplicitamente dalle eccezioni successive.
 public/uploads/sliders/*
+# Eccezione: permette di tracciare l’asset indicato nonostante le esclusioni più generali.
 !public/uploads/buttons/tasto_*.png
+# Eccezione: permette di tracciare l’asset indicato nonostante le esclusioni più generali.
 !public/uploads/buttons/tasto_*.svg
+# Eccezione: permette di tracciare l’asset indicato nonostante le esclusioni più generali.
 !public/uploads/catalog/boxe.jpg
+# Eccezione: permette di tracciare l’asset indicato nonostante le esclusioni più generali.
 !public/uploads/catalog/giocoleria.jpg
+# Eccezione: permette di tracciare l’asset indicato nonostante le esclusioni più generali.
 !public/uploads/defaults/default_user.png
+# Eccezione: permette di tracciare l’asset indicato nonostante le esclusioni più generali.
 !public/uploads/defaults/default_corso.png
+# Eccezione: permette di tracciare l’asset indicato nonostante le esclusioni più generali.
 !public/uploads/defaults/default_gara.png
+# Eccezione: permette di tracciare l’asset indicato nonostante le esclusioni più generali.
 !public/uploads/sliders/*.jpg
 
+# Esclude i log generati dagli strumenti o dall’applicazione.
 *.log
+# Esclude i documenti di lavoro generati, separati dai sorgenti del sito.
 *.docx
+# Esclude gli export del database, che possono contenere dati applicativi.
 database/backups/*.json
+# Esclude il file o il formato locale indicato dal tracciamento dei nuovi file.
 .DS_Store
+# Esclude il file o il formato locale indicato dal tracciamento dei nuovi file.
 Thumbs.db

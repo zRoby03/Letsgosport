@@ -1,59 +1,99 @@
+<!-- Struttura del frontend: JavaScript trova gli elementi tramite id e classi, CSS ne definisce l’aspetto. -->
+<!-- I commenti descrivono la struttura; i dati dinamici restano gestiti dai moduli JavaScript caricati in fondo. -->
+<!-- id collega un nodo al codice; class seleziona gli stili, data-* espone dati al frontend e aria-* descrive -->
+<!-- l’interfaccia alle tecnologie assistive. -->
 <!DOCTYPE html>
+<!-- Documento HTML in italiano: contiene metadati e interfaccia del sito. -->
 <html lang="it">
+<!-- Metadati, fogli di stile e risorse iniziali della pagina. -->
 <head>
+    <!-- Metadato del documento utilizzato dal browser. -->
     <meta charset="UTF-8">
+    <!-- Adatta il viewport alle dimensioni del dispositivo, necessario per il layout mobile. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Let's Go Sport</title>
+    <!-- Carica il foglio di stile css/tokens.css. Il parametro di versione distingue l’asset nella cache. -->
     <link rel="stylesheet" href="css/tokens.css?v=2">
+    <!-- Carica il foglio di stile css/style.css. Il parametro di versione distingue l’asset nella cache. -->
     <link rel="stylesheet" href="css/style.css?v=35">
-    <link rel="stylesheet" href="css/layout.css?v=5">
+    <!-- Carica il foglio di stile css/layout.css. Il parametro di versione distingue l’asset nella cache. -->
+    <link rel="stylesheet" href="css/layout.css?v=6">
+    <!-- Carica il foglio di stile css/coach.css. Il parametro di versione distingue l’asset nella cache. -->
     <link rel="stylesheet" href="css/coach.css?v=2">
+    <!-- Carica il foglio di stile css/admin.css. Il parametro di versione distingue l’asset nella cache. -->
     <link rel="stylesheet" href="css/admin.css?v=3">
-    <link rel="stylesheet" href="css/call.css?v=6">
-    <link rel="stylesheet" href="css/chat.css?v=5">
+    <!-- Carica il foglio di stile css/call.css. Il parametro di versione distingue l’asset nella cache. -->
+    <link rel="stylesheet" href="css/call.css?v=8">
+    <!-- Carica il foglio di stile css/chat.css. Il parametro di versione distingue l’asset nella cache. -->
+    <link rel="stylesheet" href="css/chat.css?v=6">
+    <!-- Script incorporato: prepara la configurazione o l’avvio richiesti dalla pagina. -->
     <script>
         window.RECAPTCHA_SITE_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+        // Esegue la callback passata all’operazione, utilizzando i parametri forniti dal chiamante.
         window.onRecaptchaReady = function () {
             window.app?.gestisciRecaptchaPronto?.();
         };
     </script>
+    <!-- Carica https://www.google.com/recaptcha/api.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
     <script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaReady&render=explicit" async defer></script>
+    <!-- Collega il manifest con le informazioni per l’installazione della PWA. -->
     <link rel="manifest" href="/manifest.json">
+    <!-- Metadato del documento utilizzato dal browser. -->
     <meta name="theme-color" content="#ffffff">
 </head>
+<!-- Contiene l’interfaccia visibile e i moduli JavaScript del frontend. -->
 <body class="lgs-app">
+<!-- Elemento loading-screen identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
 <div id="loading-screen" class="loading-screen">
     <div class="loader-pulse"></div>
     <h2 class="loading-text">LETSGOSPORT</h2>
 </div>
 
+<!-- Raggruppa semanticamente l’intestazione. -->
 <header class="navbar" aria-label="Navigazione principale">
+    <!-- Pulsante btn-home-logo: Vai alla home. -->
     <button id="btn-home-logo" class="brand-button" type="button" data-nav="home" aria-label="Vai alla home">
         <span class="brand-mark" aria-hidden="true">LS</span>
         <span class="brand-text">LetsGo<span>Sport</span></span>
     </button>
 
+    <!-- Navigazione tra le sezioni del sito; JavaScript aggiorna la voce attiva. -->
     <nav class="nav-left" aria-label="Sezioni">
+        <!-- Pulsante btn-home; il gestore JavaScript esegue l’azione collegata. -->
         <button id="btn-home" class="nav-link" type="button" data-nav="home">Home</button>
+        <!-- Pulsante btn-dashboard; il gestore JavaScript esegue l’azione collegata. -->
         <button id="btn-dashboard" class="nav-link" type="button" data-nav="dashboard">Corsi</button>
+        <!-- Pulsante btn-gare; il gestore JavaScript esegue l’azione collegata. -->
         <button id="btn-gare" class="nav-link" type="button" data-nav="gare">Gare</button>
+        <!-- Pulsante btn-chat; il gestore JavaScript esegue l’azione collegata. -->
         <button id="btn-chat" class="nav-link nav-link-chat" type="button" data-nav="chat">
             Chat
+            <!-- Elemento badge-nav-chat identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
             <span id="badge-nav-chat" class="nav-chat-badge" hidden>Nuovo</span>
         </button>
+        <!-- Pulsante btn-area-mobile; il gestore JavaScript esegue l’azione collegata. -->
         <button id="btn-area-mobile" class="nav-link nav-link-area" type="button" data-nav="profilo">Area</button>
     </nav>
 
     <div class="nav-right">
+        <!-- Elemento container-saluto identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
         <span id="container-saluto" class="nav-greeting hidden">
+            <!-- Elemento testo-saluto identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
             <span id="testo-saluto"></span>
         </span>
+        <!-- Pulsante btn-admin; il gestore JavaScript esegue l’azione collegata. -->
         <button id="btn-admin" class="nav-pill nav-pill-soft hidden" type="button" data-nav="admin">Admin</button>
+        <!-- Pulsante btn-coach; il gestore JavaScript esegue l’azione collegata. -->
         <button id="btn-coach" class="nav-pill nav-pill-soft hidden" type="button" data-nav="coach">Coach</button>
+        <!-- Pulsante btn-login-nav; il gestore JavaScript esegue l’azione collegata. -->
         <button id="btn-login-nav" class="nav-pill nav-pill-light" type="button">Login</button>
+        <!-- Pulsante btn-registrati-nav; il gestore JavaScript esegue l’azione collegata. -->
         <button id="btn-registrati-nav" class="nav-pill nav-pill-primary" type="button">Registrati</button>
+        <!-- Pulsante btn-profilo; il gestore JavaScript esegue l’azione collegata. -->
         <button id="btn-profilo" class="nav-pill nav-pill-primary hidden" type="button" data-nav="profilo">Area personale</button>
+        <!-- Pulsante btn-logout; il gestore JavaScript esegue l’azione collegata. -->
         <button id="btn-logout" class="nav-pill nav-pill-light hidden" type="button">Esci</button>
+        <!-- Pulsante mobile-nav-toggle: Apri menu. -->
         <button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button"
                 aria-label="Apri menu" aria-expanded="false" aria-controls="mobile-navigation">
             <span></span>
@@ -63,21 +103,30 @@
     </div>
 </header>
 
+<!-- Pulsante mobile-nav-backdrop: Chiudi menu. -->
 <button id="mobile-nav-backdrop" class="mobile-nav-backdrop" type="button" aria-label="Chiudi menu"></button>
 
+<!-- Contenuto principale del sito, suddiviso nelle sezioni mostrate dalla navigazione. -->
 <main class="app-shell">
+    <!-- Elemento stato-backend identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
     <div id="stato-backend" class="backend-status" hidden>
+        <!-- Area di stato stato-backend-testo; le tecnologie assistive possono annunciarne gli aggiornamenti. -->
         <span id="stato-backend-testo" role="status"></span>
+        <!-- Pulsante stato-backend-riprova; il gestore JavaScript esegue l’azione collegata. -->
         <button id="stato-backend-riprova" type="button">Riprova</button>
     </div>
+<!-- Sezione pagina-home selezionata dalla navigazione e aggiornata dai moduli dedicati. -->
 <div id="pagina-home" class="sezione-pagina">
+    <!-- Raggruppa semanticamente questa sezione. -->
     <section class="landing-hero">
         <div class="hero-copy">
             <p class="eyebrow">Associazione sportiva</p>
             <h1><span class="text-magenta">Sport</span>, crescita e <span class="text-cyan">comunità</span> in un solo posto.</h1>
             <p class="hero-subtitle">LetsGoSport è l'associazione sportiva che unisce benessere, passione e crescita attraverso lo sport. Per bambini, ragazzi e adulti: insieme, ogni giorno.</p>
             <div class="hero-actions">
+                <!-- Pulsante; il gestore JavaScript esegue l’azione collegata. -->
                 <button class="btn-liquid btn-liquid-primary" type="button" data-nav="dashboard">Scopri i corsi</button>
+                <!-- Pulsante; il gestore JavaScript esegue l’azione collegata. -->
                 <button class="btn-liquid btn-liquid-secondary" type="button" data-nav="gare">Vedi le gare</button>
             </div>
         </div>
@@ -85,25 +134,31 @@
              role="region" aria-label="Immagini dell'associazione sportiva">
             <div class="image-slider-track">
                 <figure class="image-slide is-active">
+                    <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
                     <img src="uploads/sliders/associazione-sportiva-1.jpg" alt="Palestra attrezzata dell'associazione sportiva">
                     <figcaption>Spazi attrezzati per allenarsi in sicurezza</figcaption>
                 </figure>
                 <figure class="image-slide">
+                    <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
                     <img src="uploads/sliders/associazione-sportiva-2.jpg" alt="Gruppo di sportivi che si saluta dopo l'allenamento" loading="lazy">
                     <figcaption>Una comunità che cresce attraverso lo sport</figcaption>
                 </figure>
                 <figure class="image-slide">
+                    <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
                     <img src="uploads/sliders/associazione-sportiva-3.jpg" alt="Atlete pronte per una sessione di nuoto" loading="lazy">
                     <figcaption>Attività per ogni età e livello</figcaption>
                 </figure>
             </div>
+            <!-- Pulsante: Immagine precedente. -->
             <button class="image-slider-arrow image-slider-prev" type="button" data-slider-prev aria-label="Immagine precedente">‹</button>
+            <!-- Pulsante: Immagine successiva. -->
             <button class="image-slider-arrow image-slider-next" type="button" data-slider-next aria-label="Immagine successiva">›</button>
             <div class="image-slider-dots" data-slider-dots aria-label="Seleziona immagine"></div>
             <span class="sr-only" data-slider-status aria-live="polite"></span>
         </div>
     </section>
 
+    <!-- Raggruppa semanticamente questa sezione. -->
     <section class="feature-strip" aria-label="Valori LetsGoSport">
         <article><span>👥</span><strong>Per tutti</strong><small>Bambini, ragazzi e adulti</small></article>
         <article><span>♡</span><strong>Benessere</strong><small>Corpo, mente e spirito</small></article>
@@ -112,82 +167,116 @@
         <article><span>◎</span><strong>Qualità</strong><small>Istruttori qualificati</small></article>
     </section>
 
+    <!-- Raggruppa semanticamente questa sezione. -->
     <section class="preview-panel">
         <div class="section-heading">
             <h2>I nostri corsi</h2>
+            <!-- Pulsante; il gestore JavaScript esegue l’azione collegata. -->
             <button class="link-action" type="button" data-nav="dashboard">Scopri tutti i corsi <span>→</span></button>
         </div>
+        <!-- Area di stato home-corsi; le tecnologie assistive possono annunciarne gli aggiornamenti. -->
         <div id="home-corsi" class="home-course-grid" aria-live="polite">
             <p>Caricamento corsi…</p>
         </div>
     </section>
 
+    <!-- Raggruppa semanticamente questa sezione. -->
     <section class="preview-panel race-preview-panel">
         <div class="section-heading">
             <h2>Prossime gare</h2>
+            <!-- Pulsante; il gestore JavaScript esegue l’azione collegata. -->
             <button class="link-action" type="button" data-nav="gare">Vedi tutte le gare <span>→</span></button>
         </div>
+        <!-- Area di stato home-gare; le tecnologie assistive possono annunciarne gli aggiornamenti. -->
         <div id="home-gare" class="home-race-list" aria-live="polite">
             <p>Caricamento gare…</p>
         </div>
     </section>
 
     <div class="mobile-sticky-cta">
+        <!-- Pulsante btn-login-home; il gestore JavaScript esegue l’azione collegata. -->
         <button id="btn-login-home" class="btn-liquid btn-liquid-primary" type="button">Registrati ora</button>
     </div>
 </div>
 
+    <!-- Finestra sovrapposta modale-login; visibilità e interazioni sono gestite dal frontend. -->
     <div id="modale-login" class="modal-overlay">
         <div class="modal-content">
+            <!-- Pulsante: Chiudi login. -->
             <button class="chiudi-modale" type="button" data-close-modal="modale-login" aria-label="Chiudi login">×</button>
             <h2 class="modal-title">Bentornato</h2>
             
+            <!-- Raccoglie i campi del form e li collega al flusso di invio previsto. -->
             <form id="form-login">
+                <!-- Etichetta del campo input-email; aiuta a riconoscere il controllo e a focalizzarlo. -->
                 <label class="auth-field-label" for="input-email">Email</label>
+                <!-- Campo del form input-email di tipo email; required ne richiede la compilazione nel controllo del browser. -->
                 <input type="email" id="input-email" name="email" class="form-input" autocomplete="username" placeholder="La tua email" required>
+                <!-- Etichetta del campo input-password; aiuta a riconoscere il controllo e a focalizzarlo. -->
                 <label class="auth-field-label" for="input-password">Password</label>
+                <!-- Campo del form input-password di tipo password; required ne richiede la compilazione nel controllo del browser. -->
                 <input type="password" id="input-password" name="password" class="form-input form-input-last" autocomplete="current-password" placeholder="Password" required>
                 
                 <div class="recaptcha-container">
+                    <!-- Elemento recaptcha-login identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
                     <div id="recaptcha-login" class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
                 </div>
+                <!-- Pulsante; il gestore JavaScript esegue l’azione collegata. -->
                 <button type="submit" class="btn btn-primary btn-block">Entra</button>
             </form>
             
             <p class="modal-footer-text">
+                <!-- Collegamento alla destinazione indicata da href. -->
                 Non hai un account? <a href="#" id="link-apri-registrazione" class="modal-link primary">Registrati ora</a>
             </p>
         </div>
     </div>
 
+    <!-- Finestra sovrapposta modale-registrazione; visibilità e interazioni sono gestite dal frontend. -->
     <div id="modale-registrazione" class="modal-overlay">
         <div class="modal-content">
+            <!-- Pulsante: Chiudi registrazione. -->
             <button class="chiudi-modale" type="button" data-close-modal="modale-registrazione" aria-label="Chiudi registrazione">×</button>
             <h2 class="modal-title">Unisciti a noi</h2>
             
+            <!-- Raccoglie i campi del form e li collega al flusso di invio previsto. -->
             <form id="form-registrazione">
+                <!-- Etichetta del campo reg-nome; aiuta a riconoscere il controllo e a focalizzarlo. -->
                 <label class="auth-field-label" for="reg-nome">Nome</label>
+                <!-- Campo del form reg-nome di tipo text; required ne richiede la compilazione nel controllo del browser. -->
                 <input type="text" id="reg-nome" class="form-input" autocomplete="given-name" placeholder="Nome" required>
+                <!-- Etichetta del campo reg-cognome; aiuta a riconoscere il controllo e a focalizzarlo. -->
                 <label class="auth-field-label" for="reg-cognome">Cognome</label>
+                <!-- Campo del form reg-cognome di tipo text; required ne richiede la compilazione nel controllo del browser. -->
                 <input type="text" id="reg-cognome" class="form-input" autocomplete="family-name" placeholder="Cognome" required>
+                <!-- Etichetta del campo reg-email; aiuta a riconoscere il controllo e a focalizzarlo. -->
                 <label class="auth-field-label" for="reg-email">Email</label>
+                <!-- Campo del form reg-email di tipo email; required ne richiede la compilazione nel controllo del browser. -->
                 <input type="email" id="reg-email" class="form-input" autocomplete="email" placeholder="Email" required>
+                <!-- Etichetta del campo reg-password; aiuta a riconoscere il controllo e a focalizzarlo. -->
                 <label class="auth-field-label" for="reg-password">Password</label>
+                <!-- Campo del form reg-password di tipo password; required ne richiede la compilazione nel controllo del browser. -->
                 <input type="password" id="reg-password" class="form-input form-input-last" autocomplete="new-password" placeholder="Scegli una password" required>
                 
                 <div class="recaptcha-container">
+                    <!-- Elemento recaptcha-registrazione identificabile da CSS e JavaScript per aggiornare questa parte -->
+                    <!-- dell’interfaccia. -->
                     <div id="recaptcha-registrazione" class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
                 </div>
+                <!-- Pulsante; il gestore JavaScript esegue l’azione collegata. -->
                 <button type="submit" class="btn btn-success btn-block">Registrati</button>
             </form>
 
             <p class="modal-footer-text">
+                <!-- Collegamento alla destinazione indicata da href. -->
                 Hai già un account? <a href="#" id="link-apri-login" class="modal-link success">Accedi</a>
             </p>
         </div>
     </div>
 
+    <!-- Sezione pagina-dashboard selezionata dalla navigazione e aggiornata dai moduli dedicati. -->
     <div id="pagina-dashboard" class="sezione-pagina hidden">
+        <!-- Raggruppa semanticamente questa sezione. -->
         <section class="catalog-hero catalog-hero-courses">
             <div>
                 <p class="eyebrow">Corsi sportivi per tutti</p>
@@ -198,28 +287,36 @@
                  role="region" aria-label="Immagini dei corsi sportivi">
                 <div class="image-slider-track">
                     <figure class="image-slide is-active">
+                        <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
                         <img src="uploads/sliders/basket.jpg" alt="Partita di basket in un palazzetto">
                         <figcaption>Basket</figcaption>
                     </figure>
                     <figure class="image-slide">
+                        <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
                         <img src="uploads/sliders/nuoto.jpg" alt="Atleta durante un allenamento di nuoto" loading="lazy">
                         <figcaption>Nuoto</figcaption>
                     </figure>
                     <figure class="image-slide">
+                        <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
                         <img src="uploads/sliders/giocoleria.jpg" alt="Artista durante un esercizio di giocoleria" loading="lazy">
                         <figcaption>Giocoleria</figcaption>
                     </figure>
                 </div>
+                <!-- Pulsante: Immagine precedente. -->
                 <button class="image-slider-arrow image-slider-prev" type="button" data-slider-prev aria-label="Immagine precedente">‹</button>
+                <!-- Pulsante: Immagine successiva. -->
                 <button class="image-slider-arrow image-slider-next" type="button" data-slider-next aria-label="Immagine successiva">›</button>
                 <div class="image-slider-dots" data-slider-dots aria-label="Seleziona immagine"></div>
                 <span class="sr-only" data-slider-status aria-live="polite"></span>
             </div>
         </section>
+        <!-- Contenitore contenitore-corsi popolato o aggiornato dai moduli JavaScript. -->
         <div id="contenitore-corsi" class="grid-corsi"></div>
     </div>
 
+    <!-- Sezione pagina-gare selezionata dalla navigazione e aggiornata dai moduli dedicati. -->
     <div id="pagina-gare" class="sezione-pagina hidden">
+        <!-- Raggruppa semanticamente questa sezione. -->
         <section class="catalog-hero catalog-hero-races">
             <div>
                 <p class="eyebrow">Associazione sportiva</p>
@@ -230,52 +327,71 @@
                  role="region" aria-label="Immagini delle gare sportive">
                 <div class="image-slider-track">
                     <figure class="image-slide is-active">
+                        <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
                         <img src="uploads/sliders/trofei.jpg" alt="Trofei pronti per una premiazione sportiva">
                         <figcaption>Traguardi da celebrare insieme</figcaption>
                     </figure>
                     <figure class="image-slide">
+                        <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
                         <img src="uploads/sliders/maratona.jpg" alt="Partecipanti durante una maratona cittadina" loading="lazy">
                         <figcaption>Gare aperte alla nostra comunità</figcaption>
                     </figure>
                 </div>
+                <!-- Pulsante: Immagine precedente. -->
                 <button class="image-slider-arrow image-slider-prev" type="button" data-slider-prev aria-label="Immagine precedente">‹</button>
+                <!-- Pulsante: Immagine successiva. -->
                 <button class="image-slider-arrow image-slider-next" type="button" data-slider-next aria-label="Immagine successiva">›</button>
                 <div class="image-slider-dots" data-slider-dots aria-label="Seleziona immagine"></div>
                 <span class="sr-only" data-slider-status aria-live="polite"></span>
             </div>
         </section>
+        <!-- Raggruppa semanticamente questa sezione. -->
         <section class="feature-strip race-feature-strip" aria-label="Valori gare">
             <article><span>🏆</span><strong>Competizione sana</strong><small>Crescita e confronto nel rispetto.</small></article>
             <article><span>👥</span><strong>Comunità attiva</strong><small>Insieme per raggiungere grandi traguardi.</small></article>
             <article><span>🏅</span><strong>Spirito sportivo</strong><small>Valori che vanno oltre ogni gara.</small></article>
             <article><span>🗓</span><strong>Eventi organizzati</strong><small>Gare per tutti i livelli e categorie.</small></article>
         </section>
+        <!-- Contenitore contenitore-gare popolato o aggiornato dai moduli JavaScript. -->
         <div id="contenitore-gare" class="grid-corsi"></div>
     </div>
 
+    <!-- Sezione pagina-profilo selezionata dalla navigazione e aggiornata dai moduli dedicati. -->
     <div id="pagina-profilo" class="sezione-pagina hidden">
+        <!-- Raggruppa semanticamente questa sezione. -->
         <section class="profile-page-heading">
             <h1>La tua <span class="text-magenta">area personale</span></h1>
             <p>Gestisci il tuo profilo, visualizza i tuoi corsi e le gare a cui sei iscritto.</p>
         </section>
 
+        <!-- Elemento info-utente identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
         <div id="info-utente" class="profile-panel">
 
+            <!-- Raggruppa semanticamente il contenuto laterale. -->
             <aside class="profile-avatar-card" aria-label="Foto e stato certificato">
+                <!-- Immagine img-propic; alt ne fornisce la descrizione alternativa quando prevista. -->
                 <img id="img-propic" class="profile-avatar" src="uploads/defaults/default_user.png" alt="Foto profilo">
 
+                <!-- Campo del form input-propic di tipo file. -->
                 <input type="file" id="input-propic" class="sr-only" accept=".jpg,.jpeg,.png,.webp,.gif" aria-label="Carica una nuova foto profilo">
+                <!-- Pulsante btn-cambia-propic; il gestore JavaScript esegue l’azione collegata. -->
                 <button id="btn-cambia-propic" class="btn btn-primary btn-small" type="button">Cambia foto</button>
 
+                <!-- Area di stato status-certificato; le tecnologie assistive possono annunciarne gli aggiornamenti. -->
                 <div id="status-certificato" class="profile-certificate" aria-live="polite">
+                    <!-- Elemento semaforo-luce identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
                     <div id="semaforo-luce" class="profile-certificate-dot" aria-hidden="true"></div>
+                    <!-- Elemento semaforo-testo identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
                     <span id="semaforo-testo" class="profile-certificate-text"></span>
                 </div>
             </aside>
 
+            <!-- Raggruppa semanticamente questa sezione. -->
             <section class="profile-form-card" aria-label="Dati personali">
                 <div class="profile-meta-grid">
+                    <!-- Elemento testo-email identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
                     <p><strong>Email:</strong> <span id="testo-email"></span></p>
+                    <!-- Elemento testo-ruolo identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
                     <p><strong>Ruolo:</strong> <span id="testo-ruolo" class="profile-role-badge"></span></p>
                 </div>
 
@@ -283,46 +399,59 @@
 
                 <div class="profile-form-grid">
                     <div class="field-group">
+                        <!-- Etichetta del campo input-nome; aiuta a riconoscere il controllo e a focalizzarlo. -->
                         <label for="input-nome">Nome</label>
+                        <!-- Campo del form input-nome di tipo text. -->
                         <input type="text" id="input-nome" placeholder="Il tuo nome" autocomplete="given-name">
                     </div>
                     <div class="field-group">
+                        <!-- Etichetta del campo input-cognome; aiuta a riconoscere il controllo e a focalizzarlo. -->
                         <label for="input-cognome">Cognome</label>
+                        <!-- Campo del form input-cognome di tipo text. -->
                         <input type="text" id="input-cognome" placeholder="Il tuo cognome" autocomplete="family-name">
                     </div>
                 </div>
 
                 <div class="field-group field-group-compact">
+                    <!-- Etichetta del campo input-eta; aiuta a riconoscere il controllo e a focalizzarlo. -->
                     <label for="input-eta">Età</label>
+                    <!-- Campo del form input-eta di tipo number. -->
                     <input type="number" id="input-eta" placeholder="Es. 25" min="1" max="120" inputmode="numeric">
                 </div>
 
                 <div class="field-group">
+                    <!-- Etichetta del campo input-bio; aiuta a riconoscere il controllo e a focalizzarlo. -->
                     <label for="input-bio">Biografia</label>
+                    <!-- Campo di testo su più righe input-bio; il valore viene letto dai gestori del form. -->
                     <textarea id="input-bio" rows="3" placeholder="Scrivi qualcosa su di te..."></textarea>
                 </div>
 
                 <div class="profile-actions-row">
+                    <!-- Pulsante btn-salva-profilo; il gestore JavaScript esegue l’azione collegata. -->
                     <button id="btn-salva-profilo" class="btn btn-success profile-save-btn" type="button">Salva modifiche</button>
                 </div>
             </section>
         </div>
 
+        <!-- Raggruppa semanticamente questa sezione. -->
         <section class="profile-list-panel profile-tools-panel">
             <div class="section-heading profile-tools-heading">
                 <h2>Strumenti</h2>
             </div>
             <div class="profile-tools-grid">
+                <!-- Pulsante btn-admin-profilo; il gestore JavaScript esegue l’azione collegata. -->
                 <button id="btn-admin-profilo" class="profile-tool-button profile-tool-admin hidden" type="button" data-nav="admin">
                     <span aria-hidden="true">⚙</span>
                     <strong>Pannello Admin</strong>
                     <small>Gestisci utenti, corsi e gare</small>
                 </button>
+                <!-- Pulsante btn-coach-profilo; il gestore JavaScript esegue l’azione collegata. -->
                 <button id="btn-coach-profilo" class="profile-tool-button profile-tool-coach hidden" type="button" data-nav="coach">
                     <span aria-hidden="true">▣</span>
                     <strong>Area coach</strong>
                     <small>Controlla registro e iscritti</small>
                 </button>
+                <!-- Pulsante btn-logout-profilo; il gestore JavaScript esegue l’azione collegata. -->
                 <button id="btn-logout-profilo" class="profile-tool-button profile-tool-logout" type="button">
                     <span aria-hidden="true">↩</span>
                     <strong>Esci</strong>
@@ -333,37 +462,48 @@
 
         <div class="section-heading profile-section-heading">
             <h2>I tuoi corsi</h2>
+            <!-- Pulsante; il gestore JavaScript esegue l’azione collegata. -->
             <button class="link-action" type="button" data-nav="dashboard">Vedi tutti i corsi <span>→</span></button>
         </div>
+        <!-- Contenitore lista-mie-iscrizioni popolato o aggiornato dai moduli JavaScript. -->
         <div id="lista-mie-iscrizioni" class="profile-list-panel">
             <p>Caricamento iscrizioni...</p>
         </div>
 
         <div class="section-heading profile-section-heading">
             <h2>Le tue gare</h2>
+            <!-- Pulsante; il gestore JavaScript esegue l’azione collegata. -->
             <button class="link-action" type="button" data-nav="gare">Vedi tutte le gare <span>→</span></button>
         </div>
+        <!-- Contenitore lista-mie-gare popolato o aggiornato dai moduli JavaScript. -->
         <div id="lista-mie-gare" class="profile-list-panel">
             <p>Caricamento gare...</p>
         </div>
     </div>
 
+    <!-- Sezione pagina-chat selezionata dalla navigazione e aggiornata dai moduli dedicati. -->
     <div id="pagina-chat" class="sezione-pagina hidden">
         <div class="chat-container">
             
+            <!-- Elemento chat-sidebar identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
             <div id="chat-sidebar" class="chat-sidebar">
                 <h3 class="chat-sidebar-title">Le tue stanze</h3>
                 <div class="chat-sidebar-actions">
+                    <!-- Pulsante btn-nuova-chat; il gestore JavaScript esegue l’azione collegata. -->
                     <button id="btn-nuova-chat" class="chat-sidebar-primary" type="button">
                         <span>➕</span> Nuova chat privata
                     </button>
                     
+                    <!-- Pulsante btn-stato-dnd; il gestore JavaScript esegue l’azione collegata. -->
                     <button id="btn-stato-dnd" class="chat-status-btn is-online" type="button">
                         🟢 Stato: disponibile
                     </button>
+                    <!-- Pulsante btn-notifiche-desktop; il gestore JavaScript esegue l’azione collegata. -->
                     <button id="btn-notifiche-desktop" class="chat-notification-btn is-disabled" type="button">🔕 OFF</button>
                 </div>
+                <!-- Contenitore lista-stanze-chat popolato o aggiornato dai moduli JavaScript. -->
                 <ul id="lista-stanze-chat" class="chat-room-list">
+                    <!-- Elemento nav-room-general identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
                     <li id="nav-room-general" class="stanza-item room-general attiva">
                         <span class="room-avatar room-avatar-general"><span class="room-avatar-emoji">🌍</span></span>
                         <div class="room-details"><div class="room-name">Piazza principale</div></div>
@@ -371,44 +511,69 @@
                 </ul>
             </div>
 
+            <!-- Pulsante chat-sidebar-backdrop: Chiudi elenco stanze. -->
             <button id="chat-sidebar-backdrop" class="chat-sidebar-backdrop" type="button" aria-label="Chiudi elenco stanze"></button>
 
             <div class="chat-main">
                 
 <div class="chat-header">
+    <!-- Pulsante btn-chat-sidebar-toggle: Apri elenco stanze. -->
     <button id="btn-chat-sidebar-toggle" class="chat-sidebar-toggle" type="button" aria-label="Apri elenco stanze" aria-expanded="false">
         <span></span><span></span><span></span>
     </button>
+    <!-- Elemento titolo-chat-attiva identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
     <h3 id="titolo-chat-attiva">🌍 Piazza principale</h3>
+    <!-- Elemento chat-member-count identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
     <span id="chat-member-count" class="chat-member-count">Caricamento partecipanti...</span>
+    <!-- Elemento chat-connection-status identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
     <span id="chat-connection-status" class="chat-connection-status is-offline">Offline</span>
 
+    <!-- Pulsante btn-avvia-chiamata: Avvia chiamata. -->
     <button id="btn-avvia-chiamata" class="chat-action-btn" data-mobile-icon="☎" type="button" title="Avvia chiamata">
+        <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
         <img src="uploads/buttons/tasto_call.svg" alt="">
     </button>
 </div>
+                <!-- Contenitore contenitore-messaggi popolato o aggiornato dai moduli JavaScript. -->
                 <div id="contenitore-messaggi" aria-live="polite" aria-label="Messaggi della chat">
                     <p class="chat-list-state">Benvenuto nella Piazza principale. Manteniamo toni gentili e rispettosi.</p>
                 </div>
 
 <div class="chat-composer">
     
+    <!-- Elemento indicatore-scrittura identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
     <div id="indicatore-scrittura" class="chat-typing-indicator"></div>
+
+    <!-- Lo stato e il timer restano visibili finché il vocale viene registrato o inviato. -->
+    <div id="stato-registrazione-vocale" class="voice-recording-status" role="status" aria-live="polite" hidden>
+        <span class="voice-recording-indicator" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+        <div class="voice-recording-copy"><strong id="etichetta-registrazione-vocale"></strong><span id="suggerimento-registrazione-vocale"></span></div>
+        <span id="tempo-registrazione-vocale" class="voice-recording-time" aria-hidden="true">0:00</span>
+        <button id="btn-annulla-vocale" type="button" aria-label="Annulla registrazione vocale">Annulla</button>
+    </div>
     
+    <!-- Campo del form input-file-chat di tipo file. -->
     <input type="file" id="input-file-chat" class="sr-only" accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.webm,.mp3,.wav,.ogg,.mp4,.aac,.m4a">
     
+    <!-- Pulsante btn-allega-chat: Allega un file. -->
     <button id="btn-allega-chat" class="chat-action-btn" data-mobile-icon="+" type="button" title="Allega un file">
+        <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
         <img src="uploads/buttons/tasto_allega.svg" alt="">
     </button>
     
+    <!-- Campo del form input-messaggio di tipo text. -->
     <input type="text" id="input-messaggio" placeholder="Scrivi un messaggio...">
     
+    <!-- Pulsante btn-registra-vocale: Tieni premuto per registrare. -->
     <button id="btn-registra-vocale" class="chat-action-btn" data-mobile-icon="●"
-        type="button" title="Tieni premuto per registrare">
+        type="button" title="Tieni premuto per registrare" aria-label="Tieni premuto per registrare un vocale" aria-pressed="false">
+        <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
         <img src="uploads/buttons/tasto_audio.svg" alt="">
     </button>
     
+    <!-- Pulsante btn-invia-chat: Invia. -->
     <button id="btn-invia-chat" class="chat-action-btn chat-send-btn" data-mobile-icon="➤" type="button" title="Invia">
+        <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
         <img src="uploads/buttons/tasto_invia.svg" alt="">
     </button>
 </div>
@@ -417,41 +582,55 @@
         </div>
     </div>
 
+    <!-- Finestra sovrapposta modale-contatti; visibilità e interazioni sono gestite dal frontend. -->
     <div id="modale-contatti" class="modal-overlay">
         <div class="modal-content contacts-modal-content">
+            <!-- Pulsante: Chiudi rubrica. -->
             <button class="chiudi-modale modal-close-btn" type="button" data-close-modal="modale-contatti" aria-label="Chiudi rubrica">×</button>
             <h2 class="contacts-modal-title">Rubrica 📒</h2>
             
+            <!-- Campo del form input-cerca-contatti di tipo text. -->
             <input type="text" id="input-cerca-contatti" class="contacts-search-input" placeholder="🔍 Cerca nome o cognome...">
             
+            <!-- Contenitore lista-contatti popolato o aggiornato dai moduli JavaScript. -->
             <div id="lista-contatti" class="contacts-list">
                 <p class="chat-list-state">Caricamento contatti...</p>
             </div>
         </div>
     </div>
 
+    <!-- Finestra sovrapposta modale-mini-profilo; visibilità e interazioni sono gestite dal frontend. -->
     <div id="modale-mini-profilo" class="modal-overlay mini-profile-modal">
         <div class="modal-content mini-profile-content">
+            <!-- Pulsante: Chiudi profilo. -->
             <button class="chiudi-modale modal-close-btn" type="button" data-close-modal="modale-mini-profilo" aria-label="Chiudi profilo">×</button>
             
             <div class="mini-profile-layout">
                 <div class="mini-profile-summary">
                     <div class="mini-profile-avatar-wrap">
+                        <!-- Immagine mini-profilo-img; alt ne fornisce la descrizione alternativa quando prevista. -->
                         <img id="mini-profilo-img" class="mini-profile-avatar" src="" alt="Foto profilo">
+                        <!-- Elemento mini-profilo-pallino identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
                         <span id="mini-profilo-pallino" class="mini-profile-presence"></span>
                     </div>
                     
+                    <!-- Elemento mini-profilo-nome identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
                     <h2 id="mini-profilo-nome" class="mini-profile-name"></h2>
+                    <!-- Elemento mini-profilo-ruolo-tag identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
                     <div id="mini-profilo-ruolo-tag" class="mini-profile-role"></div>
                     
                     <div class="mini-profile-facts">
+                        <!-- Elemento mini-profilo-eta identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
                         <p><strong>Età:</strong> <span id="mini-profilo-eta"></span></p>
+                        <!-- Elemento mini-profilo-ruolo-testo identificabile da CSS e JavaScript per aggiornare questa parte -->
+                        <!-- dell’interfaccia. -->
                         <p><strong>Ruolo:</strong> <span id="mini-profilo-ruolo-testo"></span></p>
                     </div>
                 </div>
                 <div class="mini-profile-bio-panel">
                     <h3>Biografia</h3>
                     <div class="mini-profile-bio-scroll">
+                        <!-- Elemento mini-profilo-bio identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
                         <p id="mini-profilo-bio"></p>
                     </div>
                 </div>
@@ -459,39 +638,51 @@
         </div>
     </div>
 
+    <!-- Sezione pagina-admin selezionata dalla navigazione e aggiornata dai moduli dedicati. -->
     <div id="pagina-admin" class="sezione-pagina hidden">
+        <!-- Raggruppa semanticamente questa sezione. -->
         <section class="admin-hero-panel">
             <p class="eyebrow">Pannello amministrativo</p>
             <h1>Gestisci LetsGoSport con ordine.</h1>
             <p>Tieni sotto controllo utenti, coach, corsi e gare da un'unica area riservata.</p>
         </section>
 
+        <!-- Raggruppa semanticamente questa sezione. -->
         <section class="admin-stats-grid" aria-label="Riepilogo amministrazione">
+            <!-- Elemento admin-count-utenti identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
             <article><span>Utenti</span><strong id="admin-count-utenti">--</strong><small>Profili registrati</small></article>
+            <!-- Elemento admin-count-coach identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
             <article><span>Coach</span><strong id="admin-count-coach">--</strong><small>Istruttori assegnabili</small></article>
+            <!-- Elemento admin-count-corsi identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
             <article><span>Corsi</span><strong id="admin-count-corsi">--</strong><small>Attivi nel catalogo</small></article>
+            <!-- Elemento admin-count-gare identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
             <article><span>Gare</span><strong id="admin-count-gare">--</strong><small>Eventi pubblicati</small></article>
         </section>
 
+        <!-- Raggruppa semanticamente questa sezione. -->
         <section class="admin-mobile-actions admin-quick-actions" aria-label="Azioni rapide admin">
+            <!-- Pulsante; il gestore JavaScript esegue l’azione collegata. -->
             <button class="admin-mobile-card" type="button" data-scroll-target="admin-sezione-utenti">
                 <span>Utenti</span>
                 <strong>Profili e permessi</strong>
                 <small>Gestisci dati, ruoli e certificati.</small>
                 <em aria-hidden="true">›</em>
             </button>
+            <!-- Pulsante; il gestore JavaScript esegue l’azione collegata. -->
             <button class="admin-mobile-card" type="button" data-scroll-target="admin-form-corsi">
                 <span>Corsi</span>
                 <strong>Nuovo corso</strong>
                 <small>Crea o aggiorna il catalogo sportivo.</small>
                 <em aria-hidden="true">›</em>
             </button>
+            <!-- Pulsante; il gestore JavaScript esegue l’azione collegata. -->
             <button class="admin-mobile-card" type="button" data-scroll-target="admin-lista-corsi">
                 <span>Catalogo</span>
                 <strong>Corsi pubblicati</strong>
                 <small>Modifica orari, coach e descrizioni.</small>
                 <em aria-hidden="true">›</em>
             </button>
+            <!-- Pulsante; il gestore JavaScript esegue l’azione collegata. -->
             <button class="admin-mobile-card" type="button" data-scroll-target="admin-form-gare">
                 <span>Gare</span>
                 <strong>Nuova gara</strong>
@@ -500,6 +691,7 @@
             </button>
         </section>
 
+        <!-- Elemento admin-sezione-utenti identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
         <section id="admin-sezione-utenti" class="admin-section-block">
             <div class="admin-section-heading">
                 <div>
@@ -507,13 +699,16 @@
                     <h2>Gestione utenti</h2>
                     <p>Modifica profili, ruoli, certificati e foto senza uscire dal pannello.</p>
                 </div>
+                <!-- Campo del form admin-search-utenti di tipo search. -->
                 <input type="search" id="admin-search-utenti" class="admin-search-input" placeholder="Cerca nome, email o ruolo" aria-label="Cerca utenti">
             </div>
+            <!-- Elemento tabella-utenti identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
             <div id="tabella-utenti" class="admin-panel">
                 <p>Caricamento utenti in corso...</p>
             </div>
         </section>
 
+        <!-- Elemento admin-sezione-corsi identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
         <section id="admin-sezione-corsi" class="admin-section-block">
             <div class="admin-section-heading">
                 <div>
@@ -521,21 +716,29 @@
                     <h2>Gestione corsi</h2>
                     <p>Crea nuovi corsi, assegna i coach e mantieni aggiornati giorni, orari e costi.</p>
                 </div>
+                <!-- Campo del form admin-search-corsi di tipo search. -->
                 <input type="search" id="admin-search-corsi" class="admin-search-input" placeholder="Cerca corso, giorno o coach" aria-label="Cerca corsi">
             </div>
 
+            <!-- Elemento admin-form-corsi identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
             <div id="admin-form-corsi" class="admin-panel admin-form-panel">
+                <!-- Elemento titolo-modulo-corso identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
                 <h3 id="titolo-modulo-corso">Aggiungi un nuovo corso</h3>
 
+                <!-- Campo del form admin-corso-id di tipo hidden. -->
                 <input type="hidden" id="admin-corso-id">
 
                 <div class="admin-form-row admin-form-grid">
+                    <!-- Etichetta del campo admin-corso-nome; aiuta a riconoscere il controllo e a focalizzarlo. -->
                     <label class="admin-field-group admin-form-grow" for="admin-corso-nome">
                         <span>Nome corso</span>
+                        <!-- Campo del form admin-corso-nome di tipo text. -->
                         <input type="text" id="admin-corso-nome" placeholder="Es. Calcio base" autocomplete="off">
                     </label>
+                    <!-- Etichetta del campo admin-corso-giorno; aiuta a riconoscere il controllo e a focalizzarlo. -->
                     <label class="admin-field-group" for="admin-corso-giorno">
                         <span>Giorno</span>
+                        <!-- Menu di scelta admin-corso-giorno; JavaScript legge o popola le opzioni. -->
                         <select id="admin-corso-giorno" aria-label="Giorno del corso">
                             <option value="">Seleziona giorno</option>
                             <option value="Lunedi">Lunedì</option>
@@ -547,49 +750,65 @@
                             <option value="Domenica">Domenica</option>
                         </select>
                     </label>
+                    <!-- Etichetta del campo admin-corso-orario; aiuta a riconoscere il controllo e a focalizzarlo. -->
                     <label class="admin-field-group" for="admin-corso-orario">
                         <span>Orario</span>
+                        <!-- Campo del form admin-corso-orario di tipo time. -->
                         <input type="time" id="admin-corso-orario">
                     </label>
+                    <!-- Etichetta del campo admin-corso-durata; aiuta a riconoscere il controllo e a focalizzarlo. -->
                     <label class="admin-field-group admin-form-number" for="admin-corso-durata">
                         <span>Durata</span>
+                        <!-- Campo del form admin-corso-durata di tipo number. -->
                         <input type="number" id="admin-corso-durata" placeholder="Minuti" min="1" max="300">
                     </label>
+                    <!-- Etichetta del campo admin-corso-costo; aiuta a riconoscere il controllo e a focalizzarlo. -->
                     <label class="admin-field-group admin-form-number" for="admin-corso-costo">
                         <span>Costo</span>
+                        <!-- Campo del form admin-corso-costo di tipo number. -->
                         <input type="number" id="admin-corso-costo" placeholder="Euro" min="0" step="0.01">
                     </label>
                 </div>
 
+                <!-- Etichetta del campo admin-corso-bio; aiuta a riconoscere il controllo e a focalizzarlo. -->
                 <label class="admin-field-group admin-field-group-wide" for="admin-corso-bio">
                     <span>Descrizione</span>
+                    <!-- Campo di testo su più righe admin-corso-bio; il valore viene letto dai gestori del form. -->
                     <textarea id="admin-corso-bio" class="admin-form-wide" rows="3" placeholder="Racconta il corso in modo chiaro e coinvolgente."></textarea>
                 </label>
 
+                <!-- Etichetta del campo admin-corso-coach; aiuta a riconoscere il controllo e a focalizzarlo. -->
                 <label class="admin-field-group admin-field-group-wide" for="admin-corso-coach">
                     <span>Coach</span>
+                    <!-- Menu di scelta admin-corso-coach; JavaScript legge o popola le opzioni. -->
                     <select id="admin-corso-coach">
                         <option value="">Seleziona un coach...</option>
                     </select>
                 </label>
 
                 <div class="admin-file-box">
+                    <!-- Etichetta del campo admin-corso-img; aiuta a riconoscere il controllo e a focalizzarlo. -->
                     <label class="admin-upload-label" for="admin-corso-img">Immagine di copertina</label>
+                    <!-- Campo del form admin-corso-img di tipo file. -->
                     <input type="file" id="admin-corso-img" class="admin-file-input" accept=".jpg,.jpeg,.png,.webp,.gif">
                     <small>Lascia vuoto questo campo per mantenere l'immagine attuale.</small>
                 </div>
 
                 <div class="admin-form-actions">
+                    <!-- Pulsante btn-salva-corso; il gestore JavaScript esegue l’azione collegata. -->
                     <button id="btn-salva-corso" class="admin-form-submit is-course" type="button">Crea corso</button>
+                    <!-- Pulsante btn-annulla-corso; il gestore JavaScript esegue l’azione collegata. -->
                     <button id="btn-annulla-corso" class="admin-form-cancel hidden" type="button">Annulla</button>
                 </div>
             </div>
 
+            <!-- Contenitore admin-lista-corsi popolato o aggiornato dai moduli JavaScript. -->
             <div id="admin-lista-corsi" class="admin-panel">
                 <p>Caricamento corsi in corso...</p>
             </div>
         </section>
 
+        <!-- Elemento admin-sezione-gare identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
         <section id="admin-sezione-gare" class="admin-section-block">
             <div class="admin-section-heading">
                 <div>
@@ -597,57 +816,78 @@
                     <h2>Gestione gare ed eventi</h2>
                     <p>Programma gare, aggiorna date e cura la presentazione degli eventi.</p>
                 </div>
+                <!-- Campo del form admin-search-gare di tipo search. -->
                 <input type="search" id="admin-search-gare" class="admin-search-input" placeholder="Cerca gara o data" aria-label="Cerca gare">
             </div>
 
+            <!-- Elemento admin-form-gare identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
             <div id="admin-form-gare" class="admin-panel admin-form-panel">
+                <!-- Elemento titolo-modulo-gara identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
                 <h3 id="titolo-modulo-gara">Aggiungi una nuova gara</h3>
 
+                <!-- Campo del form admin-gara-id di tipo hidden. -->
                 <input type="hidden" id="admin-gara-id">
 
                 <div class="admin-form-row admin-form-grid">
+                    <!-- Etichetta del campo admin-gara-nome; aiuta a riconoscere il controllo e a focalizzarlo. -->
                     <label class="admin-field-group admin-form-grow" for="admin-gara-nome">
                         <span>Nome gara</span>
+                        <!-- Campo del form admin-gara-nome di tipo text. -->
                         <input type="text" id="admin-gara-nome" placeholder="Es. Maratona estiva" autocomplete="off">
                     </label>
+                    <!-- Etichetta del campo admin-gara-giorno; aiuta a riconoscere il controllo e a focalizzarlo. -->
                     <label class="admin-field-group" for="admin-gara-giorno">
                         <span>Data</span>
+                        <!-- Campo del form admin-gara-giorno di tipo date. -->
                         <input type="date" id="admin-gara-giorno">
                     </label>
+                    <!-- Etichetta del campo admin-gara-orario; aiuta a riconoscere il controllo e a focalizzarlo. -->
                     <label class="admin-field-group" for="admin-gara-orario">
                         <span>Orario</span>
+                        <!-- Campo del form admin-gara-orario di tipo time. -->
                         <input type="time" id="admin-gara-orario">
                     </label>
+                    <!-- Etichetta del campo admin-gara-costo; aiuta a riconoscere il controllo e a focalizzarlo. -->
                     <label class="admin-field-group admin-form-number" for="admin-gara-costo">
                         <span>Costo</span>
+                        <!-- Campo del form admin-gara-costo di tipo number. -->
                         <input type="number" id="admin-gara-costo" placeholder="Euro" min="0" step="0.01">
                     </label>
                 </div>
 
+                <!-- Etichetta del campo admin-gara-bio; aiuta a riconoscere il controllo e a focalizzarlo. -->
                 <label class="admin-field-group admin-field-group-wide" for="admin-gara-bio">
                     <span>Descrizione</span>
+                    <!-- Campo di testo su più righe admin-gara-bio; il valore viene letto dai gestori del form. -->
                     <textarea id="admin-gara-bio" class="admin-form-wide" rows="3" placeholder="Presenta l'evento con informazioni essenziali e tono curato."></textarea>
                 </label>
 
                 <div class="admin-file-box">
+                    <!-- Etichetta del campo admin-gara-img; aiuta a riconoscere il controllo e a focalizzarlo. -->
                     <label class="admin-upload-label" for="admin-gara-img">Immagine vetrina</label>
+                    <!-- Campo del form admin-gara-img di tipo file. -->
                     <input type="file" id="admin-gara-img" class="admin-file-input" accept=".jpg,.jpeg,.png,.webp,.gif">
                     <small>JPG, PNG, WEBP o GIF. Se non carichi nulla, resta l'immagine già presente.</small>
                 </div>
 
                 <div class="admin-form-actions">
+                    <!-- Pulsante btn-salva-gara; il gestore JavaScript esegue l’azione collegata. -->
                     <button id="btn-salva-gara" class="admin-form-submit is-race" type="button">Crea gara</button>
+                    <!-- Pulsante btn-annulla-gara; il gestore JavaScript esegue l’azione collegata. -->
                     <button id="btn-annulla-gara" class="admin-form-cancel hidden" type="button">Annulla</button>
                 </div>
             </div>
 
+            <!-- Contenitore admin-lista-gare popolato o aggiornato dai moduli JavaScript. -->
             <div id="admin-lista-gare" class="admin-panel">
                 <p>Caricamento gare in corso...</p>
             </div>
         </section>
     </div>
 
+    <!-- Sezione pagina-coach selezionata dalla navigazione e aggiornata dai moduli dedicati. -->
     <div id="pagina-coach" class="sezione-pagina hidden">
+        <!-- Raggruppa semanticamente questa sezione. -->
         <section class="coach-hero-panel">
             <div>
                 <p class="eyebrow">Area coach</p>
@@ -656,132 +896,308 @@
             </div>
         </section>
 
+        <!-- Raggruppa semanticamente questa sezione. -->
         <section class="coach-workbar" aria-label="Riepilogo area coach">
             <article>
                 <span>Corsi assegnati</span>
+                <!-- Elemento coach-count-corsi identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
                 <strong id="coach-count-corsi">0</strong>
             </article>
             <article>
                 <span>Iscritti totali</span>
+                <!-- Elemento coach-count-iscritti identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
                 <strong id="coach-count-iscritti">0</strong>
             </article>
+            <!-- Etichetta del campo coach-search-registro; aiuta a riconoscere il controllo e a focalizzarlo. -->
             <label class="coach-search-field" for="coach-search-registro">
                 <span>Cerca nel registro</span>
+                <!-- Campo del form coach-search-registro di tipo search. -->
                 <input id="coach-search-registro" type="search" autocomplete="off" placeholder="Cerca corso, nome o email">
             </label>
         </section>
 
+        <!-- Contenitore coach-lista-corsi popolato o aggiornato dai moduli JavaScript. -->
         <div id="coach-lista-corsi" class="coach-course-list">
             <p class="admin-list-state">Caricamento registro...</p>
         </div>
     </div>
 
-    <div id="modale-chiamata-arrivo" class="modal-overlay incoming-call-modal">
+    <!-- Finestra sovrapposta modale-chiamata-arrivo; visibilità e interazioni sono gestite dal frontend. -->
+    <div id="modale-chiamata-arrivo" class="modal-overlay incoming-call-modal" role="dialog" aria-modal="true" aria-labelledby="chiamante-nome" aria-hidden="true">
         <div class="modal-content incoming-call-content">
+            <span class="incoming-call-eyebrow">LET'S GO SPORT</span>
+            <!-- Immagine chiamante-img; alt ne fornisce la descrizione alternativa quando prevista. -->
             <img id="chiamante-img" class="incoming-call-avatar" src="uploads/defaults/default_user.png" alt="Foto del chiamante">
+            <!-- Elemento chiamante-nome identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
             <h2 id="chiamante-nome" class="incoming-call-name">Mario Rossi</h2>
-            <p class="incoming-call-message">Ti sta videochiamando...</p>
+            <p class="incoming-call-message">Chiamata in arrivo</p>
+            <p class="incoming-call-hint">Puoi attivare la videocamera quando vuoi.</p>
             
             <div class="incoming-call-actions">
+                <!-- Pulsante btn-accetta-chiamata: Accetta chiamata. -->
                 <button id="btn-accetta-chiamata" class="incoming-call-action" type="button" aria-label="Accetta chiamata">
+                    <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
                     <img src="uploads/buttons/tasto_accetta.svg" alt="">
+                    <span>Rispondi</span>
                 </button>
+                <!-- Pulsante btn-rifiuta-chiamata: Rifiuta chiamata. -->
                 <button id="btn-rifiuta-chiamata" class="incoming-call-action" type="button" aria-label="Rifiuta chiamata">
+                    <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
                     <img src="uploads/buttons/tasto_rifiuta.svg" alt="">
+                    <span>Rifiuta</span>
                 </button>
             </div>
         </div>
     </div>
 
-<div id="modale-videochiamata" role="dialog" aria-modal="true" aria-label="Videochiamata">
+<!-- Finestra sovrapposta modale-videochiamata; visibilità e interazioni sono gestite dal frontend. -->
+<div id="modale-videochiamata" role="dialog" aria-modal="true" aria-labelledby="vc-call-title" aria-hidden="true" data-layout="focus" data-state="connecting">
+    <!-- Elemento audio audio-remoto usato dal player o dalla chiamata; gli attributi ne definiscono riproduzione e -->
+    <!-- caricamento. -->
     <audio id="audio-remoto" autoplay></audio>
-    
+
+    <!-- Raggruppa semanticamente l’intestazione. -->
+    <header class="vc-header">
+        <div class="vc-heading">
+            <span class="vc-brand-mark" aria-hidden="true">L<span>G</span>S</span>
+            <div class="vc-heading-copy">
+                <p class="vc-eyebrow">LET'S GO SPORT <span> / </span> CHIAMATA</p>
+                <!-- Elemento vc-call-title identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
+                <h2 id="vc-call-title">La tua chiamata</h2>
+            </div>
+        </div>
+        <div class="vc-header-actions">
+            <div class="vc-session-status">
+                <!-- Area di stato vc-connection-status; le tecnologie assistive possono annunciarne gli aggiornamenti. -->
+                <span class="vc-connection-status" id="vc-connection-status" role="status">In collegamento</span>
+                <!-- Elemento vc-call-duration identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
+                <span class="vc-duration" id="vc-call-duration" aria-label="Durata chiamata">00:00</span>
+            </div>
+            <div class="vc-view-actions" aria-label="Visualizzazione">
+                <!-- Pulsante vc-toggle-layout: Mostra a griglia. -->
+                <button id="vc-toggle-layout" class="vc-utility-button" type="button" title="Mostra a griglia" aria-label="Mostra a griglia" aria-pressed="false">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1.5"/><rect x="14" y="3.5" width="6.5" height="6.5" rx="1.5"/><rect x="3.5" y="14" width="6.5" height="6.5" rx="1.5"/><rect x="14" y="14" width="6.5" height="6.5" rx="1.5"/></svg>
+                    <span>Griglia</span>
+                </button>
+                <!-- Pulsante vc-fullscreen: Schermo intero. -->
+                <button id="vc-fullscreen" class="vc-utility-button vc-icon-button" type="button" title="Schermo intero" aria-label="Schermo intero" aria-pressed="false">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
     <div class="vc-layout-wrapper">
         
+        <!-- Elemento vc-main-focus identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
         <div id="vc-main-focus"></div>
         
+        <!-- Elemento vc-sidebar identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
         <div id="vc-sidebar">
             
+            <!-- Elemento card-remota identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
             <div class="vc-card" id="card-remota" data-focus-card="card-remota">
+                <!-- Immagine img-chiamata-remota; alt ne fornisce la descrizione alternativa quando prevista. -->
                 <div class="vc-avatar"><img id="img-chiamata-remota" src="uploads/defaults/default_user.png" alt="Partecipante remoto"></div>
-                <video id="video-remoto" autoplay playsinline muted></video>
+                <!-- Elemento video video-remoto collegato a un MediaStream; playsinline evita l’apertura automatica a pieno schermo -->
+                <!-- sui dispositivi compatibili. -->
+                <video id="video-remoto" autoplay playsinline muted disablepictureinpicture disableremoteplayback tabindex="-1"></video>
+                <!-- Pulsante: Metti l'altra persona in primo piano. -->
+                <button class="vc-pin-button" type="button" data-pin-card="card-remota" aria-label="Metti l'altra persona in primo piano" title="Metti in primo piano">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m15 3 6 6-4 1-4 4v4l-3-3-5 5-1-1 5-5-3-3h4l4-4z"/></svg>
+                </button>
+                <!-- Area di stato stato-video-remoto; le tecnologie assistive possono annunciarne gli aggiornamenti. -->
                 <div class="vc-camera-status" id="stato-video-remoto" role="status">Connessione audio e video in corso…</div>
                 <div class="vc-remote-status" aria-live="polite">
-                    <span id="stato-microfono-remoto" hidden>Microfono spento</span>
-                    <span id="stato-ascolto-remoto" hidden>Ascolto disattivato</span>
+                    <!-- Elemento stato-microfono-remoto identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
+                    <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
+                    <span id="stato-microfono-remoto" hidden><img src="uploads/buttons/tasto_mic_disatt.svg" alt="">Microfono spento</span>
+                    <!-- Elemento stato-ascolto-remoto identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
+                    <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
+                    <span id="stato-ascolto-remoto" hidden><img src="uploads/buttons/tasto_cuffie_disatt.svg" alt="">Ascolto disattivato</span>
+                    <!-- Pulsante btn-riproduci-audio-remoto; il gestore JavaScript esegue l’azione collegata. -->
                     <button id="btn-riproduci-audio-remoto" type="button" hidden>Attiva l’audio</button>
                 </div>
+                <!-- Elemento nome-chiamata-remota identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
                 <div class="vc-name-tag" id="nome-chiamata-remota">In attesa...</div>
             </div>
 
+            <!-- Elemento card-locale identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
             <div class="vc-card" id="card-locale" data-focus-card="card-locale">
+                <!-- Immagine img-chiamata-locale; alt ne fornisce la descrizione alternativa quando prevista. -->
                 <div class="vc-avatar"><img id="img-chiamata-locale" src="uploads/defaults/default_user.png" alt="Il tuo avatar"></div>
-                <video id="video-locale" autoplay playsinline muted></video>
+                <!-- Elemento video video-locale collegato a un MediaStream; playsinline evita l’apertura automatica a pieno schermo -->
+                <!-- sui dispositivi compatibili. -->
+                <video id="video-locale" autoplay playsinline muted disablepictureinpicture disableremoteplayback tabindex="-1"></video>
+                <!-- Pulsante: Metti la tua anteprima in primo piano. -->
+                <button class="vc-pin-button" type="button" data-pin-card="card-locale" aria-label="Metti la tua anteprima in primo piano" title="Metti in primo piano">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m15 3 6 6-4 1-4 4v4l-3-3-5 5-1-1 5-5-3-3h4l4-4z"/></svg>
+                </button>
                 <div class="vc-camera-status">Videocamera spenta</div>
+                <!-- Elemento vc-local-mic-status identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
+                <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
+                <div class="vc-local-status"><span id="vc-local-mic-status" hidden><img src="uploads/buttons/tasto_mic_disatt.svg" alt="Microfono spento"></span></div>
                 <div class="vc-name-tag">Tu</div>
             </div>
 
+            <!-- Elemento card-screen identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
             <div class="vc-card hidden" id="card-screen" data-focus-card="card-screen">
-                <video id="video-screen" autoplay playsinline muted></video>
+                <!-- Elemento video video-screen collegato a un MediaStream; playsinline evita l’apertura automatica a pieno schermo -->
+                <!-- sui dispositivi compatibili. -->
+                <video id="video-screen" autoplay playsinline muted disablepictureinpicture disableremoteplayback tabindex="-1"></video>
+                <!-- Pulsante: Metti lo schermo condiviso in primo piano. -->
+                <button class="vc-pin-button" type="button" data-pin-card="card-screen" aria-label="Metti lo schermo condiviso in primo piano" title="Metti in primo piano">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m15 3 6 6-4 1-4 4v4l-3-3-5 5-1-1 5-5-3-3h4l4-4z"/></svg>
+                </button>
                 <div class="vc-name-tag">Il tuo schermo</div>
             </div>
 
         </div>
     </div>
 
-    <div class="vc-control-bar">
-        <select id="vc-camera-device" class="vc-camera-device" aria-label="Videocamera da usare" hidden></select>
-        <div class="vc-control-group">
+    <!-- Elemento vc-device-panel identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
+    <section id="vc-device-panel" class="vc-device-panel" aria-labelledby="vc-device-title" hidden>
+        <div class="vc-panel-heading">
+            <!-- Elemento vc-device-title identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
+            <div><p class="vc-eyebrow">PREFERENZE CHIAMATA</p><h3 id="vc-device-title">Audio e video</h3></div>
+            <!-- Pulsante vc-close-devices: Chiudi impostazioni audio e video. -->
+            <button id="vc-close-devices" class="vc-utility-button vc-icon-button" type="button" aria-label="Chiudi impostazioni audio e video">×</button>
+        </div>
+        <!-- Etichetta del campo vc-microphone-device; aiuta a riconoscere il controllo e a focalizzarlo. -->
+        <label class="vc-device-field" for="vc-microphone-device">Microfono
+            <!-- Menu di scelta vc-microphone-device; JavaScript legge o popola le opzioni. -->
+            <select id="vc-microphone-device" disabled><option value="">Dispositivo predefinito</option></select>
+        </label>
+        <!-- Etichetta del campo vc-camera-device; aiuta a riconoscere il controllo e a focalizzarlo. -->
+        <label class="vc-device-field" for="vc-camera-device">Videocamera
+            <!-- Menu di scelta vc-camera-device; JavaScript legge o popola le opzioni. -->
+            <select id="vc-camera-device" class="vc-camera-device" aria-label="Videocamera da usare" hidden></select>
+            <!-- Elemento vc-camera-device-hint identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
+            <span id="vc-camera-device-hint" class="vc-field-hint">Attiva la videocamera per vedere i dispositivi disponibili.</span>
+        </label>
+        <!-- Etichetta del campo vc-speaker-device; aiuta a riconoscere il controllo e a focalizzarlo. -->
+        <label class="vc-device-field" for="vc-speaker-device">Uscita audio
+            <!-- Menu di scelta vc-speaker-device; JavaScript legge o popola le opzioni. -->
+            <select id="vc-speaker-device" disabled><option value="">Uscita del dispositivo</option></select>
+            <!-- Elemento vc-speaker-device-hint identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
+            <span id="vc-speaker-device-hint" class="vc-field-hint">L'uscita audio dipende dal supporto del browser.</span>
+        </label>
+        <div class="vc-profile-note"><span aria-hidden="true">◈</span><div><strong>Profilo risparmio</strong><span>Webcam fino a 480p · 15 fps</span></div></div>
+        <!-- Area di stato vc-device-feedback; le tecnologie assistive possono annunciarne gli aggiornamenti. -->
+        <p id="vc-device-feedback" class="vc-field-hint" role="status">Le periferiche disponibili vengono aggiornate durante la chiamata.</p>
+    </section>
+
+    <!-- Raggruppa semanticamente i controlli o le informazioni finali. -->
+    <footer class="vc-control-bar">
+        <div class="vc-connection-detail" title="Percorso effettivamente utilizzato da audio e video">
+            <span class="vc-signal-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <!-- Elemento vc-network-path identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
+            <!-- Elemento vc-network-latency identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
+            <div><span id="vc-network-path">Connessione in corso</span><span id="vc-network-latency">In attesa del collegamento</span></div>
+        </div>
+        <div class="vc-control-group" role="group" aria-label="Controlli chiamata">
+            <div class="vc-control">
             
-            <button id="btn-toggle-audio" class="vc-btn spento" data-mobile-icon="M" title="Microfono disattivato" aria-label="Microfono" aria-pressed="false">
+            <!-- Pulsante btn-toggle-audio: Microfono. -->
+            <button id="btn-toggle-audio" class="vc-btn spento" type="button" data-mobile-icon="M" title="Microfono disattivato" aria-label="Microfono" aria-pressed="false">
+                <!-- Immagine img-toggle-audio; alt ne fornisce la descrizione alternativa quando prevista. -->
                 <img id="img-toggle-audio" src="uploads/buttons/tasto_mic_disatt.svg" alt="">
             </button>
+            <span class="vc-control-label">Microfono</span>
+            </div>
+            <div class="vc-control">
             
-            <button id="btn-toggle-deafen" class="vc-btn is-active" data-mobile-icon="A" title="Audio chiamata attivo" aria-label="Audio chiamata" aria-pressed="true">
+            <!-- Pulsante btn-toggle-deafen: Audio chiamata. -->
+            <button id="btn-toggle-deafen" class="vc-btn is-active" type="button" data-mobile-icon="A" title="Audio chiamata attivo" aria-label="Audio chiamata" aria-pressed="true">
+                <!-- Immagine img-toggle-deafen; alt ne fornisce la descrizione alternativa quando prevista. -->
                 <img id="img-toggle-deafen" src="uploads/buttons/tasto_cuffie_att.svg" alt="">
             </button>
+            <span class="vc-control-label">Ascolto</span>
+            </div>
+            <div class="vc-control">
 
-            <button id="btn-toggle-video" class="vc-btn spento" data-mobile-icon="V" title="Videocamera disattivata" aria-label="Videocamera" aria-pressed="false">
+            <!-- Pulsante btn-toggle-video: Videocamera. -->
+            <button id="btn-toggle-video" class="vc-btn spento" type="button" data-mobile-icon="V" title="Videocamera disattivata" aria-label="Videocamera" aria-pressed="false">
+                <!-- Immagine img-toggle-video; alt ne fornisce la descrizione alternativa quando prevista. -->
                 <img id="img-toggle-video" src="uploads/buttons/tasto_cam_disatt.svg" alt="">
             </button>
+            <span class="vc-control-label">Videocamera</span>
+            </div>
+            <div class="vc-control">
 
-            <button id="btn-share-screen" class="vc-btn spento" data-mobile-icon="S" title="Condivisione schermo disattivata" aria-label="Condivisione schermo" aria-pressed="false">
+            <!-- Pulsante btn-share-screen: Condivisione schermo. -->
+            <button id="btn-share-screen" class="vc-btn spento" type="button" data-mobile-icon="S" title="Condivisione schermo disattivata" aria-label="Condivisione schermo" aria-pressed="false">
+                <!-- Immagine img-share-screen; alt ne fornisce la descrizione alternativa quando prevista. -->
                 <img id="img-share-screen" src="uploads/buttons/tasto_schermo_disatt.svg" alt="">
             </button>
+            <span class="vc-control-label">Schermo</span>
+            </div>
+            <div class="vc-control vc-control-end">
 
-            <button id="btn-end-call" data-mobile-icon="×" class="vc-btn" title="Termina chiamata" aria-label="Termina chiamata">
+            <!-- Pulsante btn-end-call: Termina chiamata. -->
+            <button id="btn-end-call" type="button" data-mobile-icon="×" class="vc-btn" title="Termina chiamata" aria-label="Termina chiamata">
+                <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
                 <img src="uploads/buttons/tasto_rifiuta.svg" alt="">
             </button>
-
+            <span class="vc-control-label">Termina</span>
+            </div>
         </div>
-    </div>
+        <!-- Pulsante vc-toggle-devices; il gestore JavaScript esegue l’azione collegata. -->
+        <button id="vc-toggle-devices" class="vc-utility-button vc-settings-button" type="button" aria-controls="vc-device-panel" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="currentColor"/><circle cx="15" cy="17" r="3" fill="currentColor"/></svg>
+            <span>Audio e video</span>
+        </button>
+    </footer>
 </div>
 
 </main>
 
+    <!-- Elemento toast-container identificabile da CSS e JavaScript per aggiornare questa parte dell’interfaccia. -->
     <div id="toast-container"></div>
 
+    <!-- Elemento audio suono-squillo usato dal player o dalla chiamata; gli attributi ne definiscono riproduzione e -->
+    <!-- caricamento. -->
     <audio id="suono-squillo" src="sounds/ringtone.mp3" loop preload="auto"></audio>
     
+    <!-- Carica /socket.io/socket.io.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
     <script src="/socket.io/socket.io.js"></script> 
+    <!-- Carica js/api.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
     <script src="js/api.js?v=3"></script>
-    <script src="js/main.js?v=16"></script>
-    <script src="js/ui.js?v=14"></script>
+    <!-- Carica js/main.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
+    <script src="js/main.js?v=17"></script>
+    <!-- Carica js/ui.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
+    <script src="js/ui.js?v=15"></script>
+    <!-- Carica js/auth.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
     <script src="js/auth.js?v=7"></script>
+    <!-- Carica js/profilo.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
     <script src="js/profilo.js?v=8"></script>
+    <!-- Carica js/admin-api.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
     <script src="js/admin-api.js?v=1"></script>
+    <!-- Carica js/admin-ui.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
     <script src="js/admin-ui.js?v=7"></script>
+    <!-- Carica js/admin.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
     <script src="js/admin.js?v=8"></script>
-    <script src="js/chat-socket.js?v=15"></script>
+    <!-- Carica js/chat-socket.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
+    <script src="js/chat-socket.js?v=16"></script>
+    <!-- Carica js/chat-messaggi.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
     <script src="js/chat-messaggi.js?v=11"></script>
-    <script src="js/chat-audio.js?v=7"></script>
-    <script src="js/call.js?v=17"></script>
+    <!-- Carica js/chat-audio.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
+    <script src="js/chat-audio.js?v=8"></script>
+    <!-- Carica js/call-interface.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
+    <script src="js/call-interface.js?v=2"></script>
+    <!-- Carica js/call.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
+    <script src="js/call.js?v=18"></script>
 
+    <!-- Script incorporato: prepara la configurazione o l’avvio richiesti dalla pagina. -->
     <script>
   if ('serviceWorker' in navigator) {
+    // Prosegue l’inizializzazione dopo il caricamento della risorsa.
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js')
+        // Elabora il risultato quando la Promise precedente si completa con successo.
         .then(() => {})
+        // Gestisce il rifiuto della Promise secondo il recupero o la propagazione previsti nel blocco.
+        // Riceve: error (errore intercettato).
         .catch((error) => {
           console.error('Errore nella registrazione del Service Worker:', error);
         });
