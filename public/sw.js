@@ -4,7 +4,7 @@
 // Una Promise rappresenta un risultato futuro; le callback ricevono gli esiti e async/await ne rendono sequenziale
 // la gestione.
 // CACHE_NAME: Nome della versione di cache usata dal service worker.
-const CACHE_NAME = 'letsgosport-v62';
+const CACHE_NAME = 'letsgosport-v63';
 // ASSETS: Risorse statiche che il service worker prova a memorizzare durante l’installazione.
 const ASSETS = [
   '/',
