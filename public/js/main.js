@@ -42,13 +42,18 @@ if (typeof ResizeObserver === 'function' && document.querySelector('.navbar')) {
 }
 
 // inizializzaSliderImmagini: Prepara avanzamento, pulsanti e interazioni degli slider presenti nella pagina.
-function inizializzaSliderImmagini() {
+// Conserva le pulizie degli slider, così un aggiornamento dei corsi non duplica eventi e timer.
+const controlliSliderImmagini = new WeakMap();
+
+function inizializzaSliderImmagini(contenitore = document) {
     // movimentoRidotto: Preferenza di sistema che richiede meno animazioni.
     const movimentoRidotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Applica l’operazione del blocco a ciascun elemento della raccolta.
     // Riceve: slider (contenitore dello slider).
-    document.querySelectorAll('[data-image-slider]').forEach(slider => {
+    const elementi = contenitore.matches?.('[data-image-slider]')
+        ? [contenitore] : contenitore.querySelectorAll('[data-image-slider]');
+    elementi.forEach(slider => {
         if (slider.dataset.sliderReady === 'true') return;
 
         // slides: Elenco dei valori che questo blocco deve confrontare, mostrare o elaborare.
@@ -67,12 +72,21 @@ function inizializzaSliderImmagini() {
         if (slides.length === 0 || !dotsContainer) return;
 
         slider.dataset.sliderReady = 'true';
+        const eventi = new AbortController();
+        const opzioniEvento = { signal: eventi.signal };
+        dotsContainer.replaceChildren();
+        dotsContainer.hidden = slides.length < 2;
+        if (previousButton) previousButton.hidden = slides.length < 2;
+        if (nextButton) nextButton.hidden = slides.length < 2;
+        if (status) status.textContent = '';
         // activeIndex: Indice dell’immagine attualmente visibile nello slider.
         // Esegue la callback passata all’operazione, utilizzando i parametri forniti dal chiamante.
         // Riceve: slide (immagine corrente dello slider).
         let activeIndex = Math.max(0, slides.findIndex(slide => slide.classList.contains('is-active')));
         // rotationTimer: Riferimento all’intervallo automatico dello slider, da annullare durante le pause.
         let rotationTimer = null;
+        let distrutto = false;
+        let nelViewport = typeof IntersectionObserver !== 'function';
 
         // dots: Pulsanti di selezione creati per le immagini dello slider.
         // Trasforma l’elemento corrente nel valore da inserire nella nuova raccolta.
@@ -89,7 +103,7 @@ function inizializzaSliderImmagini() {
             dot.addEventListener('click', () => {
                 mostraSlide(index, true);
                 riavviaRotazione();
-            });
+            }, opzioniEvento);
             dotsContainer.appendChild(dot);
             return dot;
         });
@@ -105,6 +119,12 @@ function inizializzaSliderImmagini() {
                 const isActive = slideIndex === activeIndex;
                 slide.classList.toggle('is-active', isActive);
                 slide.setAttribute('aria-hidden', String(!isActive));
+                // Le altre foto del catalogo vengono richieste soltanto quando vengono mostrate.
+                const image = isActive && slide.querySelector('img[data-src]');
+                if (image) {
+                    image.src = image.dataset.src;
+                    image.removeAttribute('data-src');
+                }
             });
             // Applica l’operazione del blocco a ciascun elemento della raccolta.
             // Riceve: dot (indicatore dello slider); dotIndex (indice dell’indicatore).
@@ -128,7 +148,8 @@ function inizializzaSliderImmagini() {
         // avviaRotazione: Avvia la rotazione automatica solo se la pagina è visibile e non è richiesto movimento ridotto.
         function avviaRotazione() {
             fermaRotazione();
-            if (movimentoRidotto || slides.length < 2 || document.hidden) return;
+            if (distrutto || !nelViewport || movimentoRidotto || slides.length < 2 || document.hidden ||
+                slider.matches(':hover') || slider.contains(document.activeElement)) return;
             // Esegue l’azione alla scadenza del temporizzatore previsto.
             rotationTimer = window.setInterval(() => mostraSlide(activeIndex + 1), interval);
         }
@@ -143,12 +164,12 @@ function inizializzaSliderImmagini() {
         previousButton?.addEventListener('click', () => {
             mostraSlide(activeIndex - 1, true);
             riavviaRotazione();
-        });
+        }, opzioniEvento);
         // Esegue la callback passata all’operazione, utilizzando i parametri forniti dal chiamante.
         nextButton?.addEventListener('click', () => {
             mostraSlide(activeIndex + 1, true);
             riavviaRotazione();
-        });
+        }, opzioniEvento);
         // Gestisce i tasti premuti, rispettando le condizioni controllate nel blocco.
         // Riceve: event (evento del browser).
         slider.addEventListener('keydown', event => {
@@ -156,21 +177,34 @@ function inizializzaSliderImmagini() {
             event.preventDefault();
             mostraSlide(activeIndex + (event.key === 'ArrowRight' ? 1 : -1), true);
             riavviaRotazione();
-        });
-        slider.addEventListener('pointerenter', fermaRotazione);
-        slider.addEventListener('pointerleave', avviaRotazione);
-        slider.addEventListener('focusin', fermaRotazione);
+        }, opzioniEvento);
+        slider.addEventListener('pointerenter', fermaRotazione, opzioniEvento);
+        slider.addEventListener('pointerleave', avviaRotazione, opzioniEvento);
+        slider.addEventListener('focusin', fermaRotazione, opzioniEvento);
         // Reagisce all’evento focusout aggiornando i dati o i controlli previsti.
         slider.addEventListener('focusout', () => {
             // Esegue l’azione alla scadenza del temporizzatore previsto.
             window.setTimeout(() => {
                 if (!slider.contains(document.activeElement)) avviaRotazione();
             }, 0);
-        });
+        }, opzioniEvento);
         // Aggiorna lo stato previsto quando la pagina diventa visibile o viene nascosta.
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) fermaRotazione();
             else avviaRotazione();
+        }, opzioniEvento);
+
+        const osservatore = typeof IntersectionObserver === 'function'
+            ? new IntersectionObserver(entries => {
+                nelViewport = entries.some(entry => entry.isIntersecting);
+                avviaRotazione();
+            }) : null;
+        osservatore?.observe(slider);
+        controlliSliderImmagini.set(slider, () => {
+            distrutto = true;
+            fermaRotazione();
+            osservatore?.disconnect();
+            eventi.abort();
         });
 
         mostraSlide(activeIndex);
@@ -180,6 +214,18 @@ function inizializzaSliderImmagini() {
 
 // Copia le proprietà degli oggetti successivi nel primo oggetto e restituisce l’oggetto aggiornato.
 Object.assign(window.app, {
+
+    // Ricrea i controlli quando cambiano le foto, rimuovendo prima quelli precedenti.
+    aggiornaSliderImmagini(slider) {
+        if (!slider) return;
+        controlliSliderImmagini.get(slider)?.();
+        controlliSliderImmagini.delete(slider);
+        delete slider.dataset.sliderReady;
+        slider.querySelector('[data-slider-dots]')?.replaceChildren();
+        slider.querySelectorAll('[data-slider-prev], [data-slider-next], [data-slider-dots]')
+            .forEach(controllo => { controllo.hidden = true; });
+        inizializzaSliderImmagini(slider);
+    },
     // isMobileLayout: Indica se dimensioni e orientamento richiedono la modalità di navigazione mobile.
     isMobileLayout() {
         return window.matchMedia(

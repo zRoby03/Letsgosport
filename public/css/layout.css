@@ -705,6 +705,24 @@ html {
     }
 }
 
+/* Le anteprime della home usano le foto salvate dei corsi anziché icone decorative. */
+.home-course-grid button .home-course-photo {
+    grid-area: icon;
+    display: block;
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* Senza foto disponibili il catalogo mantiene una sola colonna, senza spazi vuoti. */
+.catalog-hero-courses:not(.has-course-images) { grid-template-columns: minmax(0, 1fr); }
+.image-slider[hidden], .image-slider [hidden] { display: none !important; }
+
+@media screen and (max-width: 767px) {
+    .home-course-grid button .home-course-photo { width: 48px; height: 48px; border-radius: 9px; }
+}
+
 /* Reusable image sliders for the home, courses and races hero sections */
 /* Definisce posizione e sovrapposizione, dimensioni e adattamento, spaziatura per .image-slider, */
 /* .hero-visual.image-slider, .catalog-hero .image-slider. */

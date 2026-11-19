@@ -17,7 +17,7 @@
     <!-- Carica il foglio di stile css/style.css. Il parametro di versione distingue l’asset nella cache. -->
     <link rel="stylesheet" href="css/style.css?v=35">
     <!-- Carica il foglio di stile css/layout.css. Il parametro di versione distingue l’asset nella cache. -->
-    <link rel="stylesheet" href="css/layout.css?v=6">
+    <link rel="stylesheet" href="css/layout.css?v=7">
     <!-- Carica il foglio di stile css/coach.css. Il parametro di versione distingue l’asset nella cache. -->
     <link rel="stylesheet" href="css/coach.css?v=2">
     <!-- Carica il foglio di stile css/admin.css. Il parametro di versione distingue l’asset nella cache. -->
@@ -159,15 +159,6 @@
     </section>
 
     <!-- Raggruppa semanticamente questa sezione. -->
-    <section class="feature-strip" aria-label="Valori LetsGoSport">
-        <article><span>👥</span><strong>Per tutti</strong><small>Bambini, ragazzi e adulti</small></article>
-        <article><span>♡</span><strong>Benessere</strong><small>Corpo, mente e spirito</small></article>
-        <article><span>🏆</span><strong>Comunità</strong><small>Insieme è meglio</small></article>
-        <article><span>🛡</span><strong>Sicurezza</strong><small>Ambiente sano e protetto</small></article>
-        <article><span>◎</span><strong>Qualità</strong><small>Istruttori qualificati</small></article>
-    </section>
-
-    <!-- Raggruppa semanticamente questa sezione. -->
     <section class="preview-panel">
         <div class="section-heading">
             <h2>I nostri corsi</h2>
@@ -283,25 +274,10 @@
                 <h1>Scopri i corsi giusti per <span class="text-cyan">ogni età</span> e <span class="text-magenta">livello</span>.</h1>
                 <p>Dai primi passi allo sport al perfezionamento: corsi pensati per bambini, ragazzi e adulti, con istruttori qualificati e ambienti sicuri e accoglienti.</p>
             </div>
-            <div class="image-slider" data-image-slider data-slider-interval="5200"
-                 role="region" aria-label="Immagini dei corsi sportivi">
-                <div class="image-slider-track">
-                    <figure class="image-slide is-active">
-                        <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
-                        <img src="uploads/sliders/basket.jpg" alt="Partita di basket in un palazzetto">
-                        <figcaption>Basket</figcaption>
-                    </figure>
-                    <figure class="image-slide">
-                        <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
-                        <img src="uploads/sliders/nuoto.jpg" alt="Atleta durante un allenamento di nuoto" loading="lazy">
-                        <figcaption>Nuoto</figcaption>
-                    </figure>
-                    <figure class="image-slide">
-                        <!-- Immagine; alt ne fornisce la descrizione alternativa quando prevista. -->
-                        <img src="uploads/sliders/giocoleria.jpg" alt="Artista durante un esercizio di giocoleria" loading="lazy">
-                        <figcaption>Giocoleria</figcaption>
-                    </figure>
-                </div>
+            <!-- Le foto vengono ricavate dai profili dei corsi restituiti dal backend. -->
+            <div id="slider-corsi" class="image-slider" data-image-slider data-slider-interval="5200"
+                 role="region" aria-label="Immagini dei corsi disponibili" hidden>
+                <div class="image-slider-track"></div>
                 <!-- Pulsante: Immagine precedente. -->
                 <button class="image-slider-arrow image-slider-prev" type="button" data-slider-prev aria-label="Immagine precedente">‹</button>
                 <!-- Pulsante: Immagine successiva. -->
@@ -347,10 +323,10 @@
         </section>
         <!-- Raggruppa semanticamente questa sezione. -->
         <section class="feature-strip race-feature-strip" aria-label="Valori gare">
-            <article><span>🏆</span><strong>Competizione sana</strong><small>Crescita e confronto nel rispetto.</small></article>
-            <article><span>👥</span><strong>Comunità attiva</strong><small>Insieme per raggiungere grandi traguardi.</small></article>
-            <article><span>🏅</span><strong>Spirito sportivo</strong><small>Valori che vanno oltre ogni gara.</small></article>
-            <article><span>🗓</span><strong>Eventi organizzati</strong><small>Gare per tutti i livelli e categorie.</small></article>
+            <article><strong>Competizione sana</strong><small>Crescita e confronto nel rispetto.</small></article>
+            <article><strong>Comunità attiva</strong><small>Insieme per raggiungere grandi traguardi.</small></article>
+            <article><strong>Spirito sportivo</strong><small>Valori che vanno oltre ogni gara.</small></article>
+            <article><strong>Eventi organizzati</strong><small>Gare per tutti i livelli e categorie.</small></article>
         </section>
         <!-- Contenitore contenitore-gare popolato o aggiornato dai moduli JavaScript. -->
         <div id="contenitore-gare" class="grid-corsi"></div>
@@ -1164,9 +1140,9 @@
     <!-- Carica js/api.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
     <script src="js/api.js?v=3"></script>
     <!-- Carica js/main.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
-    <script src="js/main.js?v=17"></script>
+    <script src="js/main.js?v=18"></script>
     <!-- Carica js/ui.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
-    <script src="js/ui.js?v=15"></script>
+    <script src="js/ui.js?v=16"></script>
     <!-- Carica js/auth.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->
     <script src="js/auth.js?v=7"></script>
     <!-- Carica js/profilo.js: il modulo viene eseguito nell’ordine previsto dalla pagina. -->

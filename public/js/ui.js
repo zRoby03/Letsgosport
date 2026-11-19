@@ -26,6 +26,8 @@ Object.assign(window.app, {
             this.apiRequest('/api/corsi'),
             this.apiRequest('/api/gare')
         ]);
+        this.aggiornaImmaginiCorsi(corsiResult.status === 'fulfilled' && Array.isArray(corsiResult.value)
+            ? corsiResult.value : []);
         // stato: Mostra un messaggio di stato nell’elemento indicato.
         // Riceve: element (elemento del DOM); message (testo del messaggio).
         const stato = (element, message) => element.replaceChildren(this.creaElemento('p', { text: message }));
@@ -45,10 +47,15 @@ Object.assign(window.app, {
             // Trasforma l’elemento corrente nel valore da inserire nella nuova raccolta.
             // Riceve: corso (dati del corso).
             const cards = corsiResult.value.slice(0, 8).map(corso => {
-                // visual: Icona, categoria e tono grafico scelti per la scheda del catalogo.
-                const visual = this.getCourseVisual(corso.nome || '');
+                // Usa la foto salvata nel profilo del corso anche nell’anteprima della home.
+                const photo = this.creaImmagineCard(
+                    this.uploadSrc(corso.propic, 'uploads/defaults/default_corso.png'),
+                    'uploads/defaults/default_corso.png',
+                    `Foto del corso ${corso.nome || ''}`.trim()
+                );
+                photo.className = 'home-course-photo';
                 return creaVoce('dashboard',
-                    this.creaElemento('span', { className: 'sport-icon sport-icon-' + visual.tone, text: visual.icon }),
+                    photo,
                     this.creaElemento('strong', { text: corso.nome }),
                     this.creaElemento('small', { text: corso.bio || '' }),
                     this.creaElemento('span', { text: '›', attrs: { 'aria-hidden': 'true' } })
@@ -466,12 +473,46 @@ Object.assign(window.app, {
         return image;
     },
 
+    // Compone lo slider con le foto profilo dei corsi, escludendo immagini mancanti o predefinite.
+    aggiornaImmaginiCorsi(corsi) {
+        const slider = document.getElementById('slider-corsi');
+        const track = slider?.querySelector('.image-slider-track');
+        if (!track) return;
+        const hero = slider.closest('.catalog-hero-courses');
+        const aggiornaControlli = () => {
+            const disponibile = track.children.length > 0;
+            slider.hidden = !disponibile;
+            hero?.classList.toggle('has-course-images', disponibile);
+            this.aggiornaSliderImmagini(slider);
+        };
+        const slides = corsi.flatMap(corso => {
+            const src = this.uploadSrc(corso.propic, '');
+            if (!src || src.endsWith('/defaults/default_corso.png')) return [];
+            const figure = this.creaElemento('figure', { className: 'image-slide' });
+            const image = this.creaElemento('img', {
+                attrs: { 'data-src': src, alt: `Foto del corso ${corso.nome || ''}`.trim(), decoding: 'async' }
+            });
+            // Una foto eliminata o non raggiungibile non lascia un riquadro vuoto nel carosello.
+            image.addEventListener('error', () => {
+                if (figure.parentNode !== track) return;
+                figure.remove();
+                aggiornaControlli();
+            });
+            figure.append(image, this.creaElemento('figcaption', { text: corso.nome || 'Corso' }));
+            return [figure];
+        });
+        track.replaceChildren(...slides);
+        aggiornaControlli();
+    },
+
     // caricaCorsi: Richiede i corsi al backend e ricostruisce le schede del catalogo.
     // È async: restituisce una Promise; await sospende questa funzione fino al completamento dell’operazione attesa.
     async caricaCorsi() {
         try {
             // corsi: Risultato della richiesta HTTP attesa prima di proseguire.
             const corsi = await this.apiRequest('/api/corsi');
+            if (!Array.isArray(corsi)) throw new Error('Elenco corsi non valido.');
+            this.aggiornaImmaginiCorsi(corsi);
             // contenitore: Elemento DOM contenitore-corsi: Contenitore dell’interfaccia.
             const contenitore = document.getElementById('contenitore-corsi');
             if (!contenitore) return;
@@ -491,6 +532,7 @@ Object.assign(window.app, {
         } catch (error) {
             // error: errore intercettato dal catch; il blocco decide come rispondere o propagarlo.
             console.error("Errore caricamento corsi:", error);
+            this.aggiornaImmaginiCorsi([]);
             // contenitore: Elemento DOM contenitore-corsi: Contenitore dell’interfaccia.
             const contenitore = document.getElementById('contenitore-corsi');
             contenitore?.replaceChildren(
@@ -646,11 +688,6 @@ Object.assign(window.app, {
         // titleRow: Elemento DOM creato per comporre questa parte dell’interfaccia.
         const titleRow = this.creaElemento('div', { className: 'liquid-card-title-row' });
         titleRow.append(
-            this.creaElemento('span', {
-                className: `sport-icon sport-icon-${visual.tone}`,
-                text: visual.icon,
-                attrs: { 'aria-hidden': 'true' }
-            }),
             this.creaElemento('h3', { className: 'card-title', text: corso.nome || 'Corso' })
         );
 
@@ -735,12 +772,7 @@ Object.assign(window.app, {
                 imgGara,
                 'uploads/defaults/default_gara.png',
                 `Copertina della gara ${gara.nome || ''}`.trim()
-            ),
-            this.creaElemento('span', {
-                className: `sport-icon sport-icon-${visual.tone} race-floating-icon`,
-                text: visual.icon,
-                attrs: { 'aria-hidden': 'true' }
-            })
+            )
         );
 
         // body: Elemento DOM creato per comporre questa parte dell’interfaccia.

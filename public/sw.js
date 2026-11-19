@@ -4,7 +4,7 @@
 // Una Promise rappresenta un risultato futuro; le callback ricevono gli esiti e async/await ne rendono sequenziale
 // la gestione.
 // CACHE_NAME: Nome della versione di cache usata dal service worker.
-const CACHE_NAME = 'letsgosport-v61';
+const CACHE_NAME = 'letsgosport-v62';
 // ASSETS: Risorse statiche che il service worker prova a memorizzare durante l’installazione.
 const ASSETS = [
   '/',
@@ -13,14 +13,14 @@ const ASSETS = [
   '/icon.svg',
   '/css/tokens.css?v=2',
   '/css/style.css?v=35',
-  '/css/layout.css?v=6',
+  '/css/layout.css?v=7',
   '/css/coach.css?v=2',
   '/css/admin.css?v=3',
   '/css/call.css?v=8',
   '/css/chat.css?v=6',
   '/js/api.js?v=3',
-  '/js/main.js?v=17',
-  '/js/ui.js?v=15',
+  '/js/main.js?v=18',
+  '/js/ui.js?v=16',
   '/js/auth.js?v=7',
   '/js/profilo.js?v=8',
   '/js/admin-api.js?v=1',
@@ -34,9 +34,6 @@ const ASSETS = [
   '/uploads/sliders/associazione-sportiva-1.jpg',
   '/uploads/sliders/associazione-sportiva-2.jpg',
   '/uploads/sliders/associazione-sportiva-3.jpg',
-  '/uploads/sliders/basket.jpg',
-  '/uploads/sliders/nuoto.jpg',
-  '/uploads/sliders/giocoleria.jpg',
   '/uploads/sliders/trofei.jpg',
   '/uploads/sliders/maratona.jpg'
 ];
